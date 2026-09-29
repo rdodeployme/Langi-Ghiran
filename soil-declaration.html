@@ -2,49 +2,68 @@
 <html lang="en-AU">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Soil Declaration | LG Recycling</title>
-<meta name="description" content="Waste acceptance and soil declaration form for delivering soil to LG Recycling.">
+<meta name="description" content="Waste acceptance and soil declaration form for delivering soil to LG Recycling. Takes about 10 minutes; your progress saves as you go.">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#23402F">
+<meta name="theme-color" content="#171E21">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LG Recycling">
+<meta property="og:title" content="Soil Declaration | LG Recycling">
+<meta property="og:description" content="Waste acceptance and soil declaration form for delivering soil to LG Recycling. Takes about 10 minutes; your progress saves as you go.">
+<meta property="og:image" content="https://rdodeployme.github.io/Langi-Ghiran/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://rdodeployme.github.io/Langi-Ghiran/soil-declaration.html">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
+<script>document.documentElement.classList.add('js')</script>
 </head>
-<body>
-<div class="draft"><strong>Draft for review.</strong> Items marked <span class="tbc">TBC</span> are placeholders awaiting confirmation. Not for public release.</div>
+<body class="">
+<a class="skip" href="#main">Skip to content</a>
+<div class="draft"><strong>Draft for review.</strong> Items marked <span class="tbc">TBC</span> are placeholders awaiting confirmation. Photography is illustrative. Not for public release.</div>
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="LG Recycling home"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></a>
+    <a class="brand" href="index.html" aria-label="LG Recycling home"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></span></a>
     <button class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+      <span></span><span></span><span></span>
     </button>
-    <nav class="nav" id="site-nav">
-      <a href="about.html">Our Story</a> <a href="langi-ghiran.html">Langi Ghiran</a> <a href="soil-disposal.html">Soil Disposal</a> <a href="site-safety.html">Site Safety & Find Us</a> <a href="index.html#enquire">Contact</a> <a class="btn btn-primary" href="soil-declaration.html" aria-current="page">Soil Declaration</a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="about.html">Our Story</a> <a href="langi-ghiran.html">Langi Ghiran</a> <a href="soil-disposal.html">Soil Disposal</a> <a href="site-safety.html">Site Safety</a> <a href="index.html#enquire">Contact</a> <a class="btn btn-primary nav-cta" href="soil-declaration.html" aria-current="page">Soil Declaration</a>
     </nav>
   </div>
 </header>
-<main>
+<main id="main">
 <section class="page-hero">
-  <div class="wrap narrow" style="margin-left:auto;margin-right:auto">
+  <div class="wrap narrow">
     <p class="eyebrow">Waste acceptance &amp; soil declaration</p>
     <h1>Soil declaration</h1>
-    <p class="lede">Every load delivered to LG Recycling needs an approved declaration. Complete one form per source site. It takes about 10 minutes.</p>
-    <p class="note">We can't accept asbestos, reportable priority waste or waste acid sulfate soil. Not sure if your material is suitable? <a href="index.html#enquire">Ask us first</a>.</p>
+    <p class="lede">Every load delivered to LG Recycling needs an approved declaration. Complete one per source site. It takes about 10 minutes, and your progress saves on this device as you go.</p>
+    <p class="note">We can't accept asbestos, reportable priority waste or waste acid sulfate soil. Not sure your material is suitable? <a href="soil-disposal.html#checker">Use the soil checker</a> or <a href="index.html#enquire">ask us first</a>.</p>
   </div>
 </section>
 
-<section style="padding-top:48px">
-  <div class="wrap narrow" style="margin-left:auto;margin-right:auto">
-    <form class="form" id="declaration-form" action="send-declaration.php" method="POST" enctype="multipart/form-data" novalidate>
+<section style="padding-top:0">
+  <div class="wrap narrow">
+    <div class="wizard-head">
+      <ol class="steps-bar" id="steps-bar" aria-label="Declaration progress"></ol>
+    </div>
+
+    <p class="note prefill-note" id="prefill-note">We've pre-filled your material and safety answers from the soil checker. Check them as you go.</p>
+    <p class="note prefill-note" id="draft-note">We've restored your saved progress. <button type="button" class="link-btn" data-clear-draft>Start fresh</button></p>
+
+    <form class="form wiz" id="declaration-form" action="send-declaration.php" method="POST" enctype="multipart/form-data" novalidate>
       <p class="hp" aria-hidden="true"><label>Leave blank <input name="website" tabindex="-1" autocomplete="off"></label></p>
 
-      <fieldset class="form-section">
-        <legend><span>Section 01</span>Waste and company details</legend>
+      <fieldset class="form-section" data-title="Company &amp; job">
+        <legend><span>Step 1 of 6</span>Waste and company details</legend>
+        <p class="hint">Who is producing and transporting the material, and when.</p>
         <div class="grid-2">
-          <div class="field"><label for="d-company">Company <span class="req">*</span></label><input id="d-company" type="text" name="company" required></div>
+          <div class="field"><label for="d-company">Company <span class="req">*</span></label><input id="d-company" type="text" name="company" autocomplete="organization" required></div>
           <div class="field"><label for="d-producer">Waste producer <span class="req">*</span></label><input id="d-producer" type="text" name="waste_producer" required></div>
           <div class="field"><label for="d-transport">Waste transport company <span class="req">*</span></label><input id="d-transport" type="text" name="transport_company" required></div>
           <div class="field"><label for="d-contact">Contact name <span class="req">*</span></label><input id="d-contact" type="text" name="contact_name" autocomplete="name" required></div>
@@ -52,13 +71,14 @@
           <div class="field"><label for="d-phone">Contact phone <span class="req">*</span></label><input id="d-phone" type="tel" name="contact_phone" autocomplete="tel" required></div>
           <div class="field"><label for="d-start">Expected job start <span class="req">*</span></label><input id="d-start" type="date" name="job_start" required></div>
           <div class="field"><label for="d-end">Expected job end <span class="req">*</span></label><input id="d-end" type="date" name="job_end" required></div>
-          <div class="field full"><label for="d-source">Address of waste source <span class="req">*</span></label><input id="d-source" type="text" name="source_address" required></div>
         </div>
       </fieldset>
 
-      <fieldset class="form-section">
-        <legend><span>Section 02</span>Land use and site information</legend>
+      <fieldset class="form-section" data-title="Source site">
+        <legend><span>Step 2 of 6</span>Land use and site information</legend>
+        <p class="hint">Where the material is coming from and what the land has been used for.</p>
         <div class="grid-2">
+          <div class="field full"><label for="d-source">Address of waste source <span class="req">*</span></label><input id="d-source" type="text" name="source_address" autocomplete="street-address" required></div>
           <div class="field"><label for="d-landuse">Current land use <span class="req">*</span></label>
             <select id="d-landuse" name="current_land_use" required>
               <option value="">Select…</option><option>Residential</option><option>Commercial / industrial</option><option>Public space</option><option>Agricultural</option><option>Other</option>
@@ -72,16 +92,17 @@
         </div>
       </fieldset>
 
-      <fieldset class="form-section">
-        <legend><span>Section 03</span>Material details</legend>
-        <div class="field full material-group" style="margin-bottom:16px">
+      <fieldset class="form-section" data-title="Material">
+        <legend><span>Step 3 of 6</span>Material details</legend>
+        <p class="hint">What's in the load and roughly how much.</p>
+        <div class="field full material-group" style="margin-bottom:20px">
           <span class="label">Material type (select all that apply) <span class="req">*</span></span>
           <div class="checks">
-            <label class="check"><input type="checkbox" name="material_type" value="Fill soil"> Fill soil</label>
-            <label class="check"><input type="checkbox" name="material_type" value="Clean fill with rock"> Clean fill with rock</label>
-            <label class="check"><input type="checkbox" name="material_type" value="Clean fill with vegetation"> Clean fill with vegetation</label>
-            <label class="check"><input type="checkbox" name="material_type" value="Mixed fill"> Mixed fill</label>
-            <label class="check"><input type="checkbox" name="material_type" value="Mudstone"> Mudstone</label>
+            <label class="opt"><input type="checkbox" name="material_type" value="Fill soil"><span class="tick"></span><span>Fill soil</span></label>
+            <label class="opt"><input type="checkbox" name="material_type" value="Clean fill with rock"><span class="tick"></span><span>Clean fill with rock</span></label>
+            <label class="opt"><input type="checkbox" name="material_type" value="Clean fill with vegetation"><span class="tick"></span><span>Clean fill with vegetation</span></label>
+            <label class="opt"><input type="checkbox" name="material_type" value="Mixed fill"><span class="tick"></span><span>Mixed fill</span></label>
+            <label class="opt"><input type="checkbox" name="material_type" value="Mudstone"><span class="tick"></span><span>Mudstone</span></label>
           </div>
         </div>
         <div class="grid-2">
@@ -93,21 +114,22 @@
         </div>
       </fieldset>
 
-      <fieldset class="form-section">
-        <legend><span>Section 04</span>Contamination assessment</legend>
+      <fieldset class="form-section" data-title="Contamination">
+        <legend><span>Step 4 of 6</span>Contamination assessment</legend>
         <p class="hint">Answer every question. A "yes" to a marked question means we can't accept the material.</p>
-        <div class="yn"><div class="q">Has a waste classification assessment been completed?</div><div class="opts"><label><input type="radio" name="classification_done" value="Yes" required> Yes</label><label><input type="radio" name="classification_done" value="No"> No</label></div></div>
-        <div class="yn"><div class="q">Have demolition works taken place on the source site?</div><div class="opts"><label><input type="radio" name="demolition_on_site" value="Yes" required> Yes</label><label><input type="radio" name="demolition_on_site" value="No"> No</label></div></div>
-        <div class="yn"><div class="q">Is the source site potentially contaminated?</div><div class="opts"><label><input type="radio" name="potentially_contaminated" value="Yes" required> Yes</label><label><input type="radio" name="potentially_contaminated" value="No"> No</label></div></div>
-        <div class="yn"><div class="q">Does the material contain reportable priority waste (categories A–D)?<small>Cannot be accepted</small></div><div class="opts"><label><input type="radio" name="contains_rpw" value="Yes" required> Yes</label><label><input type="radio" name="contains_rpw" value="No"> No</label></div></div>
-        <div class="yn"><div class="q">Does the material contain asbestos?<small>Cannot be accepted</small></div><div class="opts"><label><input type="radio" name="contains_asbestos" value="Yes" required> Yes</label><label><input type="radio" name="contains_asbestos" value="No"> No</label></div></div>
-        <div class="yn"><div class="q">Are there signs of contamination, such as staining or odour?</div><div class="opts"><label><input type="radio" name="signs_of_contamination" value="Yes" required> Yes</label><label><input type="radio" name="signs_of_contamination" value="No"> No</label></div></div>
-        <div class="yn"><div class="q">Is the material waste acid sulfate soil?<small>Cannot be accepted</small></div><div class="opts"><label><input type="radio" name="contains_wass" value="Yes" required> Yes</label><label><input type="radio" name="contains_wass" value="No"> No</label></div></div>
-        <div class="field" style="margin-top:20px"><label for="d-report">Waste classification report (optional, PDF or image, max 8 MB)</label><input id="d-report" type="file" name="classification_report" accept=".pdf,image/*"></div>
+        <div class="yn"><div class="q">Has a waste classification assessment been completed?</div><div class="seg"><label><input type="radio" name="classification_done" value="Yes" required><span>Yes</span></label><label><input type="radio" name="classification_done" value="No"><span>No</span></label></div></div>
+        <div class="yn"><div class="q">Have demolition works taken place on the source site?</div><div class="seg"><label><input type="radio" name="demolition_on_site" value="Yes" required><span>Yes</span></label><label><input type="radio" name="demolition_on_site" value="No"><span>No</span></label></div></div>
+        <div class="yn"><div class="q">Is the source site potentially contaminated?</div><div class="seg"><label><input type="radio" name="potentially_contaminated" value="Yes" required><span>Yes</span></label><label><input type="radio" name="potentially_contaminated" value="No"><span>No</span></label></div></div>
+        <div class="yn"><div class="q">Does the material contain reportable priority waste (categories A–D)?<br><small>Cannot be accepted</small></div><div class="seg"><label><input type="radio" name="contains_rpw" value="Yes" required><span>Yes</span></label><label><input type="radio" name="contains_rpw" value="No"><span>No</span></label></div></div>
+        <div class="yn"><div class="q">Does the material contain asbestos?<br><small>Cannot be accepted</small></div><div class="seg"><label><input type="radio" name="contains_asbestos" value="Yes" required><span>Yes</span></label><label><input type="radio" name="contains_asbestos" value="No"><span>No</span></label></div></div>
+        <div class="yn"><div class="q">Are there signs of contamination, such as staining or odour?</div><div class="seg"><label><input type="radio" name="signs_of_contamination" value="Yes" required><span>Yes</span></label><label><input type="radio" name="signs_of_contamination" value="No"><span>No</span></label></div></div>
+        <div class="yn"><div class="q">Is the material waste acid sulfate soil?<br><small>Cannot be accepted</small></div><div class="seg"><label><input type="radio" name="contains_wass" value="Yes" required><span>Yes</span></label><label><input type="radio" name="contains_wass" value="No"><span>No</span></label></div></div>
+        <div class="inline-alert" id="blocked-alert" role="alert"><b>We can't accept this material.</b>LG Recycling can't take material containing asbestos, reportable priority waste or waste acid sulfate soil. Please <a href="index.html#enquire">contact us</a> before going any further.</div>
+        <div class="field" style="margin-top:22px"><label for="d-report">Waste classification report (optional)</label><input id="d-report" type="file" name="classification_report" accept=".pdf,image/*"><p class="help">PDF or image, up to 8 MB.</p></div>
       </fieldset>
 
-      <fieldset class="form-section">
-        <legend><span>Section 05</span>Declaration</legend>
+      <fieldset class="form-section" data-title="Declare &amp; sign" data-sign>
+        <legend><span>Step 5 of 6</span>Declaration and signature</legend>
         <div class="declare">
           <p>By signing, I declare that:</p>
           <ol>
@@ -121,16 +143,12 @@
           </ol>
           <label class="confirm"><input type="checkbox" name="declaration_agreed" value="Yes" required> I have read and agree to the declaration above.</label>
         </div>
-      </fieldset>
-
-      <fieldset class="form-section">
-        <legend><span>Section 06</span>Signature</legend>
-        <div class="grid-3">
+        <div class="grid-3" style="margin-top:24px">
           <div class="field"><label for="d-signame">Full name <span class="req">*</span></label><input id="d-signame" type="text" name="signatory_name" autocomplete="name" required></div>
-          <div class="field"><label for="d-sigpos">Position / title <span class="req">*</span></label><input id="d-sigpos" type="text" name="signatory_position" required></div>
+          <div class="field"><label for="d-sigpos">Position / title <span class="req">*</span></label><input id="d-sigpos" type="text" name="signatory_position" autocomplete="organization-title" required></div>
           <div class="field"><label for="d-sigdate">Date <span class="req">*</span></label><input id="d-sigdate" type="date" name="signature_date" required></div>
         </div>
-        <div class="field" style="margin-top:18px">
+        <div class="field" style="margin-top:20px">
           <span class="label">Sign below <span class="req">*</span></span>
           <div class="sig-wrap"><canvas id="sig-canvas" aria-label="Signature pad"></canvas><span class="sig-hint">Sign here with your finger or mouse</span></div>
           <div class="sig-actions"><button type="button" class="link-btn" id="sig-clear">Clear signature</button></div>
@@ -138,28 +156,38 @@
         </div>
       </fieldset>
 
-      <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Submit declaration</button>
+      <fieldset class="form-section" data-title="Review" data-review>
+        <legend><span>Step 6 of 6</span>Check and submit</legend>
+        <p class="hint">Make sure everything is right. Tap Edit to change a section.</p>
+        <div class="review" id="review"></div>
+      </fieldset>
+
+      <div class="wiz-nav">
+        <button type="button" class="btn btn-ghost" data-wiz-back hidden>&larr; Back</button>
+        <span class="spacer"></span>
         <span class="form-status" role="status" aria-live="polite"></span>
+        <button type="button" class="btn btn-primary" data-wiz-next>Continue <span class="arrow" aria-hidden="true">&rarr;</span></button>
+        <button type="submit" class="btn btn-primary" data-wiz-submit hidden>Submit declaration</button>
       </div>
     </form>
 
-    <div class="form success" id="declaration-success" role="status" style="margin-top:24px">
-      <h3>Declaration received.</h3>
+    <div class="form success" id="declaration-success" role="status">
+      <div class="tickmark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#171E21" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div>
+      <h2 style="font-size:2rem">Declaration received.</h2>
       <p id="declaration-ref" class="form-status ok"></p>
-      <p>We'll review it and confirm whether the material can be accepted before any delivery. Please don't deliver until you have our approval.</p>
-      <p class="no-print"><button type="button" class="btn btn-ghost" id="print-copy">Print or save a copy</button></p>
+      <p>We'll review it and confirm whether the material can be accepted. <strong>Please don't deliver until you have our approval.</strong></p>
+      <p class="no-print actions"><button type="button" class="btn btn-ghost" id="print-copy">Print or save a copy</button><a class="btn btn-primary" href="site-safety.html">Read the site rules</a></p>
     </div>
   </div>
 </section>
 </main>
 <footer class="site-footer">
   <div class="wrap">
-    <div class="foot-grid">
-      <div>
-        <a class="brand" href="index.html"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></a>
-        <p style="margin-top:16px;max-width:380px">Recycling soil. Restoring land. Rebuilding a landscape. A soil-recycling and land-rehabilitation operation beside Langi Ghiran State Park, western Victoria.</p>
-        <p>Part of Recycle Group.</p>
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></span></a>
+        <p class="foot-tag">Recycling soil. Restoring land. Rebuilding a landscape.</p>
+        <p>A soil-recycling and land-rehabilitation operation beside Langi Ghiran State Park, western Victoria. Part of Recycle Group.</p>
       </div>
       <div>
         <h4>Visit</h4>
@@ -167,7 +195,7 @@
           <li><span class="tbc">Site address TBC</span></li>
           <li>Near Warrak &amp; Ararat, VIC</li>
           <li>Monday to Friday, 7am – 3pm</li>
-          <li><a href="site-safety.html">Site safety &amp; directions</a></li>
+          <li>UHF channel 61 on site</li>
         </ul>
       </div>
       <div>
@@ -176,14 +204,22 @@
           <li><span class="tbc">Phone TBC</span></li>
           <li><span class="tbc">Email TBC</span></li>
           <li><a href="index.html#enquire">Send an enquiry</a></li>
-          <li><a href="soil-declaration.html">Soil declaration form</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Deliver</h4>
+        <ul>
+          <li><a href="soil-disposal.html">What we accept</a></li>
+          <li><a href="soil-disposal.html#checker">Check your material</a></li>
+          <li><a href="soil-declaration.html">Soil declaration</a></li>
+          <li><a href="site-safety.html">Site safety &amp; directions</a></li>
         </ul>
       </div>
     </div>
     <p class="foot-ack">LG Recycling acknowledges the Traditional Owners of Lar-ne-jeering (Langi Ghiran) and the surrounding Country, and their enduring cultural and spiritual connection to this landscape. We pay our respects to Elders past and present.</p>
     <div class="foot-base">
       <span>&copy; <span id="year">2026</span> LG Recycling. EPA registration R000315306.</span>
-      <span>Unable to accept asbestos, reportable priority waste or waste acid sulfate soil.</span>
+      <span>We can't accept asbestos, reportable priority waste or waste acid sulfate soil.</span>
     </div>
   </div>
 </footer>
