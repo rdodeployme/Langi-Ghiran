@@ -107,6 +107,8 @@ section{padding:clamp(72px,10vw,140px) 0;position:relative}
 .brand small{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:3px}
 .nav{display:flex;align-items:center;gap:28px}
 .nav a{color:var(--ink);text-decoration:none;font-size:.94rem;font-weight:500;position:relative;padding:6px 0}
+@media (max-width:1300px){.nav{gap:20px}.nav a{font-size:.9rem}.nav .btn{padding:0 16px}}
+.nav a{white-space:nowrap}
 .nav a:not(.btn)::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--yellow);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
 .nav a:not(.btn):hover::after,.nav a[aria-current="page"]:not(.btn)::after{transform:scaleX(1)}
 .nav .btn{min-height:44px;padding:0 20px;font-size:.92rem}
@@ -129,7 +131,7 @@ section{padding:clamp(72px,10vw,140px) 0;position:relative}
 .has-hero .site-header:not(.scrolled):not(.menu-open) .nav .btn{background:var(--yellow);color:var(--ink)}
 .has-hero .site-header:not(.scrolled):not(.menu-open) .nav .btn:hover{background:#fff}
 
-@media (max-width:1020px){
+@media (max-width:1120px){
   .menu-toggle{display:block}
   .nav{position:absolute;top:100%;left:0;right:0;background:var(--paper);flex-direction:column;align-items:stretch;gap:0;padding:8px var(--gutter) 28px;border-bottom:1px solid var(--line);box-shadow:0 24px 40px -24px rgba(23,30,33,.35);display:none;max-height:calc(100svh - var(--header-h));overflow:auto}
   .menu-open .nav{display:flex}
