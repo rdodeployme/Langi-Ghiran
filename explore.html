@@ -668,8 +668,8 @@
     map.once('style.load', function () {
       addPlan();
       var s0 = STOPS[i]; showPlan(riding ? riding : s0.plan); if (!riding) showMarkers(s0.mk);
-      if (pendingRide && !map.isMoving()) { var pr = pendingRide; pendingRide = null; ride(pr); }
     });
+    map.on('sourcedata', function (e) { if (e.sourceId === 'dem' && e.isSourceLoaded) syncElevation(); });
     var unveil = function () { tour.classList.add('loaded'); };
     map.once('load', unveil); map.once('idle', unveil); setTimeout(unveil, 3500);
   }
@@ -772,9 +772,9 @@
     if (v > 0) map.setLayoutProperty('drape', 'visibility', 'visible');
     var from = drapeV, t0 = performance.now(), d = (instant || reduce) ? 0 : 650;
     (function step(now) {
-      var u = d ? Math.min(1, (now - t0) / d) : 1, e = u * u * (3 - 2 * u);
+      var u = d ? Math.max(0, Math.min(1, (now - t0) / d)) : 1, e = u * u * (3 - 2 * u);
       drapeV = from + (v - from) * e;
-      map.setPaintProperty('drape', 'raster-opacity', drapeV);
+      map.setPaintProperty('drape', 'raster-opacity', Math.max(0, Math.min(1, drapeV)));
       if (u < 1) { drapeRaf = requestAnimationFrame(step); return; }
       if (v === 0) map.setLayoutProperty('drape', 'visibility', 'none');
     })(t0);
@@ -813,7 +813,7 @@
       (function step(now) {
         if (my !== seq) return;
         if (start === null) start = now;
-        var u = Math.min(1, (now - start) / dur), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+        var u = Math.max(0, Math.min(1, (now - start) / dur)), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
         var s = (k === 'lift' ? u : e) * path.len, pos = along(path, s), look = along(path, Math.min(path.len, s + 18));
         var target = brg(along(path, Math.max(0, s - 10)), along(path, Math.min(path.len, s + 60)));
         if (s > path.len - 8) target = b0 == null ? target : b0;
@@ -830,15 +830,19 @@
       });
     });
   }
-  function camGlide(to, dur, my, done) {
+  var camRaf = null;
+  function camGlide(to, dur, my, done, arc) {
+    cancelAnimationFrame(camRaf);
     var c0 = map.getCenter(), z0 = map.getZoom(), p0 = map.getPitch(), b0 = map.getBearing(), pd0 = map.getPadding(), t0 = performance.now();
-    var db = ((((to.bearing - b0) % 360) + 540) % 360) - 180, pd1 = to.padding;
+    var db = ((((to.bearing - b0) % 360) + 540) % 360) - 180, pd1 = to.padding || pd0;
     (function step(now) {
-      if (my !== seq) return;
-      var u = dur ? Math.min(1, (now - t0) / dur) : 1, e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
-      map.jumpTo({ center: [c0.lng + (to.center[0] - c0.lng) * e, c0.lat + (to.center[1] - c0.lat) * e], zoom: z0 + (to.zoom - z0) * e, pitch: p0 + (to.pitch - p0) * e, bearing: b0 + db * e,
-        padding: { top: pd0.top + (pd1.top - pd0.top) * e, bottom: pd0.bottom + (pd1.bottom - pd0.bottom) * e, left: pd0.left + (pd1.left - pd0.left) * e, right: pd0.right + (pd1.right - pd0.right) * e } });
-      if (u < 1) rideRaf = requestAnimationFrame(step); else done();
+      if (my !== seq) { camRaf = null; return; }
+      var u = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      var z = z0 + (to.zoom - z0) * e - (arc || 0) * Math.sin(Math.PI * u);
+      map.jumpTo({ center: [c0.lng + (to.center[0] - c0.lng) * e, c0.lat + (to.center[1] - c0.lat) * e], zoom: z, pitch: p0 + (to.pitch - p0) * e, bearing: b0 + db * e,
+        padding: { top: Math.max(0, pd0.top + (pd1.top - pd0.top) * e), bottom: Math.max(0, pd0.bottom + (pd1.bottom - pd0.bottom) * e), left: Math.max(0, pd0.left + (pd1.left - pd0.left) * e), right: Math.max(0, pd0.right + (pd1.right - pd0.right) * e) } });
+      if (u < 1) { camRaf = requestAnimationFrame(step); return; }
+      camRaf = null; done();
     })(t0);
   }
   function whenTilesReady(my, max, done) {
@@ -855,7 +859,7 @@
     else go(i);
   }
   function stopRide(silent) {
-    if (rideRaf) cancelAnimationFrame(rideRaf); rideRaf = null; riding = null;
+    if (rideRaf) cancelAnimationFrame(rideRaf); rideRaf = null; cancelAnimationFrame(camRaf); camRaf = null; riding = null;
     tour.classList.remove('riding');
     if (ready) map.getSource('me').setData(fc([]));
     showMarkers(STOPS[i] && STOPS[i].mk);
@@ -870,14 +874,15 @@
     clearTimeout(timer); clearTimeout(timer2);
     var s = STOPS[i], my = ++seq;
     if (!introOn && mode === 'fly') try { history.replaceState(null, '', '#' + SLUG[i]); } catch (e) {}
-    map.stop();
+    map.stop(); cancelAnimationFrame(orbitRaf); orbitRaf = null; cancelAnimationFrame(camRaf); camRaf = null;
     var cam = camFor(s.cam);
     showMarkers(s.mk);
-    map.once('moveend', function () {
-      if (my !== seq) return;
+    var dist = map.getCenter().distanceTo(new maplibregl.LngLat(cam.center[0], cam.center[1])), far = dist > 3000;
+    // all camera moves are stepped with jumpTo, which re-reads the ground height every frame
+    camGlide(cam, reduce ? 0 : (far ? 6500 : 3800), my, function () {
       if (pendingRide && ready && s.ride === pendingRide) { var pr = pendingRide; pendingRide = null; timer = setTimeout(function () { if (my === seq) ride(pr); }, 700); return; }
       if (s.plan === 'future') timer2 = setTimeout(function () { if (my === seq) setDrape(1); }, reduce ? 0 : 900);
-      if (s.orbit && !reduce) map.easeTo({ bearing: s.cam.bearing + (s.orbit === true ? 70 : s.orbit), duration: 14000, easing: function (t) { return t; } });
+      if (s.orbit && !reduce) orbit(s.orbit === true ? 70 : s.orbit, 14000, my);
       if (playing) {
         timer = setTimeout(function () {
           if (!playing) return;
@@ -885,10 +890,23 @@
           next();
         }, s.orbit ? 14500 : (s.ride ? 2500 : 5500));
       }
-    });
-    var far = map.getCenter().distanceTo(new maplibregl.LngLat(cam.center[0], cam.center[1])) > 3000;
-    map.flyTo(Object.assign({ duration: reduce ? 0 : (far ? 6500 : 3800), curve: far ? 1.2 : 1 }, cam));
+    }, far ? Math.max(0, Math.min(2.6, Math.log(dist / 900) / Math.LN2) - Math.max(0, cam.zoom - map.getZoom()) * 0.6) : 0);
   }
+  // slow turn around the stop, stepped with jumpTo (easeTo with terrain and padding can sink below the ground)
+  var orbitRaf = null;
+  function orbit(deg, dur, my) {
+    var b0 = map.getBearing(), t0 = performance.now();
+    cancelAnimationFrame(orbitRaf);
+    (function step(now) {
+      if (my !== seq || riding) { orbitRaf = null; return; }
+      var u = Math.max(0, Math.min(1, (now - t0) / dur));
+      map.jumpTo({ bearing: b0 + deg * u });
+      orbitRaf = u < 1 ? requestAnimationFrame(step) : null;
+    })(t0);
+  }
+  // the camera's height is taken from the terrain under it; if the terrain wasn't loaded when a move began,
+  // the camera can end up inside the hill. A no-op jumpTo makes MapLibre re-read the ground height.
+  function syncElevation() { if (!map || camRaf || rideRaf || orbitRaf) return; map._elevationFreeze = false; map.jumpTo({ center: map.getCenter() }); }
   function next() { if (i === STOPS.length - 1) { stopPlay(); return; } go(i + 1); }
 
   function startPlay() { playing = true; $('tour-play').textContent = 'Pause'; go(i === STOPS.length - 1 ? 0 : i); }
@@ -950,7 +968,7 @@
     var hop = d && from.s > to.s * 0.7 && n >= 0 && Math.hypot(from.fx - to.fx, from.fy - to.fy) > 0.08;
     cancelAnimationFrame(mpRaf);
     (function step(now) {
-      var u = d ? Math.min(1, (now - t0) / d) : 1, e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      var u = d ? Math.max(0, Math.min(1, (now - t0) / d)) : 1, e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
       ['fx', 'fy', 's', 't'].forEach(function (k) { cam[k] = from[k] + (to[k] - from[k]) * e; });
       if (hop) cam.s *= 1 - 0.42 * Math.sin(Math.PI * u);   // pull back a little between two close-ups
       mpApply();
@@ -1031,7 +1049,7 @@
   var amb = $('amb'), soundOn = false, ambRaf = null;
   function fadeAmb(to, done) {
     cancelAnimationFrame(ambRaf); var from = amb.volume, t0 = performance.now();
-    (function step(now) { var u = Math.min(1, (now - t0) / 900); amb.volume = from + (to - from) * u; if (u < 1) ambRaf = requestAnimationFrame(step); else if (done) done(); })(t0);
+    (function step(now) { var u = Math.max(0, Math.min(1, (now - t0) / 900)); amb.volume = Math.max(0, Math.min(1, from + (to - from) * u)); if (u < 1) ambRaf = requestAnimationFrame(step); else if (done) done(); })(t0);
   }
   function setSound(on) {
     soundOn = on; $('mp-snd').setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -1104,7 +1122,16 @@
     mode = m; tour.setAttribute('data-mode', m);
     document.querySelectorAll('[data-mode-btn]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.modeBtn === m ? 'true' : 'false'); });
     mpCardEl.querySelectorAll('video').forEach(function (v) { if (m === 'fly') v.pause(); else { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); } });
-    if (m === 'fly') { if (soundOn) fadeAmb(0, function () { amb.pause(); }); if (!map) initMap(); if (map) go(i); }
+    if (m === 'fly') {
+      if (soundOn) fadeAmb(0, function () { amb.pause(); });
+      if (!map) {
+        initMap(); if (!map) return;
+        render(); showMarkers([]);
+        // first flight waits for the terrain under the starting view, so the camera knows how high the ground is
+        var went = false, goNow = function () { if (went || mode !== 'fly') return; went = true; go(i); };
+        map.once('idle', goNow); setTimeout(goNow, 3000);
+      } else go(i);
+    }
     else if (soundOn) { var pa = amb.play(); if (pa && pa.catch) pa.catch(function () {}); fadeAmb(duskOn ? 0.32 : 0.6); }
     else { stopAll(); if (map) map.stop(); mpGo(mpSel, 0); }
   }
@@ -1126,7 +1153,7 @@
     setTimeout(function () { if (introVid) { introVid.pause(); introVid.removeAttribute('src'); introVid.load(); } }, 1500);
   }
   $('ti-go').addEventListener('click', function () { closeIntro(); cam = { fx: 0.535, fy: 0.5, s: mpTarget(-1).s * 0.75, t: 58 }; mpApply(); mpGo(-1, 2200); });
-  $('ti-fly').addEventListener('click', function () { closeIntro(); i = 0; setMode('fly'); startPlay(); });
+  $('ti-fly').addEventListener('click', function () { closeIntro(); i = 0; playing = true; $('tour-play').textContent = 'Pause'; setMode('fly'); });
   document.addEventListener('keydown', function (e) {
     if (e.altKey || e.ctrlKey || e.metaKey || /input|textarea|select/i.test(e.target.tagName)) return;
     var r = tour.getBoundingClientRect(); if (r.bottom < 80 || r.top > innerHeight - 80) return;
