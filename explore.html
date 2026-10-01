@@ -25,17 +25,21 @@
 <style>
 .tour{position:relative;height:calc(100svh - var(--header-h));min-height:560px;background:var(--ink-3);overflow:hidden;--g-beg:#8E9B6B;--g-int:#FCC830;--g-exp:#171E21}
 #tour-map{position:absolute;inset:0}
-.tour-panel{position:absolute;left:24px;bottom:24px;z-index:5;width:min(430px,calc(100% - 48px));max-height:calc(100% - 48px);overflow:auto;background:rgba(15,20,22,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;border-radius:18px;padding:22px 22px 18px;box-shadow:0 18px 50px rgba(0,0,0,.35);transition:transform .35s var(--ease),opacity .35s var(--ease)}
+.tour-loading{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 40%,#2E383C,#0F1416);color:rgba(255,255,255,.8);font-size:.9rem;letter-spacing:.04em;transition:opacity .8s ease;pointer-events:none}
+.tour-loading span{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.18);border-top-color:var(--yellow);animation:tourspin 1s linear infinite}
+@keyframes tourspin{to{transform:rotate(360deg)}}
+.tour.loaded .tour-loading{opacity:0}
+.tour-panel{position:absolute;left:24px;bottom:24px;z-index:5;width:min(380px,calc(100% - 48px));max-height:calc(100% - 48px);overflow:auto;background:rgba(15,20,22,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;border-radius:18px;padding:22px 22px 18px;box-shadow:0 18px 50px rgba(0,0,0,.35);transition:transform .35s var(--ease),opacity .35s var(--ease)}
 .tour-panel.hide{transform:translateY(calc(100% + 40px));opacity:0;pointer-events:none}
 .tour-panel .count{display:flex;align-items:center;gap:10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin:0 0 10px}
 .tour-panel .dots{display:flex;gap:5px;flex-wrap:wrap}
 .tour-panel .dots button{width:18px;height:4px;border-radius:2px;border:0;padding:0;background:rgba(255,255,255,.25);cursor:pointer}
 .tour-panel .dots button[aria-current="true"]{background:var(--yellow)}
-.tour-panel h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:clamp(1.35rem,2.4vw,1.75rem);line-height:1.15;margin:0 0 8px;color:#fff;display:flex;align-items:center;gap:10px}
-.tour-panel p{margin:0 0 12px;font-size:.95rem;line-height:1.55;color:rgba(255,255,255,.86)}
+.tour-panel h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:clamp(1.25rem,2vw,1.55rem);line-height:1.15;margin:0 0 8px;color:#fff;display:flex;align-items:center;gap:10px}
+.tour-panel p{margin:0 0 12px;font-size:.92rem;line-height:1.55;color:rgba(255,255,255,.86)}
 .tour-panel .tbc{color:var(--yellow);background:transparent;border-color:rgba(252,200,48,.55)}
 .tour-panel figure{margin:0 0 12px}
-.tour-panel figure img{display:block;width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:10px}
+.tour-panel figure img{display:block;width:100%;aspect-ratio:16/7;object-fit:cover;border-radius:10px}
 .tour-panel figcaption{font-size:.75rem;color:rgba(255,255,255,.6);margin-top:6px}
 .tour-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
 .tour-ctrl button,.t-btn{font:600 .88rem/1 "Public Sans",system-ui,sans-serif;border-radius:999px;padding:11px 16px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer}
@@ -47,7 +51,7 @@
 .tour-show{position:absolute;left:24px;bottom:24px;z-index:5;font:600 .9rem/1 "Public Sans",system-ui,sans-serif;border-radius:999px;padding:13px 18px;border:0;background:var(--yellow);color:var(--ink);cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 .tour-hint{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:4;background:rgba(15,20,22,.75);color:#fff;font-size:.82rem;padding:8px 14px;border-radius:999px;white-space:nowrap;pointer-events:none;transition:opacity .6s}
 .tour-hint.gone{opacity:0}
-.tour-marker{display:flex;align-items:center;gap:7px;background:rgba(15,20,22,.88);color:#fff;font:600 .78rem/1.1 "Public Sans",system-ui,sans-serif;padding:7px 11px 7px 8px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);cursor:pointer}
+.tour-marker{display:flex;align-items:center;gap:7px;background:rgba(15,20,22,.82);color:#fff;font:600 .74rem/1.1 "Public Sans",system-ui,sans-serif;padding:6px 10px 6px 7px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);cursor:pointer}
 .tour-marker i{width:10px;height:10px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 3px rgba(252,200,48,.3);flex:none}
 .tour-marker small{display:block;font-weight:500;color:rgba(255,255,255,.65);font-size:.7rem}
 .tour-marker.site i{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.3)}
@@ -96,7 +100,7 @@
 .tour-about li{margin-bottom:8px}
 @media (max-width:760px){
   .tour{height:calc(100svh - var(--header-h) - 64px);min-height:520px}
-  .tour-panel{left:12px;right:12px;bottom:12px;width:auto;padding:14px 16px 12px;border-radius:14px;max-height:56%}
+  .tour-panel{left:12px;right:12px;bottom:12px;width:auto;padding:14px 16px 12px;border-radius:14px;max-height:48%}
   .tour-panel h1{font-size:1.2rem}
   .tour-panel p{font-size:.88rem;margin-bottom:8px}
   .tour-panel figure img{aspect-ratio:16/5}
@@ -126,6 +130,7 @@
 <main id="main">
 <section class="tour" id="tour" aria-label="3D tour of Langi Ghiran and the planned bike park">
   <div id="tour-map" role="application" aria-label="3D map of Langi Ghiran"></div>
+  <div class="tour-loading" aria-hidden="true"><span></span>Loading the 3D landscape…</div>
   <p class="tour-hint" id="tour-hint">Drag to move · right-click drag or two fingers to tilt and turn</p>
 
   <div class="tour-panel" id="tour-panel" aria-live="polite">
@@ -316,65 +321,70 @@
   var STOPS = [
     { title: 'Langi Ghiran from the plains',
       body: '<p>Langi Ghiran rises from the plains between Ararat and Beaufort. This is the real landform, built from elevation data with satellite imagery draped over it.</p><p>Press <b>Play tour</b> for the full fly-through, including virtual rides down each run and up the lift.</p>',
-      cam: { center: [143.098, -37.288], zoom: 12.5, pitch: 62, bearing: 140 } },
+      cam: { center: [143.098, -37.288], zoom: 12.4, pitch: 55, bearing: 140 }, mk: ['ararat', 'ghiran', 'site'] },
     { title: 'Lar-ne-jeering',
       body: '<p>In the language of the Djab Wurrung people, the mountain is Lar-ne-jeering: "Home of the Yellow-tailed Black Cockatoos". Granite outcrops and eucalypt woodland cover its slopes.</p>',
-      cam: { center: [143.1103, -37.2993], zoom: 13.9, pitch: 66, bearing: 230 }, orbit: true },
+      cam: { center: [143.1103, -37.2993], zoom: 13.7, pitch: 58, bearing: 230 }, orbit: true, mk: ['ghiran', 'picnic'] },
     { title: 'The picnic ground and Reservoir Track',
       body: '<p>The park’s visitor area sits on its western side. From the picnic ground, the Reservoir Track leads to the reservoir built from local granite in 1880 to supply water to Ararat.</p>',
-      cam: { center: [143.094, -37.293], zoom: 14.3, pitch: 64, bearing: 105 } },
+      cam: { center: [143.094, -37.293], zoom: 14.4, pitch: 55, bearing: 105 }, mk: ['picnic', 'ghiran', 'site'] },
     { title: 'The former quarry',
       body: '<p>This is the area being rehabilitated: a former sand quarry at the foot of the range, off Warrak Road. The pale ground in the middle is the old quarry floor, and the slope rises to the south towards the park.</p><p class="tour-key"><span><i></i>Rehabilitation area (approximate)</span></p>',
-      cam: { center: [143.0906, -37.2752], zoom: 15.4, pitch: 58, bearing: 165 } },
+      cam: { fit: 'site', pitch: 50, bearing: 165 }, mk: ['site'] },
     { title: 'The bike park', plan: 'all',
       body: '<p>Three downhill runs leave a shared top station and finish together at the base, with a kids’ jump park below them, a pulley lift to pull riders back up, and 16 glamping sites off to the side. Pick a run to see it up close.</p>',
       extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
-      cam: { center: [143.0910, -37.2768], zoom: 15.75, pitch: 55, bearing: 345 } },
+      cam: { fit: 'park', pitch: 48, bearing: 345 }, mk: ['beginner', 'intermediate', 'expert', 'kids', 'glamp', 'top', 'base'] },
     { title: 'The pulley lift', plan: 'lift', ride: 'lift', g: 'g-lift',
       body: '<p>Riders roll on at the base, grab the line and get pulled straight up the slope to the top station, bike and all. No pushing, so more time riding.</p>',
       extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-ride="lift">Ride the lift up</button></div>' + fig('assets/lg-lift-concept.webp', 'Concept image of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
-      cam: { center: [143.0908, -37.2758], zoom: 16.1, pitch: 70, bearing: 152 } },
+      cam: { fit: 'lift', pitch: 52, bearing: 152 }, mk: ['top', 'base'] },
     { title: 'Beginner run', plan: 'beginner', ride: 'beginner', g: 'g-beg',
       body: '<p>' + RUN_TXT.beginner + '</p>',
       extra: function () { return statsHTML('beginner') + '<div class="t-actions"><button type="button" class="t-btn go" data-ride="beginner">Ride this run</button></div>' + fig(RUN_IMG.beginner[0], RUN_IMG.beginner[1]); },
-      cam: { center: [143.0896, -37.2770], zoom: 16.1, pitch: 58, bearing: 345 } },
+      cam: { fit: 'beginner', pitch: 50, bearing: 345 }, mk: ['beginner', 'top', 'base'] },
     { title: 'Intermediate run', plan: 'intermediate', ride: 'intermediate', g: 'g-int',
       body: '<p>' + RUN_TXT.intermediate + '</p>',
       extra: function () { return statsHTML('intermediate') + '<div class="t-actions"><button type="button" class="t-btn go" data-ride="intermediate">Ride this run</button></div>' + fig(RUN_IMG.intermediate[0], RUN_IMG.intermediate[1]); },
-      cam: { center: [143.0908, -37.2769], zoom: 16.3, pitch: 58, bearing: 345 } },
+      cam: { fit: 'intermediate', pitch: 50, bearing: 345 }, mk: ['intermediate', 'top', 'base'] },
     { title: 'Expert run', plan: 'expert', ride: 'expert', g: 'g-exp',
       body: '<p>' + RUN_TXT.expert + '</p>',
       extra: function () { return statsHTML('expert') + '<div class="t-actions"><button type="button" class="t-btn go" data-ride="expert">Ride this run</button></div>' + fig(RUN_IMG.expert[0], RUN_IMG.expert[1]); },
-      cam: { center: [143.0925, -37.2768], zoom: 16.3, pitch: 58, bearing: 330 } },
+      cam: { fit: 'expert', pitch: 50, bearing: 330 }, mk: ['expert', 'top', 'base'] },
     { title: 'Kids’ jump park', plan: 'kids', g: 'g-kids',
       body: '<p>Below the three runs, next to the base, a kids’ area: a small pump track with rollers and berms, and a short line of little dirt jumps, so younger riders have their own space while the family rides.</p>',
       extra: function () { return fig('assets/lg-kids-park.webp', 'Concept image of young children riding a small dirt pump track and jumps'); },
-      cam: { center: [143.0909, -37.2743], zoom: 18.2, pitch: 58, bearing: 200 } },
+      cam: { fit: 'kids', pitch: 50, bearing: 200, maxZoom: 17.4 }, mk: ['kids', 'base'] },
     { title: 'Glamping', plan: 'glamp', g: 'g-glamp',
       body: '<p>Off to the side of the bike park, on the open rise looking back at the range, sit 16 glamping sites: canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift base.</p>',
       extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>2</b><span>Rows</span></div><div><b>~400 m</b><span>To lift base</span></div></div>' + fig('assets/lg-glamping.webp', 'Concept image of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
-      cam: { center: [143.0941, -37.2743], zoom: 17.3, pitch: 62, bearing: 205 } },
+      cam: { fit: 'glamp', pitch: 52, bearing: 205 }, mk: ['glamp', 'base'] },
     { title: 'What it could look like', plan: 'all',
       body: '<p>Revegetated ground, three runs down the slope, a kids’ park at the bottom, a lift back to the top and a glamping camp beside it, on land that was once a sand quarry.</p>',
       extra: function () { return fig('assets/lg-park-concept.webp', 'Concept aerial image of the former quarry with three downhill runs, a pulley lift, a kids’ pump track and a glamping camp', 'Illustrative concept based on the real site. Not a final design.'); },
-      cam: { center: [143.0906, -37.2762], zoom: 15.6, pitch: 0, bearing: 0 } }
+      cam: { fit: 'park', pitch: 0, bearing: 0 }, mk: [] }
   ];
   var IDX = {}; STOPS.forEach(function (s, n) { if (s.ride) IDX[s.ride] = n; });
 
   var MARKERS = [
-    { ll: [143.1103, -37.2993], name: 'Langi Ghiran', sub: 'Lar-ne-jeering', stop: 1 },
-    { ll: [143.0920, -37.2902], name: 'Picnic ground', sub: 'Reservoir Track', stop: 2 },
-    { ll: [143.0906, -37.2736], name: 'LG Recycling', sub: 'Rehabilitation area', stop: 3, cls: 'site' },
-    { ll: [142.9280, -37.2830], name: 'Ararat', sub: 'about 14 km west' },
-    { ll: P.T, name: 'Top station', cls: 'plan', icon: 'g-lift', stop: IDX.lift },
-    { ll: P.B, name: 'Lift base', cls: 'plan', icon: 'g-lift', stop: IDX.lift },
-    { ll: along(PATH.beginner, PATH.beginner.len * 0.42), name: 'Beginner', cls: 'plan', icon: 'g-beg', stop: IDX.beginner },
-    { ll: along(PATH.intermediate, PATH.intermediate.len * 0.5), name: 'Intermediate', cls: 'plan', icon: 'g-int', stop: IDX.intermediate },
-    { ll: along(PATH.expert, PATH.expert.len * 0.45), name: 'Expert', cls: 'plan', icon: 'g-exp', stop: IDX.expert },
-    { ll: P.kids.centre, name: 'Kids’ park', cls: 'plan', icon: 'g-kids', stop: 9 },
-    { ll: offs(P.glamp.centre, 0, 34), name: 'Glamping', sub: '16 sites', cls: 'plan', icon: 'g-glamp', stop: 10 }
+    { k: 'ghiran', ll: [143.1103, -37.2993], name: 'Langi Ghiran', sub: 'Lar-ne-jeering', stop: 1 },
+    { k: 'picnic', ll: [143.0920, -37.2902], name: 'Picnic ground', sub: 'Reservoir Track', stop: 2 },
+    { k: 'site', ll: [143.0906, -37.2736], name: 'LG Recycling', sub: 'Rehabilitation area', stop: 3, cls: 'site' },
+    { k: 'ararat', ll: [142.9280, -37.2830], name: 'Ararat', sub: 'about 14 km west' },
+    { k: 'top', ll: P.T, name: 'Top station', icon: 'g-lift', stop: IDX.lift },
+    { k: 'base', ll: P.B, name: 'Lift base', icon: 'g-lift', stop: IDX.lift },
+    { k: 'beginner', ll: along(PATH.beginner, PATH.beginner.len * 0.42), name: 'Beginner', icon: 'g-beg', stop: IDX.beginner },
+    { k: 'intermediate', ll: along(PATH.intermediate, PATH.intermediate.len * 0.5), name: 'Intermediate', icon: 'g-int', stop: IDX.intermediate },
+    { k: 'expert', ll: along(PATH.expert, PATH.expert.len * 0.45), name: 'Expert', icon: 'g-exp', stop: IDX.expert },
+    { k: 'kids', ll: P.kids.centre, name: 'Kids’ park', icon: 'g-kids', stop: 9 },
+    { k: 'glamp', ll: offs(P.glamp.centre, 0, 34), name: 'Glamping', sub: '16 sites', icon: 'g-glamp', stop: 10 }
   ];
 
+  var FIT = {
+    site: P.ring, lift: [P.B, P.T], kids: P.kids.zone, glamp: P.glamp.tents.concat([P.glamp.amen]),
+    beginner: PATH.beginner.c, intermediate: PATH.intermediate.c, expert: PATH.expert.c,
+    park: PATH.beginner.c.concat(PATH.intermediate.c, PATH.expert.c, P.kids.zone, P.glamp.tents)
+  };
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
   var map, i = 0, playing = false, timer = null, seq = 0, ready = false, focus = null;
@@ -387,7 +397,7 @@
       container: 'tour-map',
       attributionControl: { compact: true },
       cooperativeGestures: coarse,
-      maxPitch: 82,
+      maxPitch: 70, maxZoom: 18,
       center: [143.060, -37.31], zoom: 10.6, pitch: 45, bearing: 60,
       style: {
         version: 8,
@@ -404,9 +414,9 @@
         layers: [
           { id: 'bg', type: 'background', paint: { 'background-color': '#2E383C' } },
           { id: 'sat', type: 'raster', source: 'sat', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.06 } },
-          { id: 'shade', type: 'hillshade', source: 'shade', paint: { 'hillshade-exaggeration': 0.22, 'hillshade-shadow-color': '#0F1416', 'hillshade-highlight-color': '#F7F6F2' } }
+          { id: 'shade', type: 'hillshade', source: 'shade', paint: { 'hillshade-exaggeration': ['interpolate', ['linear'], ['zoom'], 11, 0.25, 14.5, 0], 'hillshade-shadow-color': '#0F1416', 'hillshade-highlight-color': '#F7F6F2' } }
         ],
-        terrain: { source: 'dem', exaggeration: 1.5 },
+        terrain: { source: 'dem', exaggeration: 1.25 },
         sky: { 'sky-color': '#8DB4CF', 'horizon-color': '#E4E8E6', 'fog-color': '#DCE2E0', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.7, 'fog-ground-blend': 0.75 }
       }
     });
@@ -417,17 +427,21 @@
   map.addControl(new maplibregl.FullscreenControl({ container: tour }), 'top-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
 
+  var MK = {}, MOBJ = [];
   MARKERS.forEach(function (m) {
     var el = document.createElement('div');
-    el.className = 'tour-marker' + (m.cls ? ' ' + m.cls : '');
+    el.className = 'tour-marker' + (m.cls ? ' ' + m.cls : ''); el.dataset.k = m.k; el.style.display = 'none'; MK[m.k] = el;
     el.innerHTML = (m.icon ? '<span class="g ' + m.icon + '"></span>' : '<i></i>') + '<span>' + m.name + (m.sub ? '<small>' + m.sub + '</small>' : '') + '</span>';
     if (m.stop != null) {
       el.setAttribute('role', 'button'); el.tabIndex = 0;
       el.addEventListener('click', function (ev) { ev.stopPropagation(); stopAll(); go(m.stop); });
       el.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { stopAll(); go(m.stop); } });
     }
-    new maplibregl.Marker({ element: el, anchor: 'left', offset: [-5, 0] }).setLngLat(m.ll).addTo(map);
+    MOBJ.push(new maplibregl.Marker({ element: el, anchor: 'left', offset: [-5, 0], opacityWhenCovered: '0' }).setLngLat(m.ll).addTo(map));
   });
+  // keep labels pinned once terrain tiles finish loading under them
+  map.on('idle', function () { MOBJ.forEach(function (mk) { mk.setLngLat(mk.getLngLat()); }); });
+  function showMarkers(list) { Object.keys(MK).forEach(function (k) { MK[k].style.display = list && list.indexOf(k) > -1 ? 'flex' : 'none'; }); }
 
   var dots = $('tour-dots');
   STOPS.forEach(function (s, n) {
@@ -450,12 +464,25 @@
     if (t.dataset.ride) { stopPlay(); ride(t.dataset.ride); }
   });
 
-  function pad() {
-    var el = $('tour-panel');
-    if (el.classList.contains('hide')) return { top: 0, bottom: 0, left: 0, right: 0 };
-    return window.innerWidth <= 760
-      ? { top: 0, bottom: Math.round(el.offsetHeight * 0.8), left: 0, right: 0 }
-      : { top: 0, bottom: 0, left: el.offsetWidth + 24, right: 0 };
+  var ZERO = { top: 0, bottom: 0, left: 0, right: 0 };
+  function view() {
+    var el = $('tour-panel'), c = map.getContainer(), hidden = el.classList.contains('hide'), mob = window.innerWidth <= 760;
+    return { W: c.clientWidth, H: c.clientHeight, L: (!hidden && !mob) ? el.offsetWidth + 24 : 0, B: (!hidden && mob) ? el.offsetHeight + 12 : 0 };
+  }
+  function camFor(c) {
+    var v = view(), o = { pitch: c.pitch, bearing: c.bearing, padding: { top: 0, bottom: v.B, left: v.L, right: 0 } };
+    if (c.fit) {
+      var pts = FIT[c.fit], bb = new maplibregl.LngLatBounds(pts[0], pts[0]);
+      pts.forEach(function (q) { bb.extend(q); });
+      var cf = map.cameraForBounds(bb, { padding: 24, bearing: c.bearing }) || { zoom: 15 };
+      var aw = Math.max(240, v.W - v.L - 40), ah = Math.max(200, v.H - v.B - 40);
+      var z = cf.zoom + Math.log(Math.min(aw / v.W, ah / v.H)) / Math.LN2 - (c.pitch ? 0.12 : 0);
+      var ctr = bb.getCenter();
+      o.center = [ctr.lng, ctr.lat]; o.zoom = Math.min(z, c.maxZoom || 17.2);
+    } else {
+      o.center = c.center; o.zoom = c.zoom - (window.innerWidth <= 760 ? 0.8 : 0);
+    }
+    return o;
   }
 
   /* ---------- map layers ---------- */
@@ -464,7 +491,11 @@
     map.addSource('runs', { type: 'geojson', data: runsFC });
     map.addSource('lift', { type: 'geojson', data: liftFC });
     map.addSource('kids', { type: 'geojson', data: kidsFC });
-    map.addSource('movers', { type: 'geojson', data: fc([]) });
+    var liftPts = [];
+    for (var q = 1; q <= 5; q++) liftPts.push(feat({ kind: 'tower' }, 'Point', [P.B[0] + (P.T[0] - P.B[0]) * q / 6, P.B[1] + (P.T[1] - P.B[1]) * q / 6]));
+    liftPts.push(feat({ kind: 'station' }, 'Point', P.B), feat({ kind: 'station' }, 'Point', P.T));
+    map.addSource('liftpts', { type: 'geojson', data: fc(liftPts) });
+    map.addSource('glamppts', { type: 'geojson', data: fc(P.glamp.tents.map(function (c) { return feat({ kind: 'tent' }, 'Point', c); }).concat([feat({ kind: 'amen' }, 'Point', P.glamp.amen)])) });
     map.addSource('me', { type: 'geojson', data: fc([]) });
     map.addLayer({ id: 'site-fill', type: 'fill', source: 'site', paint: { 'fill-color': '#FFFFFF', 'fill-opacity': 0.06 } });
     map.addLayer({ id: 'site-line', type: 'line', source: 'site', paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 12, 1, 16, 2.5], 'line-dasharray': [2, 1.5], 'line-opacity': 0.85 } });
@@ -472,21 +503,22 @@
     map.addLayer({ id: 'kids-outline', type: 'line', source: 'kids', filter: ['==', ['get', 'kind'], 'zone'], layout: { visibility: 'none' }, paint: { 'line-color': '#FCC830', 'line-width': 1.5, 'line-dasharray': [2, 1] } });
     map.addLayer({ id: 'kids-case', type: 'line', source: 'kids', filter: ['in', ['get', 'kind'], ['literal', ['pump', 'jline']]], layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 15, 3, 18, 15] } });
     map.addLayer({ id: 'kids-track', type: 'line', source: 'kids', filter: ['in', ['get', 'kind'], ['literal', ['pump', 'jline']]], layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#9C7F5C', 'line-width': ['interpolate', ['linear'], ['zoom'], 15, 2, 18, 11] } });
-    map.addLayer({ id: 'kids-bumps', type: 'fill-extrusion', source: 'kids', filter: ['==', ['get', 'kind'], 'bump'], layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': '#7A6247', 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-opacity': 0.95 } });
+    map.addLayer({ id: 'kids-bumps', type: 'fill', source: 'kids', filter: ['==', ['get', 'kind'], 'bump'], layout: { visibility: 'none' }, paint: { 'fill-color': '#5E4A35', 'fill-opacity': 0.9 } });
     map.addSource('glamp', { type: 'geojson', data: glampFC });
     map.addLayer({ id: 'glamp-path-case', type: 'line', source: 'glamp', filter: ['==', ['get', 'kind'], 'path'], layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#7A6247', 'line-width': ['interpolate', ['linear'], ['zoom'], 15, 1.5, 18, 7] } });
     map.addLayer({ id: 'glamp-path', type: 'line', source: 'glamp', filter: ['==', ['get', 'kind'], 'path'], layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#E4DCCB', 'line-width': ['interpolate', ['linear'], ['zoom'], 15, 1, 18, 5] } });
-    map.addLayer({ id: 'glamp-3d', type: 'fill-extrusion', source: 'glamp', filter: ['in', ['get', 'kind'], ['literal', ['deck', 'tent', 'amen']]], layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': ['match', ['get', 'kind'], 'deck', '#8B6B4A', 'amen', '#55603F', '#F3EFE4'], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-opacity': 0.97 } });
+    map.addLayer({ id: 'glamp-sites', type: 'circle', source: 'glamppts', layout: { visibility: 'none' }, paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, ['match', ['get', 'kind'], 'amen', 3.5, 2.5], 17, ['match', ['get', 'kind'], 'amen', 10, 8]], 'circle-color': ['match', ['get', 'kind'], 'amen', '#55603F', '#F3EFE4'], 'circle-stroke-color': ['match', ['get', 'kind'], 'amen', '#FFFFFF', '#5E4A35'], 'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 14, 1, 17, 2.5], 'circle-pitch-alignment': 'map' } });
     map.addLayer({ id: 'run-case', type: 'line', source: 'runs', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 3, 17, 10], 'line-opacity': 0.9 } });
     map.addLayer({ id: 'run-line', type: 'line', source: 'runs', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': ['match', ['get', 'run'], 'beginner', COL.beginner, 'intermediate', COL.intermediate, COL.expert], 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1.6, 17, 6] } });
-    map.addLayer({ id: 'lift-cable', type: 'line', source: 'lift', filter: ['==', ['get', 'kind'], 'cable'], layout: { visibility: 'none' }, paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1, 17, 3], 'line-dasharray': [3, 1] } });
-    map.addLayer({ id: 'lift-3d', type: 'fill-extrusion', source: 'lift', filter: ['in', ['get', 'kind'], ['literal', ['tower', 'station']]], layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': ['match', ['get', 'kind'], 'station', '#FCC830', '#E4E2DA'], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-opacity': 0.95 } });
-    map.addLayer({ id: 'movers', type: 'circle', source: 'movers', layout: { visibility: 'none' }, paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 2.5, 18, 7], 'circle-color': ['get', 'c'], 'circle-stroke-color': ['get', 's'], 'circle-stroke-width': 1.5, 'circle-pitch-alignment': 'map' } });
-    map.addLayer({ id: 'me', type: 'circle', source: 'me', paint: { 'circle-radius': 9, 'circle-color': ['get', 'c'], 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 3, 'circle-pitch-alignment': 'map' } });
+    map.addLayer({ id: 'lift-case', type: 'line', source: 'lift', filter: ['==', ['get', 'kind'], 'cable'], layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': '#0F1416', 'line-opacity': 0.55, 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 2.5, 17, 6] } });
+    map.addLayer({ id: 'lift-cable', type: 'line', source: 'lift', filter: ['==', ['get', 'kind'], 'cable'], layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1, 17, 2.5] } });
+    map.addLayer({ id: 'lift-towers', type: 'circle', source: 'liftpts', layout: { visibility: 'none' }, paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, ['match', ['get', 'kind'], 'station', 4, 2], 17, ['match', ['get', 'kind'], 'station', 10, 5]], 'circle-color': ['match', ['get', 'kind'], 'station', '#FCC830', '#FFFFFF'], 'circle-stroke-color': '#0F1416', 'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 14, 1, 17, 2], 'circle-pitch-alignment': 'map' } });
+    map.addLayer({ id: 'me-halo', type: 'circle', source: 'me', paint: { 'circle-radius': 18, 'circle-color': ['get', 'c'], 'circle-opacity': 0.25, 'circle-pitch-alignment': 'map' } });
+    map.addLayer({ id: 'me', type: 'circle', source: 'me', paint: { 'circle-radius': 8, 'circle-color': ['get', 'c'], 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 3, 'circle-pitch-alignment': 'map' } });
     ready = true;
   }
 
-  var PLAN_LAYERS = ['run-case', 'run-line', 'lift-cable', 'lift-3d', 'kids-zone', 'kids-outline', 'kids-case', 'kids-track', 'kids-bumps', 'glamp-path-case', 'glamp-path', 'glamp-3d', 'movers'];
+  var PLAN_LAYERS = ['run-case', 'run-line', 'lift-case', 'lift-cable', 'lift-towers', 'kids-zone', 'kids-outline', 'kids-case', 'kids-track', 'kids-bumps', 'glamp-path-case', 'glamp-path', 'glamp-sites'];
   function showPlan(mode) {
     if (!ready) return;
     var on = !!mode;
@@ -497,38 +529,7 @@
     map.setPaintProperty('run-line', 'line-opacity', dimRun);
     map.setPaintProperty('run-case', 'line-opacity', focus ? ['case', ['==', ['get', 'run'], focus], 0.95, 0.2] : (mode === 'lift' || mode === 'kids' || mode === 'glamp' ? 0.4 : 0.9));
     map.setPaintProperty('kids-zone', 'fill-opacity', mode === 'kids' ? 0.22 : 0.12);
-    if (on) startAnim(); else stopAnim();
   }
-
-  /* ---------- ambient motion: riders on the runs, carriers on the lift ---------- */
-  var anim = null, t0 = performance.now();
-  var SPEED = { beginner: 7, intermediate: 10, expert: 13, lift: 4 };
-  function moversAt(t) {
-    var f = [];
-    ['beginner', 'intermediate', 'expert'].forEach(function (k) {
-      var p = PATH[k];
-      [0, 0.5].forEach(function (ph) {
-        var s = ((t * SPEED[k] / p.len + ph) % 1) * p.len;
-        if (focus && focus !== k) return;
-        f.push(feat({ c: COL[k], s: k === 'expert' ? '#FFFFFF' : '#0F1416' }, 'Point', along(p, s)));
-      });
-    });
-    var L = PATH.lift;
-    for (var j = 0; j < 6; j++) {
-      var s = ((t * SPEED.lift / L.len + j / 6) % 1) * L.len;
-      f.push(feat({ c: '#FFFFFF', s: '#0F1416' }, 'Point', along(L, s)));
-    }
-    return fc(f);
-  }
-  var lastFrame = 0;
-  function tick(now) {
-    anim = requestAnimationFrame(tick);
-    if (now - lastFrame < 33) return; lastFrame = now;
-    if (reduce) { map.getSource('movers').setData(moversAt(20)); cancelAnimationFrame(anim); anim = null; return; }
-    map.getSource('movers').setData(moversAt((now - t0) / 1000));
-  }
-  function startAnim() { if (!anim) anim = requestAnimationFrame(tick); }
-  function stopAnim() { if (anim) cancelAnimationFrame(anim); anim = null; }
 
   /* ---------- virtual rides ---------- */
   var rideRaf = null, riding = null;
@@ -540,7 +541,7 @@
     var path = PATH[k], col = k === 'lift' ? '#FFFFFF' : COL[k];
     if (IDX[k] !== i) { i = IDX[k]; render(); }
     showPlan(k === 'lift' ? 'lift' : k);
-    tour.classList.add('riding');
+    tour.classList.add('riding'); showMarkers([]);
     var title = k === 'lift' ? 'Riding the lift' : 'Riding the ' + GRADE[k][1].toLowerCase() + ' run';
     $('tour-body').innerHTML = '<div class="ride-hud"><span>' + title + '</span><span id="ride-m">0 m</span></div><div class="ride-bar"><i id="ride-bar"></i></div>' + profileSVG(k) +
       '<div class="t-actions"><button type="button" class="t-btn" id="ride-stop">Stop ride</button></div>';
@@ -548,18 +549,19 @@
     var dur = (reduce ? 8 : RIDE_SECS[k]) * 1000, start = null, b0 = null, my = ++seq;
     map.stop();
     // ease into the start of the ride first
-    var p0 = along(path, 0), b = brg(p0, along(path, 30)), rp = pad();
+    var v = view(), rp = { top: Math.round(v.H * 0.22), bottom: v.B, left: v.L, right: 0 };
+    var p0 = along(path, 18), b = brg(along(path, 0), along(path, 40));
     map.once('moveend', function () {
       if (my !== seq) return;
       (function step(now) {
         if (my !== seq) return;
         if (start === null) start = now;
         var u = Math.min(1, (now - start) / dur), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
-        var s = (k === 'lift' ? u : e) * path.len, pos = along(path, s);
-        var target = brg(pos, along(path, Math.min(path.len, s + 35)));
-        if (s > path.len - 5) target = b0 == null ? target : b0;
-        b0 = b0 == null ? target : b0 + ((((target - b0) % 360) + 540) % 360 - 180) * 0.06;
-        map.jumpTo({ center: pos, bearing: b0, pitch: 72, zoom: 18.1, padding: rp });
+        var s = (k === 'lift' ? u : e) * path.len, pos = along(path, s), look = along(path, Math.min(path.len, s + 18));
+        var target = brg(along(path, Math.max(0, s - 10)), along(path, Math.min(path.len, s + 60)));
+        if (s > path.len - 8) target = b0 == null ? target : b0;
+        b0 = b0 == null ? target : b0 + ((((target - b0) % 360) + 540) % 360 - 180) * 0.035;
+        map.jumpTo({ center: look, bearing: b0, pitch: 58, zoom: 17.1, padding: rp });
         map.getSource('me').setData(fc([feat({ c: col }, 'Point', pos)]));
         var bar = $('ride-bar'); if (bar) bar.style.width = (u * 100).toFixed(1) + '%';
         var m = $('ride-m'); if (m) m.textContent = Math.round(s) + ' / ' + Math.round(path.len) + ' m';
@@ -569,7 +571,7 @@
         rideDone();
       })(performance.now());
     });
-    map.easeTo({ center: p0, bearing: b, pitch: 72, zoom: 18.1, padding: rp, duration: reduce ? 0 : 2200 });
+    map.easeTo({ center: p0, bearing: b, pitch: 58, zoom: 17.1, padding: rp, duration: reduce ? 0 : 2400 });
   }
   function rideDone() {
     var k = riding; stopRide();
@@ -580,6 +582,7 @@
     if (rideRaf) cancelAnimationFrame(rideRaf); rideRaf = null; riding = null;
     tour.classList.remove('riding');
     if (ready) map.getSource('me').setData(fc([]));
+    showMarkers(STOPS[i] && STOPS[i].mk);
   }
 
   /* ---------- navigation ---------- */
@@ -591,11 +594,11 @@
     clearTimeout(timer);
     var s = STOPS[i], my = ++seq;
     map.stop();
-    var cam = Object.assign({}, s.cam);
-    if (window.innerWidth <= 760) cam.zoom -= 0.8;
+    var cam = camFor(s.cam);
+    showMarkers(s.mk);
     map.once('moveend', function () {
       if (my !== seq) return;
-      if (s.orbit && !reduce) map.easeTo({ bearing: s.cam.bearing + 100, duration: 14000, easing: function (t) { return t; } });
+      if (s.orbit && !reduce) map.easeTo({ bearing: s.cam.bearing + 70, duration: 14000, easing: function (t) { return t; } });
       if (playing) {
         timer = setTimeout(function () {
           if (!playing) return;
@@ -604,7 +607,8 @@
         }, s.orbit ? 14500 : (s.ride ? 2500 : 5500));
       }
     });
-    map.flyTo(Object.assign({ duration: reduce ? 0 : 6000, curve: 1.3, padding: pad() }, cam));
+    var far = map.getCenter().distanceTo(new maplibregl.LngLat(cam.center[0], cam.center[1])) > 3000;
+    map.flyTo(Object.assign({ duration: reduce ? 0 : (far ? 6500 : 3800), curve: far ? 1.2 : 1 }, cam));
   }
   function next() { if (i === STOPS.length - 1) { stopPlay(); return; } go(i + 1); }
 
@@ -622,10 +626,9 @@
     map.getCanvasContainer().addEventListener(ev, function () { if (playing) stopPlay(); if (riding) { stopRide(); render(); } map.stop(); $('tour-hint').classList.add('gone'); }, { passive: true });
   });
   setTimeout(function () { $('tour-hint').classList.add('gone'); }, 7000);
-  document.addEventListener('visibilitychange', function () { if (document.hidden) stopAnim(); else if (tour.classList.contains('show-plan')) startAnim(); });
 
   render();
-  map.on('load', function () { addPlan(); go(i); });
+  map.on('load', function () { addPlan(); tour.classList.add('loaded'); go(i); });
 })();
 </script>
 <script src="assets/site.js"></script>
