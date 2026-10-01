@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>3D Tour | LG Recycling</title>
-<meta name="description" content="Fly around Langi Ghiran in 3D, then explore the planned bike park on the former quarry: three downhill runs, a kids' jump park and a pulley lift. Ride each run and the lift virtually.">
+<meta name="description" content="Fly around Langi Ghiran in 3D, then explore the planned bike park on the former quarry: three downhill runs, a kids' jump park, a pulley lift and 16 glamping sites. Ride each run and the lift virtually.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#171E21">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="LG Recycling">
 <meta property="og:title" content="3D Tour | LG Recycling">
-<meta property="og:description" content="Fly around Langi Ghiran in 3D, then explore the planned bike park on the former quarry: three downhill runs, a kids' jump park and a pulley lift. Ride each run and the lift virtually.">
+<meta property="og:description" content="Fly around Langi Ghiran in 3D, then explore the planned bike park on the former quarry: three downhill runs, a kids' jump park, a pulley lift and 16 glamping sites. Ride each run and the lift virtually.">
 <meta property="og:image" content="https://rdodeployme.github.io/Langi-Ghiran/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -64,6 +64,7 @@
 .tour-marker .g{width:12px;height:12px;border-width:1.5px}
 .g-kids{background:var(--soil);border-radius:4px}
 .g-lift{background:#fff;border-radius:50%;border-color:var(--ink);box-shadow:0 0 0 2px #fff}
+.g-glamp{background:#EEEDE7;border-color:#7A6247;border-radius:50% 50% 2px 2px}
 .run-cards{display:grid;gap:8px;margin:2px 0 14px}
 .run-card{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;width:100%;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 12px;color:#fff;cursor:pointer;font:inherit}
 .run-card:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.1)}
@@ -128,7 +129,7 @@
   <p class="tour-hint" id="tour-hint">Drag to move · right-click drag or two fingers to tilt and turn</p>
 
   <div class="tour-panel" id="tour-panel" aria-live="polite">
-    <div class="count"><span id="tour-count">1 / 11</span><span class="dots" id="tour-dots"></span></div>
+    <div class="count"><span id="tour-count">1 / 12</span><span class="dots" id="tour-dots"></span></div>
     <h1 id="tour-title">Langi Ghiran in 3D</h1>
     <div id="tour-body"><p>Loading the terrain…</p></div>
     <div class="tour-ctrl" id="tour-ctrl">
@@ -155,7 +156,7 @@
       <p class="eyebrow">About this tour</p>
       <h2 id="about-tour-title">Real terrain, not a render.</h2>
       <p>The landscape is built from public elevation data with satellite imagery laid over it, so the mountain, the woodland and the plains are where they really are. Height is slightly exaggerated to make the landform easier to read.</p>
-      <p>The bike park is drawn on the real slope of the former quarry: three downhill runs graded beginner, intermediate and expert, a kids' jump park at the bottom, and a pulley lift that pulls riders back to the top. Lengths and drops are measured from the elevation data along each indicative line.</p>
+      <p>The bike park is drawn on the real slope of the former quarry: three downhill runs graded beginner, intermediate and expert, a kids' jump park at the bottom, a pulley lift that pulls riders back to the top, and 16 glamping sites off to the side. Lengths and drops are measured from the elevation data along each indicative line.</p>
       <div class="actions" style="margin-top:24px">
         <a class="btn btn-primary" href="about.html">Read our story</a>
         <a class="btn btn-ghost" href="index.html#enquire">Enquire about soil disposal</a>
@@ -163,7 +164,7 @@
     </div>
     <ul class="note">
       <li>The rehabilitation area outline is approximate.</li>
-      <li>Run lines, the kids' park, the lift and the concept images show an indicative idea of the finished park, not a final design. <span class="tbc">Final layout TBC</span></li>
+      <li>Run lines, the kids' park, the lift, the glamping layout and the concept images show an indicative idea of the finished park, not a final design. <span class="tbc">Final layout TBC</span></li>
       <li>Trail grades use the usual shapes (circle, square, diamond) in the LG palette: green for beginner, yellow for intermediate, black for expert.</li>
       <li>Imagery &copy; Esri World Imagery (Wayback, Oct 2025 release), Maxar, Earthstar Geographics. Terrain: Terrain Tiles (Mapzen, AWS Open Data).</li>
     </ul>
@@ -218,6 +219,7 @@
   var tour = document.getElementById('tour');
   var $ = function (id) { return document.getElementById(id); };
   var P = {"T":[143.0928,-37.2785],"B":[143.0898,-37.2745],"F":[143.0901,-37.275],"ring":[[143.08725,-37.27622],[143.08729,-37.27657],[143.08742,-37.2769],[143.0875,-37.27726],[143.08759,-37.27763],[143.08778,-37.278],[143.08807,-37.27831],[143.0885,-37.27851],[143.08895,-37.27866],[143.08941,-37.27878],[143.08987,-37.27886],[143.09033,-37.27893],[143.09081,-37.27899],[143.09131,-37.27902],[143.09183,-37.279],[143.09229,-37.27882],[143.09265,-37.27853],[143.09301,-37.27826],[143.09334,-37.27798],[143.09364,-37.27768],[143.09393,-37.27737],[143.09412,-37.27701],[143.09424,-37.27663],[143.09426,-37.27624],[143.09417,-37.27586],[143.09398,-37.27551],[143.09377,-37.27519],[143.09352,-37.27489],[143.0932,-37.27465],[143.09294,-37.27439],[143.09268,-37.27413],[143.09239,-37.27389],[143.09199,-37.27375],[143.09158,-37.27369],[143.09118,-37.27359],[143.09077,-37.27358],[143.09036,-37.27356],[143.08995,-37.27358],[143.08954,-37.27364],[143.08915,-37.27376],[143.08879,-37.27393],[143.08848,-37.27415],[143.0882,-37.2744],[143.08803,-37.2747],[143.08792,-37.27501],[143.08782,-37.27531],[143.08757,-37.27558],[143.08731,-37.27588],[143.08725,-37.27622]],"runs":{"beginner":{"way":[[143.0928,-37.2785],[143.0912,-37.2787],[143.0893,-37.2785],[143.0883,-37.278],[143.0891,-37.2775],[143.0881,-37.2771],[143.0879,-37.2766],[143.0889,-37.2762],[143.0881,-37.2758],[143.0887,-37.2754],[143.0901,-37.275]],"len":1071,"drop":45,"grad":4.2,"prof":[467.8,465.4,462.8,460.6,459.2,458.3,457.8,457.6,456.4,454.0,451.6,448.6,444.9,440.8,437.1,433.4,430.1,427.5,425.6,424.7,424.3,424.3,424.4,424.6,424.5,424.5,424.0,423.5,422.9,422.5,422.0,421.9,422.0,422.3,422.6,422.7,422.6,422.1,421.1,420.2,419.3,418.9,419.2,420.0,421.2,422.6,423.7,424.5]},"intermediate":{"way":[[143.0928,-37.2785],[143.0916,-37.2782],[143.0904,-37.2777],[143.091,-37.2772],[143.0899,-37.2767],[143.0905,-37.2762],[143.0896,-37.2757],[143.0899,-37.2753],[143.0901,-37.275]],"len":701,"drop":45,"grad":6.4,"prof":[468.1,465.6,462.3,458.2,454.3,450.9,448.0,445.8,443.9,442.1,440.1,437.7,434.7,432.0,429.6,427.5,426.2,425.7,425.4,425.2,425.3,425.3,425.1,424.8,424.3,423.8,423.4,423.1,423.1,423.1,423.1,423.1,423.2,423.3,423.3,423.2,423.2,423.1,422.9,422.9,423.0,423.0,423.1,423.4,423.9,424.3,424.7,425.1]},"expert":{"way":[[143.0928,-37.2785],[143.0934,-37.278],[143.0934,-37.2772],[143.0928,-37.2765],[143.0927,-37.2759],[143.0916,-37.2754],[143.0901,-37.275]],"len":585,"drop":45,"grad":7.7,"prof":[471.0,471.5,471.7,471.7,470.9,469.6,467.7,465.4,463.0,461.0,459.1,457.9,457.3,456.9,456.7,456.4,455.8,455.1,454.5,453.9,453.7,454.0,454.2,454.5,454.6,454.2,453.4,452.1,450.4,448.0,445.3,442.1,438.9,435.8,433.3,431.4,430.0,429.0,428.1,427.6,427.1,426.6,426.2,425.8,425.4,425.1,425.0,425.1]}},"lift":{"len":519,"rise":49,"prof":[421.3,421.8,422.5,423.3,424.1,424.6,424.8,424.6,424.2,423.8,423.4,423.3,423.5,424.2,425.0,425.8,426.4,426.7,426.3,425.5,424.6,423.9,423.6,423.8,424.4,425.2,425.9,426.4,426.8,427.4,428.0,428.8,429.6,430.5,431.2,432.2,433.3,435.3,437.8,441.4,445.8,450.6,455.2,459.3,462.7,465.6,467.6,468.9]},"kids":{"pump":[[143.091033,-37.274132],[143.091028,-37.274123],[143.091021,-37.274114],[143.091012,-37.274105],[143.091002,-37.274099],[143.090991,-37.274093],[143.090978,-37.274089],[143.090965,-37.274087],[143.09095,-37.274086],[143.090935,-37.274087],[143.090919,-37.274089],[143.090902,-37.274092],[143.090885,-37.274096],[143.090866,-37.274101],[143.090848,-37.274106],[143.090828,-37.274112],[143.090809,-37.274118],[143.090788,-37.274124],[143.090768,-37.27413],[143.090748,-37.274136],[143.090727,-37.274142],[143.090707,-37.274147],[143.090688,-37.274153],[143.090669,-37.274158],[143.090651,-37.274163],[143.090634,-37.274169],[143.090619,-37.274175],[143.090605,-37.274182],[143.090593,-37.27419],[143.090582,-37.274198],[143.090574,-37.274206],[143.090568,-37.274216],[143.090563,-37.274226],[143.090561,-37.274236],[143.090561,-37.274247],[143.090563,-37.274257],[143.090567,-37.274268],[143.090572,-37.274277],[143.090579,-37.274286],[143.090588,-37.274295],[143.090598,-37.274301],[143.090609,-37.274307],[143.090622,-37.274311],[143.090635,-37.274313],[143.09065,-37.274314],[143.090665,-37.274313],[143.090681,-37.274311],[143.090698,-37.274308],[143.090715,-37.274304],[143.090734,-37.274299],[143.090752,-37.274294],[143.090772,-37.274288],[143.090791,-37.274282],[143.090812,-37.274276],[143.090832,-37.27427],[143.090852,-37.274264],[143.090873,-37.274258],[143.090893,-37.274253],[143.090912,-37.274247],[143.090931,-37.274242],[143.090949,-37.274237],[143.090966,-37.274231],[143.090981,-37.274225],[143.090995,-37.274218],[143.091007,-37.27421],[143.091018,-37.274202],[143.091026,-37.274194],[143.091032,-37.274184],[143.091037,-37.274174],[143.091039,-37.274164],[143.091039,-37.274153],[143.091037,-37.274143],[143.091033,-37.274132]],"rollers":[[[[143.091022,-37.274095],[143.090999,-37.274083],[143.090982,-37.274102],[143.091005,-37.274114],[143.091022,-37.274095]]],[[[143.090874,-37.274086],[143.090849,-37.274093],[143.090859,-37.274115],[143.090884,-37.274108],[143.090874,-37.274086]]],[[[143.090696,-37.274138],[143.09067,-37.274145],[143.09068,-37.274167],[143.090706,-37.27416],[143.090696,-37.274138]]],[[[143.090559,-37.274201],[143.090549,-37.274221],[143.090576,-37.27423],[143.090586,-37.27421],[143.090559,-37.274201]]],[[[143.090578,-37.274305],[143.090601,-37.274317],[143.090618,-37.274298],[143.090595,-37.274286],[143.090578,-37.274305]]],[[[143.090726,-37.274314],[143.090751,-37.274307],[143.090741,-37.274285],[143.090716,-37.274292],[143.090726,-37.274314]]],[[[143.090904,-37.274262],[143.09093,-37.274255],[143.09092,-37.274233],[143.090894,-37.27424],[143.090904,-37.274262]]],[[[143.091041,-37.274199],[143.091051,-37.274179],[143.091024,-37.27417],[143.091014,-37.27419],[143.091041,-37.274199]]]],"jumps":[[[[143.091208,-37.274305],[143.09122,-37.274278],[143.091195,-37.274271],[143.091182,-37.274298],[143.091208,-37.274305]]],[[[143.091242,-37.274229],[143.091255,-37.274202],[143.091229,-37.274195],[143.091217,-37.274222],[143.091242,-37.274229]]],[[[143.091277,-37.274153],[143.09129,-37.274126],[143.091264,-37.274119],[143.091252,-37.274146],[143.091277,-37.274153]]],[[[143.091312,-37.274077],[143.091324,-37.27405],[143.091299,-37.274043],[143.091287,-37.27407],[143.091312,-37.274077]]]],"jline":[[143.091184,-37.274326],[143.091219,-37.27425],[143.091253,-37.274174],[143.091288,-37.274098],[143.091323,-37.274022]],"zone":[[143.09133,-37.274046],[143.091311,-37.274016],[143.091281,-37.27399],[143.091242,-37.273968],[143.091195,-37.273951],[143.091141,-37.273939],[143.091081,-37.273933],[143.091016,-37.273933],[143.090949,-37.273939],[143.090881,-37.27395],[143.090813,-37.273967],[143.090748,-37.273988],[143.090687,-37.274015],[143.090631,-37.274045],[143.090582,-37.274078],[143.090541,-37.274113],[143.090508,-37.27415],[143.090486,-37.274187],[143.090474,-37.274224],[143.090472,-37.274259],[143.090482,-37.274292],[143.090501,-37.274322],[143.090531,-37.274349],[143.09057,-37.274371],[143.090617,-37.274388],[143.090672,-37.274399],[143.090732,-37.274405],[143.090796,-37.274406],[143.090863,-37.2744],[143.090931,-37.274389],[143.090999,-37.274372],[143.091064,-37.27435],[143.091125,-37.274324],[143.091181,-37.274294],[143.09123,-37.274261],[143.091272,-37.274226],[143.091304,-37.274189],[143.091326,-37.274152],[143.091338,-37.274115],[143.09134,-37.27408],[143.09133,-37.274046]],"centre":[143.090913,-37.2742]}};
+  P.glamp = {"tents":[[143.093144,-37.274089],[143.09346,-37.274004],[143.093776,-37.273966],[143.094092,-37.273981],[143.094408,-37.274028],[143.094724,-37.274071],[143.09504,-37.274088],[143.095356,-37.274088],[143.093144,-37.274266],[143.09346,-37.274303],[143.093776,-37.274364],[143.094092,-37.274424],[143.094408,-37.274449],[143.094724,-37.27442],[143.09504,-37.274347],[143.095356,-37.274266]],"amen":[143.092828,-37.2742],"centre":[143.09425,-37.2742]};
   var COL = { beginner: '#8E9B6B', intermediate: '#FCC830', expert: '#171E21' };
   var GRADE = { beginner: ['g-beg', 'Beginner'], intermediate: ['g-int', 'Intermediate'], expert: ['g-exp', 'Expert'] };
   var RUN_IMG = {
@@ -268,6 +270,19 @@
     .concat(P.kids.rollers.map(function (r) { return feat({ kind: 'bump', h: 1.2 }, 'Polygon', r); }))
     .concat(P.kids.jumps.map(function (r, i) { return feat({ kind: 'bump', h: 1 + i * 0.25 }, 'Polygon', r); })));
 
+  function oct(c, r) { var out = []; for (var a = 0; a <= 8; a++) { var t = a / 8 * 2 * Math.PI + Math.PI / 8; out.push([c[0] + r * Math.cos(t) / KX, c[1] + r * Math.sin(t) / KY]); } return [out]; }
+  function offs(c, dx, dy) { return [c[0] + dx / KX, c[1] + dy / KY]; }
+  var GT = P.glamp.tents, spineN = GT.slice(0, 8), spineS = GT.slice(8);
+  var spine = spineN.map(function (a, k) { var b = spineS[k]; return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; });
+  var glampFC = [feat({ kind: 'path' }, 'LineString', [P.glamp.amen].concat(spine)), feat({ kind: 'path' }, 'LineString', [P.glamp.amen, offs(P.glamp.amen, -60, -10), [143.0909, -37.2746]])];
+  GT.forEach(function (c, k) {
+    var s = spine[k % 8]; glampFC.push(feat({ kind: 'path' }, 'LineString', [s, c]));
+    glampFC.push(feat({ kind: 'deck', h: 0.4 }, 'Polygon', box(c, 7, 7, 0)));
+    glampFC.push(feat({ kind: 'tent', h: 3.4 }, 'Polygon', oct(c, 2.7)));
+  });
+  glampFC.push(feat({ kind: 'amen', h: 3.6 }, 'Polygon', box(P.glamp.amen, 12, 6, 0.15)));
+  glampFC = fc(glampFC);
+
   /* ---------- tour stops ---------- */
   function statsHTML(k) {
     var r = k === 'lift' ? P.lift : P.runs[k];
@@ -291,7 +306,7 @@
     var r = P.runs[k];
     return '<button type="button" class="run-card" data-go="' + k + '"><span class="g ' + GRADE[k][0] + '"></span><span><b>' + GRADE[k][1] + ' run</b><small>' + r.len + ' m · ' + r.drop + ' m drop · ' + r.grad + '% average</small></span><em>View &rarr;</em></button>';
   }
-  function fig(src, alt, cap) { return '<figure><img src="' + src + '" alt="' + alt + '" loading="lazy"><figcaption>' + (cap || 'Illustrative concept only.') + '</figcaption></figure>'; }
+  function fig(src, alt, cap) { return '<figure><img src="' + src + '" alt="' + alt + '" loading="lazy" onerror="this.parentNode.style.display=\'none\'"><figcaption>' + (cap || 'Illustrative concept only.') + '</figcaption></figure>'; }
   var RUN_TXT = {
     beginner: 'The longest and gentlest line. Wide switchbacks traverse the western side of the old quarry at a steady, easy grade, so new riders, families and anyone building confidence can roll all the way down.',
     intermediate: 'A flow trail down the middle of the slope: linked berms and rollers through the old quarry floor, with room to pump for speed and small optional jumps.',
@@ -312,8 +327,8 @@
       body: '<p>This is the area being rehabilitated: a former sand quarry at the foot of the range, off Warrak Road. The pale ground in the middle is the old quarry floor, and the slope rises to the south towards the park.</p><p class="tour-key"><span><i></i>Rehabilitation area (approximate)</span></p>',
       cam: { center: [143.0906, -37.2752], zoom: 15.4, pitch: 58, bearing: 165 } },
     { title: 'The bike park', plan: 'all',
-      body: '<p>Three downhill runs leave a shared top station and finish together at the base, with a kids’ jump park below them and a pulley lift to pull riders back up. Pick a run to see it up close.</p>',
-      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
+      body: '<p>Three downhill runs leave a shared top station and finish together at the base, with a kids’ jump park below them, a pulley lift to pull riders back up, and 16 glamping sites off to the side. Pick a run to see it up close.</p>',
+      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
       cam: { center: [143.0910, -37.2768], zoom: 15.75, pitch: 55, bearing: 345 } },
     { title: 'The pulley lift', plan: 'lift', ride: 'lift', g: 'g-lift',
       body: '<p>Riders roll on at the base, grab the line and get pulled straight up the slope to the top station, bike and all. No pushing, so more time riding.</p>',
@@ -335,9 +350,13 @@
       body: '<p>Below the three runs, next to the base, a kids’ area: a small pump track with rollers and berms, and a short line of little dirt jumps, so younger riders have their own space while the family rides.</p>',
       extra: function () { return fig('assets/lg-kids-park.webp', 'Concept image of young children riding a small dirt pump track and jumps'); },
       cam: { center: [143.0909, -37.2743], zoom: 18.2, pitch: 58, bearing: 200 } },
+    { title: 'Glamping', plan: 'glamp', g: 'g-glamp',
+      body: '<p>Off to the side of the bike park, on the open rise looking back at the range, sit 16 glamping sites: canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift base.</p>',
+      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>2</b><span>Rows</span></div><div><b>~400 m</b><span>To lift base</span></div></div>' + fig('assets/lg-glamping.webp', 'Concept image of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
+      cam: { center: [143.0941, -37.2743], zoom: 17.3, pitch: 62, bearing: 205 } },
     { title: 'What it could look like', plan: 'all',
-      body: '<p>Revegetated ground, three runs down the slope, a kids’ park at the bottom and a lift back to the top, on land that was once a sand quarry.</p>',
-      extra: function () { return fig('assets/lg-park-concept.webp', 'Concept aerial image of the former quarry with three downhill runs, a pulley lift and a kids’ pump track', 'Illustrative concept based on the real site. Not a final design.'); },
+      body: '<p>Revegetated ground, three runs down the slope, a kids’ park at the bottom, a lift back to the top and a glamping camp beside it, on land that was once a sand quarry.</p>',
+      extra: function () { return fig('assets/lg-park-concept.webp', 'Concept aerial image of the former quarry with three downhill runs, a pulley lift, a kids’ pump track and a glamping camp', 'Illustrative concept based on the real site. Not a final design.'); },
       cam: { center: [143.0906, -37.2762], zoom: 15.6, pitch: 0, bearing: 0 } }
   ];
   var IDX = {}; STOPS.forEach(function (s, n) { if (s.ride) IDX[s.ride] = n; });
@@ -352,7 +371,8 @@
     { ll: along(PATH.beginner, PATH.beginner.len * 0.42), name: 'Beginner', cls: 'plan', icon: 'g-beg', stop: IDX.beginner },
     { ll: along(PATH.intermediate, PATH.intermediate.len * 0.5), name: 'Intermediate', cls: 'plan', icon: 'g-int', stop: IDX.intermediate },
     { ll: along(PATH.expert, PATH.expert.len * 0.45), name: 'Expert', cls: 'plan', icon: 'g-exp', stop: IDX.expert },
-    { ll: P.kids.centre, name: 'Kids’ park', cls: 'plan', icon: 'g-kids', stop: 9 }
+    { ll: P.kids.centre, name: 'Kids’ park', cls: 'plan', icon: 'g-kids', stop: 9 },
+    { ll: offs(P.glamp.centre, 0, 34), name: 'Glamping', sub: '16 sites', cls: 'plan', icon: 'g-glamp', stop: 10 }
   ];
 
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -453,6 +473,10 @@
     map.addLayer({ id: 'kids-case', type: 'line', source: 'kids', filter: ['in', ['get', 'kind'], ['literal', ['pump', 'jline']]], layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 15, 3, 18, 15] } });
     map.addLayer({ id: 'kids-track', type: 'line', source: 'kids', filter: ['in', ['get', 'kind'], ['literal', ['pump', 'jline']]], layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#9C7F5C', 'line-width': ['interpolate', ['linear'], ['zoom'], 15, 2, 18, 11] } });
     map.addLayer({ id: 'kids-bumps', type: 'fill-extrusion', source: 'kids', filter: ['==', ['get', 'kind'], 'bump'], layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': '#7A6247', 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-opacity': 0.95 } });
+    map.addSource('glamp', { type: 'geojson', data: glampFC });
+    map.addLayer({ id: 'glamp-path-case', type: 'line', source: 'glamp', filter: ['==', ['get', 'kind'], 'path'], layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#7A6247', 'line-width': ['interpolate', ['linear'], ['zoom'], 15, 1.5, 18, 7] } });
+    map.addLayer({ id: 'glamp-path', type: 'line', source: 'glamp', filter: ['==', ['get', 'kind'], 'path'], layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#E4DCCB', 'line-width': ['interpolate', ['linear'], ['zoom'], 15, 1, 18, 5] } });
+    map.addLayer({ id: 'glamp-3d', type: 'fill-extrusion', source: 'glamp', filter: ['in', ['get', 'kind'], ['literal', ['deck', 'tent', 'amen']]], layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': ['match', ['get', 'kind'], 'deck', '#8B6B4A', 'amen', '#55603F', '#F3EFE4'], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-opacity': 0.97 } });
     map.addLayer({ id: 'run-case', type: 'line', source: 'runs', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 3, 17, 10], 'line-opacity': 0.9 } });
     map.addLayer({ id: 'run-line', type: 'line', source: 'runs', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': ['match', ['get', 'run'], 'beginner', COL.beginner, 'intermediate', COL.intermediate, COL.expert], 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1.6, 17, 6] } });
     map.addLayer({ id: 'lift-cable', type: 'line', source: 'lift', filter: ['==', ['get', 'kind'], 'cable'], layout: { visibility: 'none' }, paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1, 17, 3], 'line-dasharray': [3, 1] } });
@@ -462,16 +486,16 @@
     ready = true;
   }
 
-  var PLAN_LAYERS = ['run-case', 'run-line', 'lift-cable', 'lift-3d', 'kids-zone', 'kids-outline', 'kids-case', 'kids-track', 'kids-bumps', 'movers'];
+  var PLAN_LAYERS = ['run-case', 'run-line', 'lift-cable', 'lift-3d', 'kids-zone', 'kids-outline', 'kids-case', 'kids-track', 'kids-bumps', 'glamp-path-case', 'glamp-path', 'glamp-3d', 'movers'];
   function showPlan(mode) {
     if (!ready) return;
     var on = !!mode;
     tour.classList.toggle('show-plan', on);
     PLAN_LAYERS.forEach(function (id) { map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'); });
     focus = (mode === 'beginner' || mode === 'intermediate' || mode === 'expert') ? mode : null;
-    var dimRun = focus ? ['case', ['==', ['get', 'run'], focus], 1, 0.28] : (mode === 'lift' || mode === 'kids' ? 0.55 : 1);
+    var dimRun = focus ? ['case', ['==', ['get', 'run'], focus], 1, 0.28] : (mode === 'lift' || mode === 'kids' || mode === 'glamp' ? 0.55 : 1);
     map.setPaintProperty('run-line', 'line-opacity', dimRun);
-    map.setPaintProperty('run-case', 'line-opacity', focus ? ['case', ['==', ['get', 'run'], focus], 0.95, 0.2] : (mode === 'lift' || mode === 'kids' ? 0.4 : 0.9));
+    map.setPaintProperty('run-case', 'line-opacity', focus ? ['case', ['==', ['get', 'run'], focus], 0.95, 0.2] : (mode === 'lift' || mode === 'kids' || mode === 'glamp' ? 0.4 : 0.9));
     map.setPaintProperty('kids-zone', 'fill-opacity', mode === 'kids' ? 0.22 : 0.12);
     if (on) startAnim(); else stopAnim();
   }
