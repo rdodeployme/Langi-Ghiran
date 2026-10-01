@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3D Tour | LG Recycling</title>
+<meta name="description" content="Fly around Langi Ghiran in 3D: real terrain and satellite imagery of the mountain, the park and the western boundary where LG Recycling is rehabilitating a former quarry.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#171E21">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LG Recycling">
+<meta property="og:title" content="3D Tour | LG Recycling">
+<meta property="og:description" content="Fly around Langi Ghiran in 3D: real terrain and satellite imagery of the mountain, the park and the western boundary where LG Recycling is rehabilitating a former quarry.">
+<meta property="og:image" content="https://rdodeployme.github.io/Langi-Ghiran/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://rdodeployme.github.io/Langi-Ghiran/explore.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+<style>
+.tour{position:relative;height:calc(100svh - var(--header-h));min-height:540px;background:var(--ink-3);overflow:hidden}
+#tour-map{position:absolute;inset:0}
+.tour-panel{position:absolute;left:24px;bottom:24px;z-index:5;width:min(420px,calc(100% - 48px));background:rgba(15,20,22,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;border-radius:18px;padding:22px 22px 18px;box-shadow:0 18px 50px rgba(0,0,0,.35);transition:transform .35s var(--ease),opacity .35s var(--ease)}
+.tour-panel.hide{transform:translateY(calc(100% + 40px));opacity:0;pointer-events:none}
+.tour-panel .count{display:flex;align-items:center;gap:10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin:0 0 10px}
+.tour-panel .dots{display:flex;gap:6px}
+.tour-panel .dots button{width:22px;height:4px;border-radius:2px;border:0;padding:0;background:rgba(255,255,255,.25);cursor:pointer}
+.tour-panel .dots button[aria-current="true"]{background:var(--yellow)}
+.tour-panel h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:clamp(1.35rem,2.4vw,1.75rem);line-height:1.15;margin:0 0 8px;color:#fff}
+.tour-panel p{margin:0 0 12px;font-size:.95rem;line-height:1.55;color:rgba(255,255,255,.86)}
+.tour-panel .tbc{color:var(--yellow);background:transparent;border-color:rgba(252,200,48,.55)}
+.tour-panel figure{margin:0 0 12px}
+.tour-panel figure img{display:block;width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:10px}
+.tour-panel figcaption{font-size:.75rem;color:rgba(255,255,255,.6);margin-top:6px}
+.tour-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.tour-ctrl button{font:600 .88rem/1 "Public Sans",system-ui,sans-serif;border-radius:999px;padding:11px 16px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer}
+.tour-ctrl button:hover{border-color:#fff}
+.tour-ctrl .play{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+.tour-ctrl .play:hover{background:#fff;border-color:#fff}
+.tour-ctrl .free{margin-left:auto;border:0;padding:11px 4px;color:rgba(255,255,255,.75);text-decoration:underline;text-underline-offset:3px}
+.tour-show{position:absolute;left:24px;bottom:24px;z-index:5;font:600 .9rem/1 "Public Sans",system-ui,sans-serif;border-radius:999px;padding:13px 18px;border:0;background:var(--yellow);color:var(--ink);cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.tour-hint{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:4;background:rgba(15,20,22,.75);color:#fff;font-size:.82rem;padding:8px 14px;border-radius:999px;white-space:nowrap;pointer-events:none;transition:opacity .6s}
+.tour-hint.gone{opacity:0}
+.tour-marker{display:flex;align-items:center;gap:7px;background:rgba(15,20,22,.88);color:#fff;font:600 .78rem/1.1 "Public Sans",system-ui,sans-serif;padding:7px 11px 7px 8px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);cursor:pointer}
+.tour-marker i{width:10px;height:10px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 3px rgba(252,200,48,.3);flex:none}
+.tour-marker small{display:block;font-weight:500;color:rgba(255,255,255,.65);font-size:.7rem}
+.tour-marker.site i{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.3)}
+.tour-fallback{position:absolute;inset:0;display:none;align-items:flex-end}
+.tour-fallback img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+.tour-fallback div{position:relative;color:#fff;padding:32px;max-width:560px}
+.tour.failed .tour-fallback{display:flex}
+.tour.failed .tour-panel,.tour.failed .tour-hint{display:none}
+.maplibregl-ctrl-attrib{font-size:11px}
+.tour-about .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:start}
+.tour-about ul{margin:0;padding-left:1.1em}
+.tour-about li{margin-bottom:8px}
+@media (max-width:760px){
+  .tour{height:calc(100svh - var(--header-h) - 64px);min-height:500px}
+  .tour-panel{left:12px;right:12px;bottom:12px;width:auto;padding:14px 16px 12px;border-radius:14px;max-height:52%;overflow:auto}
+  .tour-panel h1{font-size:1.2rem}
+  .tour-panel p{font-size:.88rem;margin-bottom:8px}
+  .tour-panel figure img{aspect-ratio:16/5}
+  .tour-show{left:12px;bottom:12px}
+  .tour-hint{top:10px;font-size:.75rem}
+  .tour-about .wrap{grid-template-columns:1fr;gap:24px}
+}
+</style>
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="tour-page">
+<a class="skip" href="#main">Skip to content</a>
+<div class="draft"><strong>Draft for review.</strong> Items marked <span class="tbc">TBC</span> are placeholders awaiting confirmation. Photography is illustrative. Not for public release.</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="LG Recycling home"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></span></a>
+    <button class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="about.html">Our Story</a> <a href="langi-ghiran.html">Langi Ghiran</a> <a href="soil-disposal.html">Soil Disposal</a> <a href="site-safety.html">Site Safety</a> <a href="explore.html" aria-current="page">3D Tour</a> <a href="index.html#enquire">Contact</a> <a class="btn btn-primary nav-cta" href="soil-declaration.html">Soil Declaration</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<section class="tour" id="tour" aria-label="3D tour of Langi Ghiran">
+  <div id="tour-map" role="application" aria-label="3D map of Langi Ghiran"></div>
+  <p class="tour-hint" id="tour-hint">Drag to move · right-click drag or two fingers to tilt and turn</p>
+
+  <div class="tour-panel" id="tour-panel" aria-live="polite">
+    <div class="count"><span id="tour-count">1 / 5</span><span class="dots" id="tour-dots"></span></div>
+    <h1 id="tour-title">Langi Ghiran in 3D</h1>
+    <div id="tour-body"><p>Loading the terrain…</p></div>
+    <div class="tour-ctrl">
+      <button type="button" id="tour-prev" aria-label="Previous stop">&larr;</button>
+      <button type="button" class="play" id="tour-play">Play tour</button>
+      <button type="button" id="tour-next" aria-label="Next stop">&rarr;</button>
+      <button type="button" class="free" id="tour-free">Explore freely</button>
+    </div>
+  </div>
+  <button type="button" class="tour-show" id="tour-show" hidden>Show the guided tour</button>
+
+  <div class="tour-fallback">
+    <img src="assets/lg-granite.webp" alt="">
+    <div>
+      <h2 style="color:#fff">The 3D view can't load here.</h2>
+      <p>Your browser or device doesn't support the 3D map. Try a recent version of Chrome, Safari or Edge, or read <a href="langi-ghiran.html" style="color:var(--yellow)">the story of Langi Ghiran</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="tour-about" aria-labelledby="about-tour-title">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">About this tour</p>
+      <h2 id="about-tour-title">Real terrain, not a render.</h2>
+      <p>The landscape is built from public elevation data with satellite imagery laid over it, so the mountain, the woodland and the plains are where they really are. Height is slightly exaggerated to make the landform easier to read.</p>
+      <div class="actions" style="margin-top:24px">
+        <a class="btn btn-primary" href="about.html">Read our story</a>
+        <a class="btn btn-ghost" href="index.html#enquire">Enquire about soil disposal</a>
+      </div>
+    </div>
+    <ul class="note">
+      <li>Satellite imagery dates vary and may not show recent works on the property.</li>
+      <li>The LG Recycling marker shows the general area only. <span class="tbc">Exact site outline TBC</span></li>
+      <li>The downhill track and pulley lift aren't drawn yet. <span class="tbc">Layout TBC</span></li>
+      <li>Imagery &copy; Esri, Maxar, Earthstar Geographics and the GIS User Community. Terrain: Terrain Tiles (Mapzen, AWS Open Data).</li>
+    </ul>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></span></a>
+        <p class="foot-tag">Recycling soil. Restoring land. Rebuilding a landscape.</p>
+        <p>A soil-recycling and land-rehabilitation operation beside Langi Ghiran State Park, western Victoria. Part of Recycle Group.</p>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li><span class="tbc">Site address TBC</span></li>
+          <li>Near Warrak &amp; Ararat, VIC</li>
+          <li>Monday to Friday, 7am – 3pm</li>
+          <li>UHF channel 61 on site</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><span class="tbc">Phone TBC</span></li>
+          <li><span class="tbc">Email TBC</span></li>
+          <li><a href="index.html#enquire">Send an enquiry</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Deliver</h4>
+        <ul>
+          <li><a href="soil-disposal.html">What we accept</a></li>
+          <li><a href="soil-disposal.html#checker">Check your material</a></li>
+          <li><a href="soil-declaration.html">Soil declaration</a></li>
+          <li><a href="site-safety.html">Site safety &amp; directions</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="foot-ack">LG Recycling acknowledges the Traditional Owners of Lar-ne-jeering (Langi Ghiran) and the surrounding Country, and their enduring cultural and spiritual connection to this landscape. We pay our respects to Elders past and present.</p>
+    <div class="foot-base">
+      <span>&copy; <span id="year">2026</span> LG Recycling. EPA registration R000315306.</span>
+      <span>We can't accept asbestos, reportable priority waste or waste acid sulfate soil.</span>
+    </div>
+  </div>
+</footer>
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script>
+(function () {
+  var tour = document.getElementById('tour');
+  var STOPS = [
+    { title: 'Langi Ghiran from the western plains',
+      body: '<p>Langi Ghiran rises from the plains between Ararat and Beaufort. This is the real landform, built from elevation data with satellite imagery draped over it.</p><p>Press <b>Play tour</b> for a guided fly-through, or use the arrows to go stop by stop.</p>',
+      cam: { center: [143.088, -37.302], zoom: 12.1, pitch: 62, bearing: 72 } },
+    { title: 'Lar-ne-jeering',
+      body: '<p>In the language of the Djab Wurrung people, the mountain is Lar-ne-jeering: "Home of the Yellow-tailed Black Cockatoos". Granite outcrops and eucalypt woodland cover its slopes.</p>',
+      cam: { center: [143.1103, -37.2993], zoom: 13.9, pitch: 66, bearing: 230 }, orbit: true },
+    { title: 'The picnic ground and Reservoir Track',
+      body: '<p>The park’s visitor area sits on its western side. From the picnic ground, the Reservoir Track leads to the reservoir built from local granite in 1880 to supply water to Ararat.</p>',
+      cam: { center: [143.094, -37.293], zoom: 14.3, pitch: 64, bearing: 105 } },
+    { title: 'The western boundary',
+      body: '<p>LG Recycling’s property adjoins the western boundary of the park, on land once worked as a sand quarry. The marker shows the general area only.</p><p><span class="tbc">Exact site outline TBC</span></p>',
+      cam: { center: [143.080, -37.300], zoom: 13.7, pitch: 68, bearing: 80 } },
+    { title: 'What’s coming: a downhill bike track',
+      body: '<figure><img src="assets/lg-quarry-after.webp" alt="Illustration of the former quarry rehabilitated as a downhill bike track"><figcaption>Illustrative concept only.</figcaption></figure><p>The former quarry is being rehabilitated and turned into a downhill mountain-bike track, with a pulley lift to take riders back up the hill.</p><p><span class="tbc">Track and lift line to be drawn once the layout is confirmed</span></p>',
+      cam: { center: [143.083, -37.301], zoom: 14.4, pitch: 72, bearing: 62 } }
+  ];
+  var MARKERS = [
+    { ll: [143.1103, -37.2993], name: 'Langi Ghiran', sub: 'Lar-ne-jeering', stop: 1 },
+    { ll: [143.0920, -37.2902], name: 'Picnic ground', sub: 'Reservoir Track', stop: 2 },
+    { ll: [143.0800, -37.3000], name: 'LG Recycling', sub: 'General area · outline TBC', stop: 3, cls: 'site' },
+    { ll: [142.9280, -37.2830], name: 'Ararat', sub: 'about 14 km west' }
+  ];
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+  var $ = function (id) { return document.getElementById(id); };
+  var map, i = 0, playing = false, timer = null, seq = 0;
+
+  function fail() { tour.classList.add('failed'); }
+  if (typeof maplibregl === 'undefined') return fail();
+
+  try {
+    map = new maplibregl.Map({
+      container: 'tour-map',
+      attributionControl: { compact: true },
+      cooperativeGestures: coarse,
+      maxPitch: 80,
+      center: [143.060, -37.31], zoom: 10.6, pitch: 45, bearing: 60,
+      style: {
+        version: 8,
+        sources: {
+          sat: { type: 'raster', tileSize: 256, maxzoom: 18,
+            tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+            attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics, GIS User Community' },
+          dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
+            tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+            attribution: 'Terrain: Mapzen, AWS Open Data' },
+          shade: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
+            tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'] }
+        },
+        layers: [
+          { id: 'bg', type: 'background', paint: { 'background-color': '#2E383C' } },
+          { id: 'sat', type: 'raster', source: 'sat', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.06 } },
+          { id: 'shade', type: 'hillshade', source: 'shade', paint: { 'hillshade-exaggeration': 0.22, 'hillshade-shadow-color': '#0F1416', 'hillshade-highlight-color': '#F7F6F2' } }
+        ],
+        terrain: { source: 'dem', exaggeration: 1.5 },
+        sky: { 'sky-color': '#8DB4CF', 'horizon-color': '#E4E8E6', 'fog-color': '#DCE2E0', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.7, 'fog-ground-blend': 0.75 }
+      }
+    });
+  } catch (e) { return fail(); }
+
+  map.on('error', function (e) { if (e && e.error && /webgl/i.test(String(e.error.message))) fail(); });
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+  map.addControl(new maplibregl.FullscreenControl({ container: tour }), 'top-right');
+  map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
+
+  MARKERS.forEach(function (m) {
+    var el = document.createElement('div');
+    el.className = 'tour-marker' + (m.cls ? ' ' + m.cls : '');
+    el.innerHTML = '<i></i><span>' + m.name + (m.sub ? '<small>' + m.sub + '</small>' : '') + '</span>';
+    if (m.stop != null) {
+      el.setAttribute('role', 'button'); el.tabIndex = 0;
+      el.addEventListener('click', function (ev) { ev.stopPropagation(); stopPlay(); go(m.stop); });
+      el.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { stopPlay(); go(m.stop); } });
+    }
+    new maplibregl.Marker({ element: el, anchor: 'left', offset: [-5, 0] }).setLngLat(m.ll).addTo(map);
+  });
+
+  var dots = $('tour-dots');
+  STOPS.forEach(function (s, n) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('aria-label', 'Stop ' + (n + 1) + ': ' + s.title);
+    b.addEventListener('click', function () { stopPlay(); go(n); });
+    dots.appendChild(b);
+  });
+
+  function render() {
+    var s = STOPS[i];
+    $('tour-count').textContent = (i + 1) + ' / ' + STOPS.length;
+    $('tour-title').textContent = s.title;
+    $('tour-body').innerHTML = s.body;
+    Array.prototype.forEach.call(dots.children, function (b, n) { b.setAttribute('aria-current', n === i ? 'true' : 'false'); });
+  }
+
+  function pad() {
+    var el = $('tour-panel');
+    if (el.classList.contains('hide')) return { top: 0, bottom: 0, left: 0, right: 0 };
+    return window.innerWidth <= 760
+      ? { top: 0, bottom: Math.round(el.offsetHeight * 0.8), left: 0, right: 0 }
+      : { top: 0, bottom: 0, left: el.offsetWidth + 24, right: 0 };
+  }
+
+  function go(n) {
+    i = (n + STOPS.length) % STOPS.length;
+    render();
+    clearTimeout(timer);
+    var s = STOPS[i], my = ++seq;
+    map.stop();
+    map.flyTo(Object.assign({ duration: reduce ? 0 : 6500, curve: 1.3, padding: pad() }, s.cam));
+    map.once('moveend', function () {
+      if (my !== seq) return;
+      if (s.orbit && !reduce) {
+        map.easeTo({ bearing: s.cam.bearing + 100, duration: 14000, easing: function (t) { return t; } });
+      }
+      if (playing) {
+        timer = setTimeout(function () {
+          if (!playing) return;
+          if (i === STOPS.length - 1) { stopPlay(); return; }
+          go(i + 1);
+        }, s.orbit ? 14500 : 5000);
+      }
+    });
+  }
+
+  function startPlay() { playing = true; $('tour-play').textContent = 'Pause'; go(i === STOPS.length - 1 ? 0 : i); }
+  function stopPlay() { playing = false; clearTimeout(timer); $('tour-play').textContent = 'Play tour'; }
+
+  $('tour-play').addEventListener('click', function () { playing ? (stopPlay(), map.stop()) : startPlay(); });
+  $('tour-prev').addEventListener('click', function () { stopPlay(); go(i - 1); });
+  $('tour-next').addEventListener('click', function () { stopPlay(); go(i + 1); });
+  $('tour-free').addEventListener('click', function () { stopPlay(); map.stop(); $('tour-panel').classList.add('hide'); $('tour-show').hidden = false; });
+  $('tour-show').addEventListener('click', function () { $('tour-panel').classList.remove('hide'); $('tour-show').hidden = true; });
+
+  ['mousedown', 'touchstart', 'wheel'].forEach(function (ev) {
+    map.getCanvasContainer().addEventListener(ev, function () { if (playing) stopPlay(); map.stop(); $('tour-hint').classList.add('gone'); }, { passive: true });
+  });
+  setTimeout(function () { $('tour-hint').classList.add('gone'); }, 7000);
+
+  render();
+  map.on('load', function () { go(0); });
+})();
+</script>
+<script src="assets/site.js"></script>
+</body>
+</html>
