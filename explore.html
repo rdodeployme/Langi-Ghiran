@@ -637,7 +637,7 @@
               tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'] }
           },
           layers: [
-            { id: 'bg', type: 'background', paint: { 'background-color': '#2E383C' } },
+            { id: 'bg', type: 'background', paint: { 'background-color': '#8A8165' } },
             { id: 'sat', type: 'raster', source: 'sat', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.06 } },
             { id: 'shade', type: 'hillshade', source: 'shade', paint: { 'hillshade-exaggeration': ['interpolate', ['linear'], ['zoom'], 11, 0.25, 14.5, 0], 'hillshade-shadow-color': '#0F1416', 'hillshade-highlight-color': '#F7F6F2' } }
           ],
@@ -664,7 +664,14 @@
     });
     // keep labels pinned once terrain tiles finish loading under them
     map.on('idle', function () { MOBJ.forEach(function (mk) { mk.setLngLat(mk.getLngLat()); }); });
-    map.on('load', function () { addPlan(); tour.classList.add('loaded'); if (!introOn) go(i); });
+    // layers go on as soon as the style is parsed; 'load' waits for every tile on screen, which can take a while
+    map.once('style.load', function () {
+      addPlan();
+      var s0 = STOPS[i]; showPlan(riding ? riding : s0.plan); if (!riding) showMarkers(s0.mk);
+      if (pendingRide && !map.isMoving()) { var pr = pendingRide; pendingRide = null; ride(pr); }
+    });
+    var unveil = function () { tour.classList.add('loaded'); };
+    map.once('load', unveil); map.once('idle', unveil); setTimeout(unveil, 3500);
   }
   function showMarkers(list) { Object.keys(MK).forEach(function (k) { MK[k].style.display = list && list.indexOf(k) > -1 ? 'flex' : 'none'; }); }
 
@@ -781,9 +788,10 @@
 
   /* ---------- virtual rides ---------- */
   var rideRaf = null, riding = null;
-  var RIDE_SECS = { lift: 24, beginner: 40, intermediate: 32, expert: 26 };
+  var RIDE_SECS = { lift: 22, beginner: 44, intermediate: 30, expert: 26 };
+  var RIDE_Z = 16.8, RIDE_PITCH = 55;
   function ride(k) {
-    if (!ready) return;
+    if (!ready) { pendingRide = k; return; }
     stopRide(true);
     riding = k;
     var path = PATH[k], col = k === 'lift' ? '#FFFFFF' : COL[k];
@@ -796,11 +804,12 @@
     $('ride-stop').addEventListener('click', function () { stopPlay(); stopRide(); go(i); });
     var dur = (reduce ? 8 : RIDE_SECS[k]) * 1000, start = null, b0 = null, my = ++seq;
     map.stop();
-    // ease into the start of the ride first
-    var v = view(), rp = { top: Math.round(v.H * 0.22), bottom: v.B, left: v.L, right: 0 };
+    var v = view(), rp = { top: Math.round(v.H * 0.2), bottom: v.B, left: v.L, right: 0 };
     var p0 = along(path, 18), b = brg(along(path, 0), along(path, 40));
-    map.once('moveend', function () {
-      if (my !== seq) return;
+    // glide to the start with our own jumpTo steps (easeTo with terrain + padding can dive under the ground),
+    // then wait for the imagery under the start to load before rolling
+    camGlide({ center: p0, bearing: b, pitch: RIDE_PITCH, zoom: RIDE_Z, padding: rp }, reduce ? 0 : 2200, my, function () {
+      whenTilesReady(my, 2500, function () {
       (function step(now) {
         if (my !== seq) return;
         if (start === null) start = now;
@@ -809,7 +818,7 @@
         var target = brg(along(path, Math.max(0, s - 10)), along(path, Math.min(path.len, s + 60)));
         if (s > path.len - 8) target = b0 == null ? target : b0;
         b0 = b0 == null ? target : b0 + ((((target - b0) % 360) + 540) % 360 - 180) * 0.035;
-        map.jumpTo({ center: look, bearing: b0, pitch: 58, zoom: 17.1, padding: rp });
+        map.jumpTo({ center: look, bearing: b0, pitch: RIDE_PITCH, zoom: RIDE_Z, padding: rp });
         map.getSource('me').setData(fc([feat({ c: col }, 'Point', pos)]));
         var bar = $('ride-bar'); if (bar) bar.style.width = (u * 100).toFixed(1) + '%';
         var m = $('ride-m'); if (m) m.textContent = Math.round(s) + ' / ' + Math.round(path.len) + ' m';
@@ -818,8 +827,27 @@
         if (u < 1) { rideRaf = requestAnimationFrame(step); return; }
         rideDone();
       })(performance.now());
+      });
     });
-    map.easeTo({ center: p0, bearing: b, pitch: 58, zoom: 17.1, padding: rp, duration: reduce ? 0 : 2400 });
+  }
+  function camGlide(to, dur, my, done) {
+    var c0 = map.getCenter(), z0 = map.getZoom(), p0 = map.getPitch(), b0 = map.getBearing(), pd0 = map.getPadding(), t0 = performance.now();
+    var db = ((((to.bearing - b0) % 360) + 540) % 360) - 180, pd1 = to.padding;
+    (function step(now) {
+      if (my !== seq) return;
+      var u = dur ? Math.min(1, (now - t0) / dur) : 1, e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      map.jumpTo({ center: [c0.lng + (to.center[0] - c0.lng) * e, c0.lat + (to.center[1] - c0.lat) * e], zoom: z0 + (to.zoom - z0) * e, pitch: p0 + (to.pitch - p0) * e, bearing: b0 + db * e,
+        padding: { top: pd0.top + (pd1.top - pd0.top) * e, bottom: pd0.bottom + (pd1.bottom - pd0.bottom) * e, left: pd0.left + (pd1.left - pd0.left) * e, right: pd0.right + (pd1.right - pd0.right) * e } });
+      if (u < 1) rideRaf = requestAnimationFrame(step); else done();
+    })(t0);
+  }
+  function whenTilesReady(my, max, done) {
+    var t0 = performance.now();
+    (function check() {
+      if (my !== seq) return;
+      if (map.areTilesLoaded() || performance.now() - t0 > max) return done();
+      rideRaf = requestAnimationFrame(check);
+    })();
   }
   function rideDone() {
     var k = riding; stopRide();
@@ -1076,14 +1104,14 @@
     mode = m; tour.setAttribute('data-mode', m);
     document.querySelectorAll('[data-mode-btn]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.modeBtn === m ? 'true' : 'false'); });
     mpCardEl.querySelectorAll('video').forEach(function (v) { if (m === 'fly') v.pause(); else { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); } });
-    if (m === 'fly') { if (soundOn) fadeAmb(0, function () { amb.pause(); }); if (!map) initMap(); else go(i); }
+    if (m === 'fly') { if (soundOn) fadeAmb(0, function () { amb.pause(); }); if (!map) initMap(); if (map) go(i); }
     else if (soundOn) { var pa = amb.play(); if (pa && pa.catch) pa.catch(function () {}); fadeAmb(duskOn ? 0.32 : 0.6); }
     else { stopAll(); if (map) map.stop(); mpGo(mpSel, 0); }
   }
   function flyTo3D(k) {
     var n = k === 'kids' ? SLUG.indexOf('kids') : k === 'glamp' ? SLUG.indexOf('glamping') : IDX[k];
     pendingRide = IDX[k] != null ? k : null;
-    i = n; stopAll(); setMode('fly'); if (map) go(n);
+    i = n; stopAll(); setMode('fly');
   }
   document.querySelectorAll('[data-mode-btn]').forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.modeBtn !== mode) setMode(b.dataset.modeBtn); }); });
 
