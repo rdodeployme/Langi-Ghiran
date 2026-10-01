@@ -50,6 +50,13 @@
 .tour-marker i{width:10px;height:10px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 3px rgba(252,200,48,.3);flex:none}
 .tour-marker small{display:block;font-weight:500;color:rgba(255,255,255,.65);font-size:.7rem}
 .tour-marker.site i{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.3)}
+.tour-marker.plan{display:none;font-size:.72rem;padding:5px 9px 5px 6px}
+.tour-marker.plan i{width:8px;height:8px}
+.show-plan .tour-marker.plan{display:flex}
+.tour-key{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;font-size:.84rem!important;color:rgba(255,255,255,.75)!important}
+.tour-key i{display:inline-block;width:22px;height:0;border-top:3px solid var(--yellow);margin-right:-4px}
+.tour-key i.k-site{border-top:2px dashed #fff}
+.tour-key i.k-lift{border-top:2px dashed #fff;width:18px}
 .tour-fallback{position:absolute;inset:0;display:none;align-items:flex-end}
 .tour-fallback img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
 .tour-fallback div{position:relative;color:#fff;padding:32px;max-width:560px}
@@ -92,7 +99,7 @@
   <p class="tour-hint" id="tour-hint">Drag to move · right-click drag or two fingers to tilt and turn</p>
 
   <div class="tour-panel" id="tour-panel" aria-live="polite">
-    <div class="count"><span id="tour-count">1 / 5</span><span class="dots" id="tour-dots"></span></div>
+    <div class="count"><span id="tour-count">1 / 7</span><span class="dots" id="tour-dots"></span></div>
     <h1 id="tour-title">Langi Ghiran in 3D</h1>
     <div id="tour-body"><p>Loading the terrain…</p></div>
     <div class="tour-ctrl">
@@ -126,9 +133,9 @@
     </div>
     <ul class="note">
       <li>Satellite imagery dates vary and may not show recent works on the property.</li>
-      <li>The LG Recycling marker shows the general area only. <span class="tbc">Exact site outline TBC</span></li>
-      <li>The downhill track and pulley lift aren't drawn yet. <span class="tbc">Layout TBC</span></li>
-      <li>Imagery &copy; Esri, Maxar, Earthstar Geographics and the GIS User Community. Terrain: Terrain Tiles (Mapzen, AWS Open Data).</li>
+      <li>The rehabilitation area outline is approximate.</li>
+      <li>The downhill tracks, pulley lift and concept images are an indicative idea of what the site could look like, not a final design. <span class="tbc">Final layout TBC</span></li>
+      <li>Imagery &copy; Esri World Imagery (Wayback, Oct 2025 release), Maxar, Earthstar Geographics. Terrain: Terrain Tiles (Mapzen, AWS Open Data).</li>
     </ul>
   </div>
 </section>
@@ -180,26 +187,64 @@
 (function () {
   var tour = document.getElementById('tour');
   var STOPS = [
-    { title: 'Langi Ghiran from the western plains',
+    { title: 'Langi Ghiran from the plains',
       body: '<p>Langi Ghiran rises from the plains between Ararat and Beaufort. This is the real landform, built from elevation data with satellite imagery draped over it.</p><p>Press <b>Play tour</b> for a guided fly-through, or use the arrows to go stop by stop.</p>',
-      cam: { center: [143.088, -37.302], zoom: 12.1, pitch: 62, bearing: 72 } },
+      cam: { center: [143.098, -37.288], zoom: 12.5, pitch: 62, bearing: 140 } },
     { title: 'Lar-ne-jeering',
       body: '<p>In the language of the Djab Wurrung people, the mountain is Lar-ne-jeering: "Home of the Yellow-tailed Black Cockatoos". Granite outcrops and eucalypt woodland cover its slopes.</p>',
       cam: { center: [143.1103, -37.2993], zoom: 13.9, pitch: 66, bearing: 230 }, orbit: true },
     { title: 'The picnic ground and Reservoir Track',
       body: '<p>The park’s visitor area sits on its western side. From the picnic ground, the Reservoir Track leads to the reservoir built from local granite in 1880 to supply water to Ararat.</p>',
       cam: { center: [143.094, -37.293], zoom: 14.3, pitch: 64, bearing: 105 } },
-    { title: 'The western boundary',
-      body: '<p>LG Recycling’s property adjoins the western boundary of the park, on land once worked as a sand quarry. The marker shows the general area only.</p><p><span class="tbc">Exact site outline TBC</span></p>',
-      cam: { center: [143.080, -37.300], zoom: 13.7, pitch: 68, bearing: 80 } },
-    { title: 'What’s coming: a downhill bike track',
-      body: '<figure><img src="assets/lg-quarry-after.webp" alt="Illustration of the former quarry rehabilitated as a downhill bike track"><figcaption>Illustrative concept only.</figcaption></figure><p>The former quarry is being rehabilitated and turned into a downhill mountain-bike track, with a pulley lift to take riders back up the hill.</p><p><span class="tbc">Track and lift line to be drawn once the layout is confirmed</span></p>',
-      cam: { center: [143.083, -37.301], zoom: 14.4, pitch: 72, bearing: 62 } }
+    { title: 'The former quarry',
+      body: '<p>This is the area being rehabilitated: a former sand quarry at the foot of the range, off Warrak Road. The pale ground in the middle is the old quarry floor, and the slope rises to the south towards the park.</p><p class="tour-key"><i class="k-site"></i>Rehabilitation area (approximate)</p>',
+      cam: { center: [143.0906, -37.2752], zoom: 15.4, pitch: 58, bearing: 165 } },
+    { title: 'The downhill tracks', plan: true,
+      body: '<p>An indicative layout: two downhill lines start at a top station on the upper slope. A flowing line winds down through the old quarry floor, and a steeper line drops down the eastern side, both finishing at the base area.</p><p class="tour-key"><i class="k-trail"></i>Downhill tracks <i class="k-lift"></i>Pulley lift</p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>',
+      cam: { center: [143.0910, -37.2768], zoom: 15.9, pitch: 64, bearing: 325 } },
+    { title: 'The pulley lift', plan: true,
+      body: '<figure><img src="assets/lg-lift-concept.webp" alt="Concept image of a rider being towed uphill by a pulley bike lift beside a dirt trail"><figcaption>Illustrative concept only.</figcaption></figure><p>A pulley lift runs straight up the slope beside the tracks, roughly 500 m from the base to the top station, so riders spend their time riding rather than pushing.</p>',
+      cam: { center: [143.0908, -37.2758], zoom: 16.1, pitch: 70, bearing: 152 } },
+    { title: 'What it could look like', plan: true,
+      body: '<figure><img src="assets/lg-site-concept.webp" alt="Concept aerial image of the former quarry rehabilitated with downhill tracks, a pulley lift and native revegetation"><figcaption>Illustrative concept based on the real site. Not a final design.</figcaption></figure><p>Revegetated ground, tracks down the slope and a lift back to the top, on land that was once a sand quarry.</p>',
+      cam: { center: [143.0906, -37.2762], zoom: 15.6, pitch: 0, bearing: 0 } }
   ];
+  var SITE = (function () {
+    var B = [143.0898, -37.2745], T = [143.0928, -37.2785];
+    var RING = [[143.08725,-37.27622],[143.08729,-37.27657],[143.08742,-37.2769],[143.0875,-37.27726],[143.08759,-37.27763],[143.08778,-37.278],[143.08807,-37.27831],[143.0885,-37.27851],[143.08895,-37.27866],[143.08941,-37.27878],[143.08987,-37.27886],[143.09033,-37.27893],[143.09081,-37.27899],[143.09131,-37.27902],[143.09183,-37.279],[143.09229,-37.27882],[143.09265,-37.27853],[143.09301,-37.27826],[143.09334,-37.27798],[143.09364,-37.27768],[143.09393,-37.27737],[143.09412,-37.27701],[143.09424,-37.27663],[143.09426,-37.27624],[143.09417,-37.27586],[143.09398,-37.27551],[143.09377,-37.27519],[143.09352,-37.27489],[143.0932,-37.27465],[143.09294,-37.27439],[143.09268,-37.27413],[143.09239,-37.27389],[143.09199,-37.27375],[143.09158,-37.27369],[143.09118,-37.27359],[143.09077,-37.27358],[143.09036,-37.27356],[143.08995,-37.27358],[143.08954,-37.27364],[143.08915,-37.27376],[143.08879,-37.27393],[143.08848,-37.27415],[143.0882,-37.2744],[143.08803,-37.2747],[143.08792,-37.27501],[143.08782,-37.27531],[143.08757,-37.27558],[143.08731,-37.27588],[143.08725,-37.27622]];
+    var LINES = [
+      [T, [143.0912, -37.2781], [143.0893, -37.2776], [143.0880, -37.2771], [143.0879, -37.2764], [143.0893, -37.2761], [143.0899, -37.2756], [143.0885, -37.2751], B],
+      [T, [143.0935, -37.2779], [143.0936, -37.2770], [143.0925, -37.2764], [143.0930, -37.2758], [143.0921, -37.2751], B]
+    ];
+    function spline(P) {
+      P = [P[0]].concat(P, [P[P.length - 1]]); var out = [];
+      for (var k = 1; k < P.length - 2; k++) for (var s = 0; s < 16; s++) {
+        var t = s / 16, t2 = t * t, t3 = t2 * t;
+        out.push([0, 1].map(function (d) { var a = P[k - 1][d], b = P[k][d], c = P[k + 1][d], e = P[k + 2][d];
+          return 0.5 * (2 * b + (c - a) * t + (2 * a - 5 * b + 4 * c - e) * t2 + (3 * b - a - 3 * c + e) * t3); }));
+      }
+      out.push(P[P.length - 2]); return out;
+    }
+    var kx = 111320 * Math.cos(B[1] * Math.PI / 180), ky = 111320;
+    var ang = Math.atan2((T[1] - B[1]) * ky, (T[0] - B[0]) * kx);
+    function box(c, w, h) {
+      var ca = Math.cos(ang), sa = Math.sin(ang);
+      return [[[-1, -1], [1, -1], [1, 1], [-1, 1], [-1, -1]].map(function (q) {
+        var x = q[0] * w / 2, y = q[1] * h / 2; return [c[0] + (x * ca - y * sa) / kx, c[1] + (x * sa + y * ca) / ky]; })];
+    }
+    var f = [{ type: 'Feature', properties: { kind: 'site' }, geometry: { type: 'Polygon', coordinates: [RING] } },
+      { type: 'Feature', properties: { kind: 'lift' }, geometry: { type: 'LineString', coordinates: [B, T] } }];
+    LINES.forEach(function (l) { f.push({ type: 'Feature', properties: { kind: 'trail' }, geometry: { type: 'LineString', coordinates: spline(l) } }); });
+    for (var n = 1; n <= 5; n++) { var q = n / 6; f.push({ type: 'Feature', properties: { kind: 'pylon', h: 9 }, geometry: { type: 'Polygon', coordinates: box([B[0] + (T[0] - B[0]) * q, B[1] + (T[1] - B[1]) * q], 2.2, 2.2) } }); }
+    [B, T].forEach(function (c) { f.push({ type: 'Feature', properties: { kind: 'station', h: 5 }, geometry: { type: 'Polygon', coordinates: box(c, 14, 8) } }); });
+    return { type: 'FeatureCollection', features: f };
+  })();
   var MARKERS = [
     { ll: [143.1103, -37.2993], name: 'Langi Ghiran', sub: 'Lar-ne-jeering', stop: 1 },
     { ll: [143.0920, -37.2902], name: 'Picnic ground', sub: 'Reservoir Track', stop: 2 },
-    { ll: [143.0800, -37.3000], name: 'LG Recycling', sub: 'General area · outline TBC', stop: 3, cls: 'site' },
+    { ll: [143.0906, -37.2736], name: 'LG Recycling', sub: 'Rehabilitation area', stop: 3, cls: 'site' },
+    { ll: [143.0898, -37.2745], name: 'Lift base', cls: 'plan', stop: 5 },
+    { ll: [143.0928, -37.2785], name: 'Top station', cls: 'plan', stop: 5 },
     { ll: [142.9280, -37.2830], name: 'Ararat', sub: 'about 14 km west' }
   ];
 
@@ -222,8 +267,8 @@
         version: 8,
         sources: {
           sat: { type: 'raster', tileSize: 256, maxzoom: 18,
-            tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-            attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics, GIS User Community' },
+            tiles: ['https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/20512/{z}/{y}/{x}'],
+            attribution: 'Imagery &copy; Esri World Imagery (Wayback, Oct 2025), Maxar, Earthstar Geographics' },
           dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
             tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
             attribution: 'Terrain: Mapzen, AWS Open Data' },
@@ -285,10 +330,13 @@
   function go(n) {
     i = (n + STOPS.length) % STOPS.length;
     render();
+    if (map.getSource('trails')) showPlan(!!STOPS[i].plan);
     clearTimeout(timer);
     var s = STOPS[i], my = ++seq;
     map.stop();
-    map.flyTo(Object.assign({ duration: reduce ? 0 : 6500, curve: 1.3, padding: pad() }, s.cam));
+    var cam = Object.assign({}, s.cam);
+    if (window.innerWidth <= 760) cam.zoom -= 0.8;
+    map.flyTo(Object.assign({ duration: reduce ? 0 : 6500, curve: 1.3, padding: pad() }, cam));
     map.once('moveend', function () {
       if (my !== seq) return;
       if (s.orbit && !reduce) {
@@ -318,8 +366,44 @@
   });
   setTimeout(function () { $('tour-hint').classList.add('gone'); }, 7000);
 
+  var trails = SITE.features.filter(function (f) { return f.properties.kind === 'trail'; });
+  var drawn = { type: 'FeatureCollection', features: [] }, anim = null;
+
+  function addPlan() {
+    map.addSource('site', { type: 'geojson', data: { type: 'FeatureCollection', features: SITE.features.filter(function (f) { return f.properties.kind === 'site'; }) } });
+    map.addSource('trails', { type: 'geojson', data: drawn });
+    map.addSource('lift', { type: 'geojson', data: { type: 'FeatureCollection', features: SITE.features.filter(function (f) { return /lift|pylon|station/.test(f.properties.kind); }) } });
+    map.addLayer({ id: 'site-fill', type: 'fill', source: 'site', paint: { 'fill-color': '#FFFFFF', 'fill-opacity': 0.08 } });
+    map.addLayer({ id: 'site-line', type: 'line', source: 'site', paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 12, 1, 16, 2.5], 'line-dasharray': [2, 1.5], 'line-opacity': 0.9 } });
+    map.addLayer({ id: 'trail-case', type: 'line', source: 'trails', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#0F1416', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 3, 17, 10], 'line-opacity': 0.55 } });
+    map.addLayer({ id: 'trail', type: 'line', source: 'trails', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#FCC830', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1.5, 17, 5] } });
+    map.addLayer({ id: 'lift-line', type: 'line', source: 'lift', filter: ['==', ['get', 'kind'], 'lift'], layout: { visibility: 'none' }, paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1, 17, 3], 'line-dasharray': [3, 1] } });
+    map.addLayer({ id: 'lift-towers', type: 'fill-extrusion', source: 'lift', filter: ['in', ['get', 'kind'], ['literal', ['pylon', 'station']]], layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': ['match', ['get', 'kind'], 'station', '#FCC830', '#E4E2DA'], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': 0, 'fill-extrusion-opacity': 0.95 } });
+  }
+
+  function showPlan(on) {
+    tour.classList.toggle('show-plan', on);
+    ['lift-line', 'lift-towers'].forEach(function (id) { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'); });
+    if (!map.getSource('trails')) return;
+    cancelAnimationFrame(anim);
+    if (!on) { drawn.features = []; map.getSource('trails').setData(drawn); return; }
+    if (drawn.features.length && drawn.full) return;
+    var t0 = null, dur = reduce ? 1 : 3200;
+    (function step(ts) {
+      if (t0 === null) t0 = ts;
+      var k = Math.min(1, (ts - t0) / dur);
+      drawn.features = trails.map(function (f) {
+        var c = f.geometry.coordinates, n = Math.max(2, Math.round(c.length * k));
+        return { type: 'Feature', properties: f.properties, geometry: { type: 'LineString', coordinates: c.slice(0, n) } };
+      });
+      drawn.full = k === 1;
+      map.getSource('trails').setData(drawn);
+      if (k < 1) anim = requestAnimationFrame(step);
+    })(performance.now());
+  }
+
   render();
-  map.on('load', function () { go(0); });
+  map.on('load', function () { addPlan(); go(i); });
 })();
 </script>
 <script src="assets/site.js"></script>
