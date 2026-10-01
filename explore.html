@@ -92,9 +92,83 @@
 .tour-fallback{position:absolute;inset:0;display:none;align-items:flex-end}
 .tour-fallback img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
 .tour-fallback div{position:relative;color:#fff;padding:32px;max-width:560px}
-.tour.failed .tour-fallback{display:flex}
-.tour.failed .tour-panel,.tour.failed .tour-hint{display:none}
+.tour[data-mode="fly"].failed .tour-fallback{display:flex}
+.tour.failed .tour-panel{display:none}
 .maplibregl-ctrl-attrib{font-size:11px}
+
+/* ---------- mode switch ---------- */
+.mode-switch{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:7;display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(15,20,22,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.mode-switch button{font:600 .86rem/1 "Public Sans",system-ui,sans-serif;border:0;border-radius:999px;padding:11px 16px;background:transparent;color:rgba(255,255,255,.78);cursor:pointer;white-space:nowrap}
+.mode-switch button:hover{color:#fff}
+.mode-switch button[aria-selected="true"]{background:#fff;color:var(--ink)}
+.tour[data-mode="park"] .tour-panel,.tour[data-mode="park"] .tour-loading,.tour[data-mode="park"] .maplibregl-control-container{display:none}
+/* ---------- park explorer ---------- */
+.mp{position:absolute;inset:0;z-index:6;background:radial-gradient(ellipse at 60% 45%,#26302F 0%,#151B1D 55%,#0F1416 100%);transition:opacity .6s ease,visibility 0s 0s}
+.tour[data-mode="fly"] .mp{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .6s ease,visibility 0s .6s}
+.mp-stage{position:absolute;inset:0;overflow:hidden;perspective:1500px}
+.mp-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 75% at 60% 50%,transparent 55%,rgba(15,20,22,.6) 100%)}
+.mp-plane{position:absolute;left:0;top:0;width:2048px;height:2048px;transform-origin:0 0;transform-style:preserve-3d;will-change:transform;--t:32deg;--s:1}
+.mp-img{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none;-webkit-mask-image:radial-gradient(ellipse 58% 58% at 56% 42%,#000 64%,transparent 100%);mask-image:radial-gradient(ellipse 58% 58% at 56% 42%,#000 64%,transparent 100%)}
+/* the real satellite surroundings, so the concept blends into the landscape instead of ending in a hard edge */
+.mp-ctx{position:absolute;left:-450.56px;top:-303.36px;width:2949.12px;height:2621.44px;max-width:none;display:block;user-select:none;filter:saturate(.95) brightness(.96);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%)}
+.mp-today{opacity:0;transition:opacity .45s ease}
+.mp.today .mp-today{opacity:1}
+#mp-pins{position:absolute;inset:0}
+.mp-anchor{position:absolute;width:1px;height:1px}
+/* pins live in a flat layer above the tilted model, positioned from anchors inside it, so they stay crisp */
+.mp-pins{position:absolute;inset:0;z-index:1;pointer-events:none}
+.mp-pin{position:absolute;left:0;top:0;display:flex;flex-direction:column;align-items:center;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;will-change:transform;-webkit-tap-highlight-color:transparent}
+.mp-pill{display:flex;align-items:center;gap:7px;padding:8px 13px 8px 9px;border-radius:999px;background:rgba(15,20,22,.88);color:#fff;font:600 .84rem/1 "Public Sans",system-ui,sans-serif;white-space:nowrap;box-shadow:0 8px 20px rgba(0,0,0,.35);transition:transform .2s var(--ease),background .2s,color .2s,opacity .3s}
+.mp-pill .g{width:13px;height:13px;border-width:1.5px}
+.mp-stem{display:block;width:2px;height:16px;background:rgba(255,255,255,.85);position:relative}
+.mp-stem::after{content:"";position:absolute;left:50%;bottom:-5px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 rgba(255,255,255,.6);animation:mppulse 2.4s ease-out infinite}
+@keyframes mppulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}70%{box-shadow:0 0 0 12px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+.mp-pin:hover .mp-pill,.mp-pin.hl .mp-pill,.mp-pin:focus-visible .mp-pill{transform:translateY(-3px);background:#fff;color:var(--ink)}
+.mp-pin.on{z-index:2}
+.mp-pin.on .mp-pill{background:var(--yellow);color:var(--ink)}
+.mp-pin.on .mp-stem::after{background:var(--yellow)}
+.mp.sel .mp-pin:not(.on) .mp-pill{opacity:.6}
+.mp-tf{position:absolute;top:16px;right:16px;z-index:2;display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(15,20,22,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mp-tf button{font:600 .82rem/1 "Public Sans",system-ui,sans-serif;border:0;border-radius:999px;padding:10px 14px;background:transparent;color:rgba(255,255,255,.78);cursor:pointer}
+.mp-tf button[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}
+.mp-hint{position:absolute;right:24px;bottom:24px;z-index:2;margin:0;font-size:.82rem;color:rgba(255,255,255,.7);background:rgba(15,20,22,.6);padding:8px 14px;border-radius:999px;transition:opacity .4s}
+.mp.sel .mp-hint{opacity:0}
+.mp-card{position:absolute;left:24px;bottom:24px;z-index:3;width:min(400px,calc(100% - 48px));overflow:auto;background:rgba(15,20,22,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;border-radius:18px;padding:22px 22px 18px;box-shadow:0 18px 50px rgba(0,0,0,.35);max-height:calc(100% - 96px)}
+.mp-card h2{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:clamp(1.3rem,2vw,1.6rem);line-height:1.15;margin:0 0 8px;color:#fff;display:flex;align-items:center;gap:10px}
+.mp-card h2 .g{width:18px;height:18px}
+.mp-card p{margin:0 0 12px;font-size:.92rem;line-height:1.55;color:rgba(255,255,255,.86)}
+.mp-card .tbc{color:var(--yellow);background:transparent;border-color:rgba(252,200,48,.55)}
+.mp-card figure{margin:0 0 14px}
+.mp-card figure img,.mp-card figure video{display:block;width:100%;aspect-ratio:16/8.5;object-fit:cover;border-radius:12px;background:#0F1416}
+.mp-card figcaption{display:none}
+.mp-card .profile{height:52px}
+.mp-eyebrow{font-size:.74rem!important;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)!important;margin:0 0 8px!important}
+.mp-list{display:grid;gap:8px;margin:4px 0 12px}
+.mp-top{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.mp-top button{font:600 .82rem/1 "Public Sans",system-ui,sans-serif;letter-spacing:0;text-transform:none;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:transparent;color:#fff;padding:9px 12px;cursor:pointer}
+.mp-top button:hover{border-color:#fff}
+.mp-top .mp-arrows{margin-left:auto;display:flex;gap:6px}
+.mp-top .mp-arrows button{width:38px;padding:9px 0}
+@media (max-width:760px){
+  .mode-switch{top:10px}
+  .mode-switch button{padding:10px 13px;font-size:.8rem}
+  .mp-tf{top:62px;right:12px}
+  .mp-tf button{padding:8px 12px;font-size:.76rem}
+  .mp-hint{display:none}
+  .mp-card{left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:54%;padding:14px 16px 12px;border-radius:14px}
+  .mp-card h2{font-size:1.2rem}
+  .mp-card p{font-size:.88rem;margin-bottom:8px}
+  .mp-card figure video,.mp-card figure img{aspect-ratio:16/7}
+  .mp-list{grid-template-columns:1fr 1fr;gap:6px}
+  .mp-list .run-card{grid-template-columns:auto 1fr;padding:9px 10px;gap:8px}
+  .mp-list .run-card small,.mp-list .run-card em{display:none}
+  .mp-list .run-card b{font-size:.84rem}
+  .mp-pill{font-size:.76rem;padding:7px 9px}
+  .mp-pin:not(.on) .mp-label{display:none}
+  .mp-pin:not(.on) .mp-pill{padding:8px}
+  .mp-stem{height:10px}
+}
+@media (prefers-reduced-motion:reduce){.mp-stem::after{animation:none}}
 /* cinematic intro */
 .tour-intro{position:absolute;inset:0;z-index:8;overflow:hidden;background:var(--ink-3);transition:opacity 1.4s ease,visibility 0s 1.4s}
 .tour-intro.out{opacity:0;visibility:hidden;pointer-events:none}
@@ -109,7 +183,8 @@
 .ti-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;opacity:0;animation:tiup 1s 1.05s var(--ease) forwards}
 .ti-actions button{font:600 .95rem/1 "Public Sans",system-ui,sans-serif;border-radius:999px;padding:16px 24px;cursor:pointer;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff}
 .ti-actions .ti-go{background:var(--yellow);border-color:var(--yellow);color:var(--ink);display:inline-flex;align-items:center;gap:10px}
-.ti-actions .ti-go::before{content:"";width:0;height:0;border-left:9px solid currentColor;border-top:6px solid transparent;border-bottom:6px solid transparent}
+#ti-fly{display:inline-flex;align-items:center;gap:10px}
+#ti-fly::before{content:"";width:0;height:0;border-left:9px solid currentColor;border-top:6px solid transparent;border-bottom:6px solid transparent}
 .ti-actions button:hover{border-color:#fff}.ti-actions .ti-go:hover{background:#fff;border-color:#fff}
 .ti-meta{margin:20px 0 0;font-size:.8rem;color:rgba(255,255,255,.6);opacity:0;animation:tiup 1s 1.3s var(--ease) forwards}
 @keyframes tiup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -163,10 +238,32 @@
   </div>
 </header>
 <main id="main">
-<section class="tour" id="tour" aria-label="3D tour of Langi Ghiran and the planned bike park">
+<section class="tour" id="tour" data-mode="park" aria-label="3D tour of Langi Ghiran and the planned bike park">
   <div id="tour-map" role="application" aria-label="3D map of Langi Ghiran"></div>
   <div class="tour-loading" aria-hidden="true"><span></span>Loading the 3D landscape…</div>
-  <p class="tour-hint" id="tour-hint">Drag to move · right-click drag or two fingers to tilt and turn</p>
+
+  <div class="mode-switch" role="tablist" aria-label="View">
+    <button type="button" role="tab" data-mode-btn="park" aria-selected="true">Explore the park</button>
+    <button type="button" role="tab" data-mode-btn="fly" aria-selected="false">3D fly-through</button>
+  </div>
+
+  <div class="mp" id="mp">
+    <div class="mp-stage" id="mp-stage">
+      <div class="mp-plane" id="mp-plane">
+        <img class="mp-ctx" src="assets/lg-mp-context.webp" alt="" draggable="false">
+        <img class="mp-img" src="assets/lg-mp-concept-2048.webp" srcset="assets/lg-mp-concept-1200.webp 1200w, assets/lg-mp-concept-2048.webp 2048w" sizes="(max-width: 760px) 1200px, 2048px" alt="Concept aerial of the planned bike park on the former quarry: three downhill runs, a pulley lift, a kids’ jump park and a glamping camp" draggable="false">
+        <img class="mp-img mp-today" src="assets/lg-mp-today-2048.webp" srcset="assets/lg-mp-today-1200.webp 1200w, assets/lg-mp-today-2048.webp 2048w" sizes="(max-width: 760px) 1200px, 2048px" alt="Satellite view of the same area today: the former sand quarry" draggable="false">
+        <div id="mp-pins"></div>
+      </div>
+    </div>
+    <div class="mp-pins" id="mp-pinlayer"></div>
+    <div class="mp-tf" role="group" aria-label="Show today or the concept">
+      <button type="button" data-mptf="today" aria-pressed="false">Today</button>
+      <button type="button" data-mptf="concept" aria-pressed="true">Concept</button>
+    </div>
+    <p class="mp-hint" id="mp-hint">Pick a marker to take a closer look</p>
+    <aside class="mp-card" id="mp-card" aria-live="polite"></aside>
+  </div>
 
   <div class="tour-panel" id="tour-panel" aria-live="polite">
     <div class="count"><span id="tour-count">1 / 12</span><span class="dots" id="tour-dots"></span></div>
@@ -176,22 +273,20 @@
       <button type="button" id="tour-prev" aria-label="Previous stop">&larr;</button>
       <button type="button" class="play" id="tour-play">Play tour</button>
       <button type="button" id="tour-next" aria-label="Next stop">&rarr;</button>
-      <button type="button" class="free" id="tour-free">Explore freely</button>
     </div>
   </div>
-  <button type="button" class="tour-show" id="tour-show" hidden>Show the guided tour</button>
 
   <div class="tour-intro" id="tour-intro">
     <video src="assets/lg-clip-aerial.mp4" poster="assets/lg-park-concept.webp" muted loop playsinline preload="auto" aria-hidden="true"></video>
     <div class="ti-body">
       <p class="ti-eyebrow">LG Recycling · Langi Ghiran, Victoria</p>
       <h2 class="ti-title">From old quarry<br>to <em>bike park.</em></h2>
-      <p class="ti-sub">Fly over the real landscape in 3D, then ride every run of the planned park and take the lift back up.</p>
+      <p class="ti-sub">Explore the planned bike park, watch each run in action, then fly over the real landscape in 3D.</p>
       <div class="ti-actions">
-        <button type="button" class="ti-go" id="ti-go">Start the tour</button>
-        <button type="button" id="ti-free">Explore the map</button>
+        <button type="button" class="ti-go" id="ti-go">Explore the park</button>
+        <button type="button" id="ti-fly">Watch the 3D fly-through</button>
       </div>
-      <p class="ti-meta">About 4 minutes · Concept only, final design TBC</p>
+      <p class="ti-meta">Concept only. Final design TBC</p>
     </div>
   </div>
 
@@ -416,12 +511,12 @@
       body: '<p>Off to the side of the bike park, on the open rise looking back at the range, sit 16 glamping sites: canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift base.</p>',
       extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>2</b><span>Rows</span></div><div><b>~400 m</b><span>To lift base</span></div></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
       cam: { fit: 'glamp', pitch: 52, bearing: 205 }, mk: ['glamp', 'base'] },
-    { title: 'Today, and what it could be', plan: 'future', orbit: true,
+    { title: 'Today, and what it could be', plan: 'future', orbit: 40,
       body: '<p>An artist’s concept of the finished park, laid over the real terrain: revegetated ground, runs down the slope, a kids’ park at the bottom, the lift back to the top and the glamping camp beside it. Slide between today and the concept.</p>',
-      extra: function () { return '<div class="tf" role="group" aria-label="Compare today and the concept"><button type="button" data-tf="0" aria-pressed="false">Today</button><button type="button" data-tf="1" aria-pressed="true">Concept</button></div>' +
-        '<input class="tf-range" id="tf-range" type="range" min="0" max="100" value="100" aria-label="Blend between today and the concept"><div class="tf-ends"><span>Today</span><span>Concept</span></div>' +
+      extra: function () { return '<div class="tf" role="group" aria-label="Compare today and the concept"><button type="button" data-tf="0" aria-pressed="true">Today</button><button type="button" data-tf="1" aria-pressed="false">Concept</button></div>' +
+        '<input class="tf-range" id="tf-range" type="range" min="0" max="100" value="0" aria-label="Blend between today and the concept"><div class="tf-ends"><span>Today</span><span>Concept</span></div>' +
         '<p><span class="tbc">Illustrative concept based on the real site. Not a final design</span></p>'; },
-      cam: { fit: 'drape', pitch: 52, bearing: 330, boost: 0.55 }, mk: [] }
+      cam: { fit: 'drape', pitch: 50, bearing: 160, boost: 0.5 }, mk: [] }
   ];
   var SLUG = ['plains', 'lar-ne-jeering', 'picnic-ground', 'former-quarry', 'bike-park', 'lift', 'beginner', 'intermediate', 'expert', 'kids', 'glamping', 'today-and-tomorrow'];
   var IDX = {}; STOPS.forEach(function (s, n) { if (s.ride) IDX[s.ride] = n; });
@@ -453,57 +548,61 @@
   var map, i = 0, playing = false, timer = null, timer2 = null, seq = 0, ready = false, focus = null;
 
   function fail() { tour.classList.add('failed'); }
-  if (typeof maplibregl === 'undefined') return fail();
-
-  try {
-    map = new maplibregl.Map({
-      container: 'tour-map',
-      attributionControl: { compact: true },
-      cooperativeGestures: coarse,
-      maxPitch: 70, maxZoom: 18,
-      center: [143.060, -37.31], zoom: 10.6, pitch: 45, bearing: 60,
-      style: {
-        version: 8,
-        sources: {
-          sat: { type: 'raster', tileSize: 256, maxzoom: 18,
-            tiles: ['https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/20512/{z}/{y}/{x}'],
-            attribution: 'Imagery &copy; Esri World Imagery (Wayback, Oct 2025), Maxar, Earthstar Geographics' },
-          dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
-            tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
-            attribution: 'Terrain: Mapzen, AWS Open Data' },
-          shade: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
-            tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'] }
-        },
-        layers: [
-          { id: 'bg', type: 'background', paint: { 'background-color': '#2E383C' } },
-          { id: 'sat', type: 'raster', source: 'sat', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.06 } },
-          { id: 'shade', type: 'hillshade', source: 'shade', paint: { 'hillshade-exaggeration': ['interpolate', ['linear'], ['zoom'], 11, 0.25, 14.5, 0], 'hillshade-shadow-color': '#0F1416', 'hillshade-highlight-color': '#F7F6F2' } }
-        ],
-        terrain: { source: 'dem', exaggeration: 1.25 },
-        sky: { 'sky-color': '#8DB4CF', 'horizon-color': '#E4E8E6', 'fog-color': '#DCE2E0', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.7, 'fog-ground-blend': 0.75 }
-      }
-    });
-  } catch (e) { return fail(); }
-
-  map.on('error', function (e) { if (e && e.error && /webgl/i.test(String(e.error.message))) fail(); });
-  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
-  map.addControl(new maplibregl.FullscreenControl({ container: tour }), 'top-right');
-  map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
-
   var MK = {}, MOBJ = [];
-  MARKERS.forEach(function (m) {
-    var el = document.createElement('div');
-    el.className = 'tour-marker' + (m.cls ? ' ' + m.cls : ''); el.dataset.k = m.k; el.style.display = 'none'; MK[m.k] = el;
-    el.innerHTML = (m.icon ? '<span class="g ' + m.icon + '"></span>' : '<i></i>') + '<span>' + m.name + (m.sub ? '<small>' + m.sub + '</small>' : '') + '</span>';
-    if (m.stop != null) {
-      el.setAttribute('role', 'button'); el.tabIndex = 0;
-      el.addEventListener('click', function (ev) { ev.stopPropagation(); stopAll(); go(m.stop); });
-      el.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { stopAll(); go(m.stop); } });
-    }
-    MOBJ.push(new maplibregl.Marker({ element: el, anchor: 'left', offset: [-5, 0], opacityWhenCovered: '0' }).setLngLat(m.ll).addTo(map));
-  });
-  // keep labels pinned once terrain tiles finish loading under them
-  map.on('idle', function () { MOBJ.forEach(function (mk) { mk.setLngLat(mk.getLngLat()); }); });
+  // the 3D map is only built when someone opens the fly-through
+  function initMap() {
+    if (map) return;
+    if (typeof maplibregl === 'undefined') return fail();
+
+    try {
+      map = new maplibregl.Map({
+        container: 'tour-map',
+        attributionControl: { compact: true },
+        interactive: false,
+        maxPitch: 70, maxZoom: 18,
+        center: [143.060, -37.31], zoom: 10.6, pitch: 45, bearing: 60,
+        style: {
+          version: 8,
+          sources: {
+            sat: { type: 'raster', tileSize: 256, maxzoom: 18,
+              tiles: ['https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/20512/{z}/{y}/{x}'],
+              attribution: 'Imagery &copy; Esri World Imagery (Wayback, Oct 2025), Maxar, Earthstar Geographics' },
+            dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
+              tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+              attribution: 'Terrain: Mapzen, AWS Open Data' },
+            shade: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
+              tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'] }
+          },
+          layers: [
+            { id: 'bg', type: 'background', paint: { 'background-color': '#2E383C' } },
+            { id: 'sat', type: 'raster', source: 'sat', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.06 } },
+            { id: 'shade', type: 'hillshade', source: 'shade', paint: { 'hillshade-exaggeration': ['interpolate', ['linear'], ['zoom'], 11, 0.25, 14.5, 0], 'hillshade-shadow-color': '#0F1416', 'hillshade-highlight-color': '#F7F6F2' } }
+          ],
+          terrain: { source: 'dem', exaggeration: 1.25 },
+          sky: { 'sky-color': '#8DB4CF', 'horizon-color': '#E4E8E6', 'fog-color': '#DCE2E0', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.7, 'fog-ground-blend': 0.75 }
+        }
+      });
+    } catch (e) { return fail(); }
+
+    map.on('error', function (e) { if (e && e.error && /webgl/i.test(String(e.error.message))) fail(); });
+    map.addControl(new maplibregl.FullscreenControl({ container: tour }), 'top-right');
+    map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
+
+    MARKERS.forEach(function (m) {
+      var el = document.createElement('div');
+      el.className = 'tour-marker' + (m.cls ? ' ' + m.cls : ''); el.dataset.k = m.k; el.style.display = 'none'; MK[m.k] = el;
+      el.innerHTML = (m.icon ? '<span class="g ' + m.icon + '"></span>' : '<i></i>') + '<span>' + m.name + (m.sub ? '<small>' + m.sub + '</small>' : '') + '</span>';
+      if (m.stop != null) {
+        el.setAttribute('role', 'button'); el.tabIndex = 0;
+        el.addEventListener('click', function (ev) { ev.stopPropagation(); stopAll(); go(m.stop); });
+        el.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { stopAll(); go(m.stop); } });
+      }
+      MOBJ.push(new maplibregl.Marker({ element: el, anchor: 'left', offset: [-5, 0], opacityWhenCovered: '0' }).setLngLat(m.ll).addTo(map));
+    });
+    // keep labels pinned once terrain tiles finish loading under them
+    map.on('idle', function () { MOBJ.forEach(function (mk) { mk.setLngLat(mk.getLngLat()); }); });
+    map.on('load', function () { addPlan(); tour.classList.add('loaded'); if (!introOn) go(i); });
+  }
   function showMarkers(list) { Object.keys(MK).forEach(function (k) { MK[k].style.display = list && list.indexOf(k) > -1 ? 'flex' : 'none'; }); }
 
   var dots = $('tour-dots');
@@ -523,7 +622,7 @@
   }
   $('tour-body').addEventListener('click', function (e) {
     var t = e.target.closest('[data-go],[data-ride],[data-tf]'); if (!t) return;
-    if (t.dataset.tf) { stopPlay(); map.setLayoutProperty('drape', 'visibility', 'visible'); setDrape(+t.dataset.tf); return; }
+    if (t.dataset.tf) { stopPlay(); clearTimeout(timer2); setDrape(+t.dataset.tf); return; }
     if (t.dataset.go) { stopAll(); go(IDX[t.dataset.go]); }
     if (t.dataset.ride) { stopPlay(); ride(t.dataset.ride); }
   });
@@ -562,7 +661,7 @@
     map.addSource('glamppts', { type: 'geojson', data: fc(P.glamp.tents.map(function (c) { return feat({ kind: 'tent' }, 'Point', c); }).concat([feat({ kind: 'amen' }, 'Point', P.glamp.amen)])) });
     map.addSource('me', { type: 'geojson', data: fc([]) });
     map.addSource('drape', { type: 'image', url: 'assets/lg-park-drape.webp', coordinates: DRAPE });
-    map.addLayer({ id: 'drape', type: 'raster', source: 'drape', layout: { visibility: 'none' }, paint: { 'raster-opacity': 0, 'raster-opacity-transition': { duration: 1600, delay: 0 }, 'raster-fade-duration': 0 } });
+    map.addLayer({ id: 'drape', type: 'raster', source: 'drape', layout: { visibility: 'none' }, paint: { 'raster-opacity': 0, 'raster-opacity-transition': { duration: 0, delay: 0 }, 'raster-fade-duration': 0 } });
     map.addLayer({ id: 'site-fill', type: 'fill', source: 'site', paint: { 'fill-color': '#FFFFFF', 'fill-opacity': 0.06 } });
     map.addLayer({ id: 'site-line', type: 'line', source: 'site', paint: { 'line-color': '#FFFFFF', 'line-width': ['interpolate', ['linear'], ['zoom'], 12, 1, 16, 2.5], 'line-dasharray': [2, 1.5], 'line-opacity': 0.85 } });
     map.addLayer({ id: 'kids-zone', type: 'fill', source: 'kids', filter: ['==', ['get', 'kind'], 'zone'], layout: { visibility: 'none' }, paint: { 'fill-color': '#FCC830', 'fill-opacity': 0.14 } });
@@ -591,8 +690,7 @@
     tour.classList.toggle('show-plan', on);
     PLAN_LAYERS.forEach(function (id) { map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'); });
     ['site-fill', 'site-line'].forEach(function (id) { map.setLayoutProperty(id, 'visibility', fut ? 'none' : 'visible'); });
-    if (fut) { map.setLayoutProperty('drape', 'visibility', 'visible'); setDrape(0, true); }
-    else { setDrape(0); }
+    if (!fut) setDrape(0, true);
     focus = (mode === 'beginner' || mode === 'intermediate' || mode === 'expert') ? mode : null;
     var dimRun = focus ? ['case', ['==', ['get', 'run'], focus], 1, 0.28] : (mode === 'lift' || mode === 'kids' || mode === 'glamp' ? 0.55 : 1);
     map.setPaintProperty('run-line', 'line-opacity', dimRun);
@@ -600,18 +698,26 @@
     map.setPaintProperty('kids-zone', 'fill-opacity', mode === 'kids' ? 0.22 : 0.12);
   }
 
+  // opacity is driven directly (no map transitions) so the slider and buttons respond instantly
+  var drapeV = 0, drapeRaf = null;
   function setDrape(v, instant) {
     if (!ready) return;
-    if (instant) map.setPaintProperty('drape', 'raster-opacity-transition', { duration: 0, delay: 0 });
-    map.setPaintProperty('drape', 'raster-opacity', v);
-    if (instant) map.setPaintProperty('drape', 'raster-opacity-transition', { duration: 1600, delay: 0 });
-    if (v === 0 && !instant) setTimeout(function () { if (map.getPaintProperty('drape', 'raster-opacity') === 0) map.setLayoutProperty('drape', 'visibility', 'none'); }, 1700);
-    var r = $('tf-range'); if (r) r.value = Math.round(v * 100);
-    document.querySelectorAll('[data-tf]').forEach(function (b) { b.setAttribute('aria-pressed', (+b.dataset.tf === 1) === v >= 0.5 ? 'true' : 'false'); });
+    cancelAnimationFrame(drapeRaf);
+    if (v > 0) map.setLayoutProperty('drape', 'visibility', 'visible');
+    var from = drapeV, t0 = performance.now(), d = (instant || reduce) ? 0 : 650;
+    (function step(now) {
+      var u = d ? Math.min(1, (now - t0) / d) : 1, e = u * u * (3 - 2 * u);
+      drapeV = from + (v - from) * e;
+      map.setPaintProperty('drape', 'raster-opacity', drapeV);
+      if (u < 1) { drapeRaf = requestAnimationFrame(step); return; }
+      if (v === 0) map.setLayoutProperty('drape', 'visibility', 'none');
+    })(t0);
+    var r = $('tf-range'); if (r && +r.value !== Math.round(v * 100)) r.value = Math.round(v * 100);
+    document.querySelectorAll('[data-tf]').forEach(function (b) { b.setAttribute('aria-pressed', ((+b.dataset.tf === 1) === (v >= 0.5)) ? 'true' : 'false'); });
   }
   $('tour-body').addEventListener('input', function (e) {
     if (e.target.id !== 'tf-range') return;
-    stopPlay(); map.setLayoutProperty('drape', 'visibility', 'visible'); setDrape(e.target.value / 100, true);
+    stopPlay(); clearTimeout(timer2); setDrape(e.target.value / 100, true);
   });
 
   /* ---------- virtual rides ---------- */
@@ -676,14 +782,15 @@
     showPlan(STOPS[i].plan);
     clearTimeout(timer); clearTimeout(timer2);
     var s = STOPS[i], my = ++seq;
-    if (!introOn) try { history.replaceState(null, '', '#' + SLUG[i]); } catch (e) {}
+    if (!introOn && mode === 'fly') try { history.replaceState(null, '', '#' + SLUG[i]); } catch (e) {}
     map.stop();
     var cam = camFor(s.cam);
     showMarkers(s.mk);
     map.once('moveend', function () {
       if (my !== seq) return;
+      if (pendingRide && ready && s.ride === pendingRide) { var pr = pendingRide; pendingRide = null; timer = setTimeout(function () { if (my === seq) ride(pr); }, 700); return; }
       if (s.plan === 'future') timer2 = setTimeout(function () { if (my === seq) setDrape(1); }, reduce ? 0 : 900);
-      if (s.orbit && !reduce) map.easeTo({ bearing: s.cam.bearing + 70, duration: 14000, easing: function (t) { return t; } });
+      if (s.orbit && !reduce) map.easeTo({ bearing: s.cam.bearing + (s.orbit === true ? 70 : s.orbit), duration: 14000, easing: function (t) { return t; } });
       if (playing) {
         timer = setTimeout(function () {
           if (!playing) return;
@@ -704,36 +811,161 @@
   $('tour-play').addEventListener('click', function () { if (playing) { stopPlay(); stopRide(); map.stop(); } else startPlay(); });
   $('tour-prev').addEventListener('click', function () { stopAll(); go(i - 1); });
   $('tour-next').addEventListener('click', function () { stopAll(); go(i + 1); });
-  $('tour-free').addEventListener('click', function () { stopAll(); map.stop(); $('tour-panel').classList.add('hide'); $('tour-show').hidden = false; });
-  $('tour-show').addEventListener('click', function () { $('tour-panel').classList.remove('hide'); $('tour-show').hidden = true; go(i); });
-
-  ['mousedown', 'touchstart', 'wheel'].forEach(function (ev) {
-    map.getCanvasContainer().addEventListener(ev, function () { if (playing) stopPlay(); if (riding) { stopRide(); render(); } map.stop(); $('tour-hint').classList.add('gone'); }, { passive: true });
+  /* ---------- park explorer ---------- */
+  var MP = [
+    { k: 'beginner', at: [0.315, 0.47], name: 'Beginner run', short: 'Beginner', g: 'g-beg', ride: true },
+    { k: 'intermediate', at: [0.59, 0.575], name: 'Intermediate run', short: 'Intermediate', g: 'g-int', ride: true },
+    { k: 'expert', at: [0.676, 0.372], name: 'Expert run', short: 'Expert', g: 'g-exp', ride: true },
+    { k: 'lift', at: [0.681, 0.56], name: 'Pulley lift', short: 'Lift', g: 'g-lift', ride: true },
+    { k: 'kids', at: [0.478, 0.176], name: 'Kids’ jump park', short: 'Kids’ park', g: 'g-kids' },
+    { k: 'glamp', at: [0.84, 0.16], name: 'Glamping', short: 'Glamping', g: 'g-glamp' }
+  ];
+  var MP_TXT = {
+    beginner: RUN_TXT.beginner, intermediate: RUN_TXT.intermediate, expert: RUN_TXT.expert,
+    lift: 'Riders roll on at the base, grab the line and get pulled straight up the slope to the top station, bike and all. No pushing, so more time riding.',
+    kids: 'Below the three runs, next to the lift base: a small pump track with rollers and berms, and a short line of little dirt jumps, so younger riders have their own space while the family rides.',
+    glamp: 'Off to the side of the park, on the open rise looking back at the range: 16 canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift.'
+  };
+  function mpSub(k) {
+    if (P.runs[k]) return P.runs[k].len.toLocaleString('en-AU') + ' m · ' + P.runs[k].grad + '% average';
+    if (k === 'lift') return P.lift.len + ' m · ' + P.lift.rise + ' m climb';
+    return k === 'kids' ? 'Pump track and jump line' : '16 sites';
+  }
+  var mpEl = $('mp'), mpStage = $('mp-stage'), mpPlane = $('mp-plane'), mpCardEl = $('mp-card'), MPS = 2048;
+  var cam = { fx: 0.535, fy: 0.45, s: 0.6, t: 50 }, mpRaf = null, mpSel = -1, tilt = { x: 0, y: 0 }, tiltT = { x: 0, y: 0 }, tiltRaf = null, mode = 'park', pendingRide = null;
+  $('mp-pins').innerHTML = MP.map(function (f) { return '<i class="mp-anchor" style="left:' + (f.at[0] * 100) + '%;top:' + (f.at[1] * 100) + '%"></i>'; }).join('');
+  $('mp-pinlayer').innerHTML = MP.map(function (f, n) {
+    return '<button type="button" class="mp-pin" data-mp="' + n + '" aria-label="' + f.name + '"><span class="mp-pill"><span class="g ' + f.g + '"></span><span class="mp-label">' + f.short + '</span></span><i class="mp-stem"></i></button>';
+  }).join('');
+  var ANCH = document.querySelectorAll('.mp-anchor'), PINS = document.querySelectorAll('.mp-pin');
+  function mpFocus() {
+    var W = mpStage.clientWidth, H = mpStage.clientHeight, sr = mpStage.getBoundingClientRect(), r = mpCardEl.getBoundingClientRect();
+    if (window.innerWidth <= 760) { var top = Math.max(240, r.top - sr.top); return { x: W / 2, y: 110 + (top - 120) * 0.5, w: W - 40, h: top - 140 }; }
+    var L = r.right - sr.left + 8; return { x: L + (W - L) / 2, y: H * 0.53, w: W - L - 32, h: H - 120 };
+  }
+  function mpTarget(n) {
+    var f = mpFocus(), fit = Math.min(f.w / (0.84 * MPS), f.h / (0.7 * MPS * Math.cos(32 * Math.PI / 180)));
+    if (n < 0) return { fx: 0.535, fy: 0.45, s: fit, t: 32 };
+    return { fx: MP[n].at[0], fy: MP[n].at[1] + 0.025, s: Math.min(fit * 2.1, 1.1), t: 46 };
+  }
+  function mpApply() {
+    var f = mpFocus(), t = cam.t + tilt.y;
+    mpStage.style.perspectiveOrigin = f.x + 'px ' + f.y + 'px';
+    mpPlane.style.transform = 'translate3d(' + f.x + 'px,' + f.y + 'px,0) rotateX(' + t + 'deg) rotateZ(' + tilt.x + 'deg) scale(' + cam.s + ') translate3d(' + (-cam.fx * MPS) + 'px,' + (-cam.fy * MPS) + 'px,0)';
+    var o = mpEl.getBoundingClientRect();
+    for (var n = 0; n < ANCH.length; n++) {
+      var r = ANCH[n].getBoundingClientRect(), pin = PINS[n];
+      pin.style.transform = 'translate(' + (r.left - o.left) + 'px,' + (r.top - o.top) + 'px) translate(-50%,-100%)';
+    }
+  }
+  function mpMove(n, dur) {
+    var to = mpTarget(n), from = { fx: cam.fx, fy: cam.fy, s: cam.s, t: cam.t }, t0 = performance.now(), d = reduce ? 0 : dur;
+    var hop = d && from.s > to.s * 0.7 && n >= 0 && Math.hypot(from.fx - to.fx, from.fy - to.fy) > 0.08;
+    cancelAnimationFrame(mpRaf);
+    (function step(now) {
+      var u = d ? Math.min(1, (now - t0) / d) : 1, e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      ['fx', 'fy', 's', 't'].forEach(function (k) { cam[k] = from[k] + (to[k] - from[k]) * e; });
+      if (hop) cam.s *= 1 - 0.42 * Math.sin(Math.PI * u);   // pull back a little between two close-ups
+      mpApply();
+      if (u < 1) mpRaf = requestAnimationFrame(step); else mpRaf = null;
+    })(t0);
+  }
+  function mpCard() {
+    if (mpSel < 0) {
+      mpCardEl.innerHTML = '<p class="mp-eyebrow">The planned bike park</p><h2>Explore the park</h2>' +
+        '<p>Three downhill runs from one top station, a pulley lift back up, a kids’ jump park at the bottom and 16 glamping sites. Pick any of them for a closer look.</p>' +
+        '<div class="mp-list">' + MP.map(function (f, n) { return '<button type="button" class="run-card" data-mp="' + n + '"><span class="g ' + f.g + '"></span><span><b>' + f.name + '</b><small>' + mpSub(f.k) + '</small></span><em>&rarr;</em></button>'; }).join('') + '</div>' +
+        '<p style="margin:0"><span class="tbc">Concept only. Final layout TBC</span></p>';
+      return;
+    }
+    var f = MP[mpSel], N = MP.length;
+    var stats = (P.runs[f.k] || f.k === 'lift') ? statsHTML(f.k).replace(' id="prof-dot"', '') : (f.k === 'glamp' ? '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div>' : '');
+    mpCardEl.innerHTML = '<div class="mp-top"><button type="button" data-mp="-1">&larr; All</button><span>' + (mpSel + 1) + ' / ' + N + '</span><span class="mp-arrows"><button type="button" data-mp="' + ((mpSel + N - 1) % N) + '" aria-label="Previous">&larr;</button><button type="button" data-mp="' + ((mpSel + 1) % N) + '" aria-label="Next">&rarr;</button></span></div>' +
+      clip(f.k, 'Concept clip: ' + f.name) +
+      '<h2><span class="g ' + f.g + '"></span>' + f.name + '</h2><p>' + MP_TXT[f.k] + '</p>' +
+      '<div class="t-actions"><button type="button" class="t-btn go" data-fly="' + f.k + '">' + (f.k === 'lift' ? 'Ride the lift in 3D' : f.ride ? 'Ride it in 3D' : 'See it in 3D') + '</button></div>' + stats +
+      (f.ride ? '' : '<p style="margin:0"><span class="tbc">' + (f.k === 'glamp' ? 'Site layout and facilities TBC' : 'Final layout TBC') + '</span></p>');
+  }
+  function mpGo(n, dur) {
+    mpSel = n;
+    mpEl.classList.toggle('sel', n >= 0);
+    document.querySelectorAll('.mp-pin').forEach(function (p, k) { p.classList.toggle('on', k === n); });
+    mpCard();
+    mpMove(n, dur == null ? 1400 : dur);
+    if (!introOn && mode === 'park') try { history.replaceState(null, '', '#park' + (n >= 0 ? '-' + MP[n].k : '')); } catch (e) {}
+  }
+  mpEl.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-mp],[data-fly],[data-mptf]'); if (!t) return;
+    if (t.dataset.mptf) {
+      var today = t.dataset.mptf === 'today';
+      mpEl.classList.toggle('today', today);
+      document.querySelectorAll('[data-mptf]').forEach(function (b) { b.setAttribute('aria-pressed', (b.dataset.mptf === 'today') === today ? 'true' : 'false'); });
+      return;
+    }
+    if (t.dataset.fly) { flyTo3D(t.dataset.fly); return; }
+    var n = +t.dataset.mp; if (n !== mpSel) mpGo(n);
   });
-  setTimeout(function () { $('tour-hint').classList.add('gone'); }, 7000);
+  mpEl.addEventListener('mouseover', function (e) {
+    var t = e.target.closest('.mp-list [data-mp]');
+    document.querySelectorAll('.mp-pin').forEach(function (p, k) { p.classList.toggle('hl', !!t && k === +t.dataset.mp); });
+  });
+  // a gentle parallax so the model feels alive under the pointer
+  if (!reduce && !coarse) mpStage.addEventListener('mousemove', function (e) {
+    var r = mpStage.getBoundingClientRect();
+    tiltT = { x: ((e.clientX - r.left) / r.width - 0.5) * 2.2, y: ((e.clientY - r.top) / r.height - 0.5) * -2.2 };
+    if (!tiltRaf) (function loop() {
+      tilt.x += (tiltT.x - tilt.x) * 0.08; tilt.y += (tiltT.y - tilt.y) * 0.08;
+      if (!mpRaf) mpApply();
+      tiltRaf = Math.abs(tiltT.x - tilt.x) + Math.abs(tiltT.y - tilt.y) > 0.01 ? requestAnimationFrame(loop) : null;
+    })();
+  });
+  var rzT; window.addEventListener('resize', function () { clearTimeout(rzT); rzT = setTimeout(function () { if (mode === 'park') mpMove(mpSel, 0); }, 120); });
+
+  /* ---------- modes ---------- */
+  function setMode(m) {
+    mode = m; tour.setAttribute('data-mode', m);
+    document.querySelectorAll('[data-mode-btn]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.modeBtn === m ? 'true' : 'false'); });
+    mpCardEl.querySelectorAll('video').forEach(function (v) { if (m === 'fly') v.pause(); else { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); } });
+    if (m === 'fly') { if (!map) initMap(); else go(i); }
+    else { stopAll(); if (map) map.stop(); mpGo(mpSel, 0); }
+  }
+  function flyTo3D(k) {
+    var n = k === 'kids' ? SLUG.indexOf('kids') : k === 'glamp' ? SLUG.indexOf('glamping') : IDX[k];
+    pendingRide = IDX[k] != null ? k : null;
+    i = n; stopAll(); setMode('fly'); if (map) go(n);
+  }
+  document.querySelectorAll('[data-mode-btn]').forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.modeBtn !== mode) setMode(b.dataset.modeBtn); }); });
 
   /* ---------- intro, deep links, keys ---------- */
   var intro = $('tour-intro'), introOn = true, introVid = intro.querySelector('video');
-  var startAt = SLUG.indexOf((location.hash || '').slice(1));
-  if (startAt > -1) { i = startAt; intro.classList.add('out'); introOn = false; }
+  var hash = (location.hash || '').slice(1), startAt = SLUG.indexOf(hash), startMp = -2;
+  if (/^park/.test(hash)) { startMp = -1; MP.forEach(function (f, n) { if (hash === 'park-' + f.k) startMp = n; }); }
+  if (startAt > -1 || startMp > -2) { intro.classList.add('out'); introOn = false; }
   else if (!reduce && introVid) { var pp = introVid.play(); if (pp && pp.catch) pp.catch(function () {}); }
   function closeIntro() {
     if (!introOn) return; introOn = false; intro.classList.add('out');
     setTimeout(function () { if (introVid) { introVid.pause(); introVid.removeAttribute('src'); introVid.load(); } }, 1500);
   }
-  $('ti-go').addEventListener('click', function () { closeIntro(); i = 0; startPlay(); });
-  $('ti-free').addEventListener('click', function () { closeIntro(); stopAll(); $('tour-panel').classList.add('hide'); $('tour-show').hidden = false; map.flyTo(Object.assign({ duration: reduce ? 0 : 5000 }, camFor({ fit: 'park', pitch: 55, bearing: 345 }))); });
+  $('ti-go').addEventListener('click', function () { closeIntro(); cam = { fx: 0.535, fy: 0.5, s: mpTarget(-1).s * 0.75, t: 58 }; mpApply(); mpGo(-1, 2200); });
+  $('ti-fly').addEventListener('click', function () { closeIntro(); i = 0; setMode('fly'); startPlay(); });
   document.addEventListener('keydown', function (e) {
     if (e.altKey || e.ctrlKey || e.metaKey || /input|textarea|select/i.test(e.target.tagName)) return;
     var r = tour.getBoundingClientRect(); if (r.bottom < 80 || r.top > innerHeight - 80) return;
     if (introOn) { if (e.key === 'Enter') { e.preventDefault(); $('ti-go').click(); } return; }
+    if (mode === 'park') {
+      if (e.key === 'ArrowRight') mpGo((mpSel + 1) % MP.length);
+      else if (e.key === 'ArrowLeft') mpGo(mpSel <= 0 ? MP.length - 1 : mpSel - 1);
+      else if (e.key === 'Escape' && mpSel > -1) mpGo(-1);
+      return;
+    }
     if (e.key === 'ArrowRight') { stopAll(); go(i + 1); }
     else if (e.key === 'ArrowLeft') { stopAll(); go(i - 1); }
     else if (e.key === ' ' && (e.target === document.body || tour.contains(e.target))) { e.preventDefault(); $('tour-play').click(); }
   });
 
+  if (startAt > -1) { i = startAt; setMode('fly'); }
+  else { mpGo(startMp > -1 ? startMp : -1, 0); }
   render();
-  map.on('load', function () { addPlan(); tour.classList.add('loaded'); if (!introOn) go(i); });
 })();
 </script>
 <script src="assets/site.js"></script>
