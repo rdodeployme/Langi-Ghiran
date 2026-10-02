@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>3D Tour | LG Recycling</title>
-<meta name="description" content="Fly around Langi Ghiran in 3D, then explore the planned bike park on the former quarry: three downhill runs, a kids' jump park, a pulley lift and 16 glamping sites. Ride each run and the lift virtually.">
+<meta name="description" content="A 3D tour of Langi Ghiran in Victoria's Grampians region. Explore the planned bike park on the former quarry: three downhill runs, a kids' jump park, a pulley lift and 16 glamping sites. Ride each run and the lift virtually.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#171E21">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="LG Recycling">
 <meta property="og:title" content="3D Tour | LG Recycling">
-<meta property="og:description" content="Fly around Langi Ghiran in 3D, then explore the planned bike park on the former quarry: three downhill runs, a kids' jump park, a pulley lift and 16 glamping sites. Ride each run and the lift virtually.">
+<meta property="og:description" content="A 3D tour of Langi Ghiran in Victoria's Grampians region. Explore the planned bike park on the former quarry: three downhill runs, a kids' jump park, a pulley lift and 16 glamping sites. Ride each run and the lift virtually.">
 <meta property="og:image" content="https://rdodeployme.github.io/Langi-Ghiran/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -228,6 +228,14 @@
 .film.ended .film-actions{opacity:1;transform:none;pointer-events:auto}
 .film-actions .t-btn{background:rgba(0,0,0,.4)}
 .film-actions .t-btn.go{background:var(--yellow)}
+.film.trailer .film-hud .film-inset,.film.trailer .film-hud .film-meta{display:none}
+.film.trailer .film-hud{justify-content:center;padding-bottom:clamp(24px,8vh,80px)}
+.film.trailer::after{background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,transparent 18%)}
+.film.trailer.ended::after{background:rgba(0,0,0,.55)}
+.film.trailer video{object-fit:contain}
+.film.trailer .film-title{visibility:hidden}
+.film.trailer .film-actions{justify-content:center}
+.film.trailer .film-actions .t-btn{font-size:1rem;padding:15px 22px}
 @media (max-width:760px){
   .film{justify-content:center}
   .film video{position:relative;inset:auto;height:auto;aspect-ratio:16/9;object-fit:cover;order:1}
@@ -240,6 +248,10 @@
   .film-inset{width:110px;height:90px}
   .film-meta{flex:1 1 150px}
   .film-actions{width:100%}
+  .film.trailer video{position:absolute;inset:0;height:100%;aspect-ratio:auto;order:0}
+  .film.trailer{justify-content:flex-end}
+  .film.trailer .film-hud{order:0;padding:20px 16px 40px}
+  .film.trailer .film-actions{flex-direction:column}
 }
 /* cinematic intro */
 .tour-intro{position:absolute;inset:0;z-index:8;overflow:hidden;background:var(--ink-3);transition:opacity 1.4s ease,visibility 0s 1.4s}
@@ -255,9 +267,10 @@
 .ti-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;opacity:0;animation:tiup 1s 1.05s var(--ease) forwards}
 .ti-actions button{font:600 .95rem/1 "Public Sans",system-ui,sans-serif;border-radius:999px;padding:16px 24px;cursor:pointer;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff}
 .ti-actions .ti-go{background:var(--yellow);border-color:var(--yellow);color:var(--ink);display:inline-flex;align-items:center;gap:10px}
-#ti-fly{display:inline-flex;align-items:center;gap:10px}
-#ti-fly::before{content:"";width:0;height:0;border-left:9px solid currentColor;border-top:6px solid transparent;border-bottom:6px solid transparent}
+#ti-fly,#ti-film{display:inline-flex;align-items:center;gap:10px}
+#ti-film::before,#ti-fly::before{content:"";width:0;height:0;border-left:9px solid currentColor;border-top:6px solid transparent;border-bottom:6px solid transparent}
 .ti-actions button:hover{border-color:#fff}.ti-actions .ti-go:hover{background:#fff;border-color:#fff}
+.ti-len{font-weight:500;opacity:.6;font-size:.85em}
 .ti-meta{margin:20px 0 0;font-size:.8rem;color:rgba(255,255,255,.6);opacity:0;animation:tiup 1s 1.3s var(--ease) forwards}
 @keyframes tiup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.tour-intro video,.tour-intro img{animation:none;transform:none}.ti-eyebrow,.ti-title,.ti-sub,.ti-actions,.ti-meta{animation:none;opacity:1}}
@@ -383,12 +396,13 @@
   <div class="tour-intro" id="tour-intro">
     <video src="assets/lg-clip-aerial.mp4" poster="assets/lg-park-concept.webp" muted loop playsinline preload="auto" aria-hidden="true"></video>
     <div class="ti-body">
-      <p class="ti-eyebrow">LG Recycling · Langi Ghiran, Victoria</p>
+      <p class="ti-eyebrow">LG Recycling · Langi Ghiran, Grampians region</p>
       <h2 class="ti-title">From old quarry<br>to <em>bike park.</em></h2>
       <p class="ti-sub">Explore the planned bike park, watch each run in action, then fly over the real landscape in 3D.</p>
       <div class="ti-actions">
-        <button type="button" class="ti-go" id="ti-go">Explore the park</button>
-        <button type="button" id="ti-fly">Watch the 3D fly-through</button>
+        <button type="button" class="ti-go" id="ti-film">Watch the film <span class="ti-len">60s</span></button>
+        <button type="button" id="ti-go">Explore the park</button>
+        <button type="button" id="ti-fly">3D fly-through</button>
       </div>
       <p class="ti-meta">Concept only. Final design TBC</p>
     </div>
@@ -431,13 +445,14 @@
       <div class="foot-brand">
         <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></span></a>
         <p class="foot-tag">Recycling soil. Restoring land. Rebuilding a landscape.</p>
-        <p>A soil-recycling and land-rehabilitation operation beside Langi Ghiran State Park, western Victoria. Part of Recycle Group.</p>
+        <p>A soil-recycling and land-rehabilitation operation beside Langi Ghiran State Park in Victoria's Grampians region. Part of Recycle Group.</p>
       </div>
       <div>
         <h4>Visit</h4>
         <ul>
           <li><span class="tbc">Site address TBC</span></li>
           <li>Near Warrak &amp; Ararat, VIC</li>
+          <li>Grampians region</li>
           <li>Monday to Friday, 7am – 3pm</li>
           <li>UHF channel 61 on site</li>
         </ul>
@@ -561,7 +576,7 @@
   var SITE_C = [143.0906, -37.2762];
   var STOPS = [
     { title: 'Langi Ghiran from the plains',
-      body: '<p>Langi Ghiran rises from the plains between Ararat and Beaufort. This is the real landform, built from elevation data with satellite imagery draped over it.</p><p>Press <b>Play tour</b> for the full fly-through, including virtual rides down each run and up the lift.</p>',
+      body: '<p>Langi Ghiran rises from the plains between Ararat and Beaufort, in Victoria’s Grampians region, with the Grampians (Gariwerd) ranges on the far western horizon. This is the real landform, built from elevation data with satellite imagery draped over it.</p><p>Press <b>Play tour</b> for the full fly-through, including virtual rides down each run and up the lift.</p>',
       cam: { center: [143.098, -37.288], zoom: 12.4, pitch: 55, bearing: 140 }, mk: ['ararat', 'ghiran', 'site'] },
     { title: 'Lar-ne-jeering',
       body: '<p>In the language of the Djab Wurrung people, the mountain is Lar-ne-jeering: "Home of the Yellow-tailed Black Cockatoos". Granite outcrops and eucalypt woodland cover its slopes.</p>',
@@ -1202,8 +1217,26 @@
   var FILM = { beginner: 'lg-ride-beginner', intermediate: 'lg-ride-intermediate', expert: 'lg-ride-expert', lift: 'lg-ride-lift' };
   var FILM_ORDER = ['beginner', 'intermediate', 'expert', 'lift'];
   var film = $('film'), fv = $('film-v'), filmK = null, filmRaf = null, filmMuted = false, filmPathLen = 0;
+  var TRAILER_PORTRAIT = matchMedia('(max-aspect-ratio: 4/5)');
+  function openTrailer() {
+    filmK = 'trailer'; stopAll(); if (map) map.stop();
+    mpCardEl.querySelectorAll('video').forEach(function (v) { v.pause(); });
+    if (introVid) introVid.pause();
+    if (soundOn) fadeAmb(0, function () { amb.pause(); });
+    $('film-title').textContent = 'LG bike park · the film';
+    $('film-actions').innerHTML = '<button type="button" class="t-btn go" data-fgo="park">Explore the park &rarr;</button><button type="button" class="t-btn" data-fgo="fly">3D fly-through</button><button type="button" class="t-btn" data-frep="1">&#8634; Watch again</button>';
+    film.classList.add('trailer'); film.classList.remove('ended'); film.hidden = false; requestAnimationFrame(function () { film.classList.add('on'); });
+    var v = TRAILER_PORTRAIT.matches ? '9x16' : '16x9';
+    fv.poster = 'assets/lg-trailer-' + v + '.webp'; fv.src = 'assets/lg-trailer-' + v + '.mp4';
+    fv.muted = filmMuted; setMuteLabel();
+    var pp = fv.play(); if (pp && pp.catch) pp.catch(function () { fv.muted = true; filmMuted = true; setMuteLabel(); fv.play().catch(function () {}); });
+    cancelAnimationFrame(filmRaf);
+    try { history.replaceState(null, '', '#film'); } catch (e) {}
+  }
   function openFilm(k) {
+    if (k === 'trailer') return openTrailer();
     if (!FILM[k]) return;
+    film.classList.remove('trailer');
     filmK = k; stopAll(); if (map) map.stop();
     mpCardEl.querySelectorAll('video').forEach(function (v) { v.pause(); });
     if (soundOn) fadeAmb(0, function () { amb.pause(); });
@@ -1240,8 +1273,9 @@
   }
   function setMuteLabel() { $('film-mute').textContent = fv.muted ? 'Sound off' : 'Sound on'; $('film-mute').setAttribute('aria-pressed', fv.muted ? 'false' : 'true'); }
   function closeFilm() {
-    if (!filmK) return; filmK = null; fv.pause(); cancelAnimationFrame(filmRaf);
+    if (!filmK) return; var wasTrailer = filmK === 'trailer'; filmK = null; fv.pause(); cancelAnimationFrame(filmRaf);
     film.classList.remove('on'); setTimeout(function () { if (!filmK) { film.hidden = true; fv.removeAttribute('src'); fv.load(); } }, 500);
+    if (wasTrailer && introOn) { if (introVid && !reduce) { var ip = introVid.play(); if (ip && ip.catch) ip.catch(function () {}); } try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} return; }
     if (soundOn && mode === 'park') { var pp = amb.play(); if (pp && pp.catch) pp.catch(function () {}); fadeAmb(duskOn ? 0.32 : 0.6); }
     if (mode === 'park') { mpCardEl.querySelectorAll('video').forEach(function (v) { var pp2 = v.play(); if (pp2 && pp2.catch) pp2.catch(function () {}); }); mpGo(mpSel, 0); }
     else try { history.replaceState(null, '', '#' + SLUG[i]); } catch (e) {}
@@ -1251,9 +1285,10 @@
   $('film-x').addEventListener('click', closeFilm);
   $('film-mute').addEventListener('click', function () { fv.muted = !fv.muted; filmMuted = fv.muted; setMuteLabel(); });
   film.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-film],[data-frep],[data-ffly]');
+    var t = e.target.closest('[data-film],[data-frep],[data-ffly],[data-fgo]');
     if (!t) { if (e.target === fv || e.target === film) { if (fv.paused) fv.play(); else fv.pause(); } return; }
     if (t.dataset.frep) { fv.currentTime = 0; fv.play(); }
+    else if (t.dataset.fgo) { var g = t.dataset.fgo; closeFilm(); if (introOn) $(g === 'fly' ? 'ti-fly' : 'ti-go').click(); else if (g === 'fly') { if (mode !== 'fly') { i = 0; setMode('fly'); } } else { if (mode !== 'park') setMode('park'); mpGo(-1); } }
     else if (t.dataset.film) openFilm(t.dataset.film);
     else if (t.dataset.ffly) { var k = t.dataset.ffly; closeFilm(); if (mode === 'park') flyTo3D(k); else ride(k); }
   });
@@ -1295,12 +1330,13 @@
     setTimeout(function () { if (introVid) { introVid.pause(); introVid.removeAttribute('src'); introVid.load(); } }, 1500);
   }
   $('ti-go').addEventListener('click', function () { closeIntro(); cam = { fx: 0.535, fy: 0.5, s: mpTarget(-1).s * 0.75, t: 58 }; mpApply(); mpGo(-1, 2200); });
+  $('ti-film').addEventListener('click', function () { openTrailer(); });
   $('ti-fly').addEventListener('click', function () { closeIntro(); i = 0; playing = true; $('tour-play').textContent = 'Pause'; setMode('fly'); });
   document.addEventListener('keydown', function (e) {
     if (e.altKey || e.ctrlKey || e.metaKey || /input|textarea|select/i.test(e.target.tagName)) return;
     var r = tour.getBoundingClientRect(); if (r.bottom < 80 || r.top > innerHeight - 80) return;
-    if (introOn) { if (e.key === 'Enter') { e.preventDefault(); $('ti-go').click(); } return; }
     if (filmK) { if (e.key === 'Escape') closeFilm(); else if (e.key === ' ') { e.preventDefault(); if (fv.paused) fv.play(); else fv.pause(); } return; }
+    if (introOn) { if (e.key === 'Enter') { e.preventDefault(); $('ti-go').click(); } return; }
     if (mode === 'park') {
       if (e.key === 'ArrowRight') mpGo((mpSel + 1) % MP.length);
       else if (e.key === 'ArrowLeft') mpGo(mpSel <= 0 ? MP.length - 1 : mpSel - 1);
@@ -1313,7 +1349,8 @@
   });
 
   var startFilm = (hash.match(/^ride-(\w+)$/) || [])[1];
-  if (startFilm && FILM[startFilm]) { intro.classList.add('out'); introOn = false; mpGo(MP.findIndex(function (f) { return f.k === startFilm; }), 0); }
+  if (hash === 'film' || hash === 'trailer') { mpGo(-1, 0); openTrailer(); }
+  else if (startFilm && FILM[startFilm]) { intro.classList.add('out'); introOn = false; mpGo(MP.findIndex(function (f) { return f.k === startFilm; }), 0); }
   else if (startAt > -1) { i = startAt; setMode('fly'); }
   else { mpGo(startMp > -1 ? startMp : -1, 0); }
   render();
