@@ -730,6 +730,89 @@ function treeCollide(P) {
     for (const t of list) { const r = 0.3 * t.s + 0.35; const dx = P.x - t.x, dz = P.z - t.z, d = Math.hypot(dx, dz); if (d < r && d > 0.001) { P.x = t.x + dx / d * r; P.z = t.z + dz / d * r; } } }
 }
 
+/* ---------- life: riders on the runs and pump track, people walking and standing ---------- */
+function peopleKit() {
+  const P = (x, y, z) => new THREE.Vector3(x, y, z); const kits = [];
+  for (const walking of [true, false]) { const cloth = [], skin = [], dark = [];
+    const hipL = P(-0.11, 0.9, 0), hipR = P(0.11, 0.9, 0), kL = walking ? P(-0.11, 0.48, 0.2) : P(-0.11, 0.47, 0), kR = walking ? P(0.11, 0.5, -0.18) : P(0.11, 0.47, 0), fL = walking ? P(-0.11, 0.05, 0.28) : P(-0.11, 0.05, 0.02), fR = walking ? P(0.11, 0.05, -0.3) : P(0.11, 0.05, -0.02);
+    const pants = []; pants.push(rod(hipL, kL, 0.08)); pants.push(rod(hipR, kR, 0.08)); pants.push(rod(kL, fL, 0.065)); pants.push(rod(kR, fR, 0.065)); dark.push(box(0.11, 0.07, 0.27, fL.x, 0.04, fL.z)); dark.push(box(0.11, 0.07, 0.27, fR.x, 0.04, fR.z));
+    const torso = new THREE.CapsuleGeometry(0.17, 0.42, 4, 10); torso.translate(0, 1.22, 0); cloth.push(torso); cloth.push(cyl(0.2, 0.2, 0.12, 10, 0, 0.92, 0));
+    const sL = P(-0.24, 1.42, 0), sR = P(0.24, 1.42, 0), eL = walking ? P(-0.27, 1.16, 0.14) : P(-0.27, 1.14, 0), eR = walking ? P(0.27, 1.16, -0.14) : P(0.27, 1.14, 0), hL = walking ? P(-0.26, 0.92, 0.0) : P(-0.26, 0.9, 0.05), hR = walking ? P(0.26, 0.92, 0.02) : P(0.26, 0.9, 0.05);
+    cloth.push(rod(sL, eL, 0.05)); cloth.push(rod(sR, eR, 0.05)); skin.push(rod(eL, hL, 0.042)); skin.push(rod(eR, hR, 0.042));
+    skin.push(xf(new THREE.SphereGeometry(0.11, 10, 8), 0, 1.62, 0)); skin.push(cyl(0.05, 0.06, 0.08, 8, 0, 1.49, 0)); dark.push(xf(new THREE.SphereGeometry(0.115, 10, 6, 0, Math.PI * 2, 0, Math.PI * 0.5), 0, 1.65, 0));
+    kits.push({ cloth: merge(cloth), skin: merge(skin), dark: merge(dark), pants: merge(pants) }); }
+  return kits;
+}
+function people(sc) {
+  const kits = peopleKit(), g = new THREE.Group(); const cols = ['#3b5f8a', '#7a3b3b', '#2f5a3a', '#5a4a7a', '#8a6a2a', '#3a3a3a'];
+  const mk = (kit, n, tag) => { const ims = { cloth: new THREE.InstancedMesh(kit.cloth, std({ color: '#ffffff', roughness: 0.9 }), n), skin: new THREE.InstancedMesh(kit.skin, std({ color: '#c89a76', roughness: 0.8 }), n), dark: new THREE.InstancedMesh(kit.dark, std({ color: '#222', roughness: 0.8 }), n), pants: new THREE.InstancedMesh(kit.pants, std({ color: '#3a3f4a', roughness: 0.9 }), n) };
+    for (const k in ims) { ims[k].castShadow = true; ims[k].frustumCulled = false; g.add(ims[k]); } for (let i = 0; i < n; i++) ims.cloth.setColorAt(i, new THREE.Color(cols[(i + (tag === 'w' ? 0 : 3)) % cols.length])); return ims; };
+  S.walkers = mk(kits[0], 4, 'w'); S.standers = mk(kits[1], 4, 's');
+  // standing people: two at the base near the racks, one at the kids' park, one at the camp
+  const B = sc.B, kc = sc.kids, t = sc.tents[4]; const st = [[B[0] - 5.5, B[1] - 4.5, 2.4], [B[0] - 4.8, B[1] - 3.6, -0.7], [kc[0] - 26, kc[1] - 18, 2.2], [t[0] + 5, t[1] + 4, 0.8]];
+  st.forEach((p, i) => setInst(S.standers, i, p[0], groundAt(p[0], p[1]), p[1], p[2], 1)); for (const k in S.standers) S.standers[k].instanceMatrix.needsUpdate = true;
+  // walkers along the camp path and the arrival path
+  S.walkPaths = [resamplePath(sc.glampPath, 1), resamplePath(sc.basePath, 1)];
+  S.walkerState = [{ p: 0, u: 0.1, dir: 1, sp: 1.25 }, { p: 0, u: 0.55, dir: -1, sp: 1.15 }, { p: 1, u: 0.3, dir: 1, sp: 1.3 }, { p: 1, u: 0.75, dir: -1, sp: 1.2 }];
+  return g;
+}
+function setInst(ims, i, x, y, z, yaw, scale, roll) { _q.setFromEuler(new THREE.Euler(0, yaw, roll || 0, 'YXZ')); _v.set(x, y, z); const s = scale || 1; _s.set(s, s, s); _m4.compose(_v, _q, _s); for (const k in ims) ims[k].setMatrixAt(i, _m4); }
+function runRiders(sc) {
+  // riders: 0-3 are towed on the lift (set in lift()), 4-15 on the runs, 16-18 on the pump track
+  S.runRiders = []; const speeds = { beginner: 5.2, intermediate: 6.8, expert: 7.6 }; let idx = 4;
+  for (const k of ['beginner', 'intermediate', 'expert']) { const pts = S.runPts[k]; for (let j = 0; j < 4; j++) S.runRiders.push({ i: idx++, pts, s: (j / 4 + 0.07 * (k.length % 3)) * pts.length * 1.5, sp: speeds[k] * (0.9 + j * 0.06), scale: 1, loop: false }); }
+  const loop = resamplePath(sc.kidsZone, 1.5, true); for (let j = 0; j < 3; j++) S.runRiders.push({ i: idx++, pts: loop, s: j / 3 * loop.length * 1.5, sp: 3.6 + j * 0.3, scale: 0.72, loop: true });
+}
+function pathPose(pts, s, loop) { // position, heading and curvature at distance s along a 1.5 m-spaced path
+  const L = pts.length * 1.5; let d = loop ? ((s % L) + L) % L : Math.max(0, Math.min(L - 1.6, s)); const i = Math.floor(d / 1.5), u = d / 1.5 - i;
+  const a = pts[i % pts.length], b = pts[(i + 1) % pts.length], c = pts[(i + 2) % pts.length];
+  const x = a[0] + (b[0] - a[0]) * u, z = a[1] + (b[1] - a[1]) * u; const h1 = Math.atan2(b[0] - a[0], b[1] - a[1]), h2 = Math.atan2(c[0] - b[0], c[1] - b[1]);
+  let dh = h2 - h1; dh = ((dh + Math.PI * 3) % (Math.PI * 2)) - Math.PI; return { x, z, yaw: h1, curv: dh };
+}
+function lifeTick(dt, now) {
+  if (!S.runRiders) return; let dirty = false;
+  for (const r of S.runRiders) { r.s += r.sp * dt; const L = r.pts.length * 1.5; if (!r.loop && r.s > L - 3) r.s = -40 * Math.random(); if (r.s < 0) { setRider(r.i, 0, -100, 0, 0, 0, 0.001); dirty = true; continue; }
+    const q = pathPose(r.pts, r.s, r.loop); const y = groundAt(q.x, q.z) + 0.04; setRider(r.i, q.x, y, q.z, q.yaw, -Math.max(-0.45, Math.min(0.45, q.curv * 2.2)), r.scale); dirty = true; }
+  if (dirty) ridersDirty();
+  if (S.walkers) { S.walkerState.forEach((w, i) => { const pts = S.walkPaths[w.p]; const L = pts.length; w.u += w.dir * w.sp * dt / L; if (w.u > 0.97 || w.u < 0.03) { w.dir *= -1; w.u = Math.max(0.03, Math.min(0.97, w.u)); }
+      const f = w.u * (L - 1), i0 = Math.floor(f), t = f - i0; const a = pts[i0], b = pts[Math.min(L - 1, i0 + 1)]; const x = a[0] + (b[0] - a[0]) * t, z = a[1] + (b[1] - a[1]) * t; const yaw = Math.atan2((b[0] - a[0]) * w.dir, (b[1] - a[1]) * w.dir);
+      const bob = Math.abs(Math.sin(now / 1000 * w.sp * 2.7 * Math.PI)) * 0.03; setInst(S.walkers, i, x + Math.cos(yaw) * 1.2 * (i % 2 ? 1 : -0.6), groundAt(x, z) + bob, z - Math.sin(yaw) * 1.2 * (i % 2 ? 1 : -0.6), yaw, 1); });
+    for (const k in S.walkers) S.walkers[k].instanceMatrix.needsUpdate = true; }
+}
+
+/* ---------- sound: ambience, wind, lift hum, footsteps ---------- */
+const AU = { on: false };
+function audioInit() {
+  if (AU.ctx) return true; const C = window.AudioContext || window.webkitAudioContext; if (!C) return false;
+  const ctx = AU.ctx = new C(); AU.master = ctx.createGain(); AU.master.gain.value = 0; AU.master.connect(ctx.destination);
+  const noiseBuf = (sec) => { const b = ctx.createBuffer(1, Math.floor(ctx.sampleRate * sec), ctx.sampleRate); const d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }; AU.noise = noiseBuf(2);
+  const wind = ctx.createBufferSource(); wind.buffer = noiseBuf(4); wind.loop = true; const wf = ctx.createBiquadFilter(); wf.type = 'bandpass'; wf.frequency.value = 420; wf.Q.value = 0.6; AU.windG = ctx.createGain(); AU.windG.gain.value = 0.0; wind.connect(wf); wf.connect(AU.windG); AU.windG.connect(AU.master); wind.start();
+  const hum = ctx.createOscillator(); hum.type = 'sawtooth'; hum.frequency.value = 52; const hum2 = ctx.createOscillator(); hum2.type = 'sine'; hum2.frequency.value = 104; const hf = ctx.createBiquadFilter(); hf.type = 'lowpass'; hf.frequency.value = 220; AU.humG = ctx.createGain(); AU.humG.gain.value = 0; hum.connect(hf); hum2.connect(hf); hf.connect(AU.humG); AU.humG.connect(AU.master); hum.start(); hum2.start();
+  AU.ambG = ctx.createGain(); AU.ambG.gain.value = 0.55; AU.ambG.connect(AU.master);
+  fetch(A + 'lg-amb-day.m4a').then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b)).then(buf => { const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(AU.ambG); src.start(); AU.ambSrc = src; }).catch(() => {});
+  return true;
+}
+function audioSet(on) {
+  AU.on = on; if (on && !audioInit()) return; if (!AU.ctx) return; if (on && AU.ctx.state === 'suspended') AU.ctx.resume();
+  const t = AU.ctx.currentTime; AU.master.gain.cancelScheduledValues(t); AU.master.gain.setTargetAtTime(on ? 1 : 0, t, 0.4);
+  if (S.ui && S.ui.snd) S.ui.snd.setAttribute('aria-pressed', on ? 'true' : 'false');
+}
+function footstep(surface, vol) {
+  if (!AU.on || !AU.ctx) return; const ctx = AU.ctx, t = ctx.currentTime; const src = ctx.createBufferSource(); src.buffer = AU.noise; const f = ctx.createBiquadFilter(); const g = ctx.createGain();
+  if (surface === 'deck') { f.type = 'lowpass'; f.frequency.value = 260; f.Q.value = 3; } else if (surface === 'gravel') { f.type = 'bandpass'; f.frequency.value = 2400 + Math.random() * 600; f.Q.value = 0.7; } else { f.type = 'bandpass'; f.frequency.value = 900 + Math.random() * 300; f.Q.value = 0.9; }
+  const dur = surface === 'deck' ? 0.07 : surface === 'gravel' ? 0.09 : 0.08; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol * (surface === 'deck' ? 0.9 : 0.55), t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  src.connect(f); f.connect(g); g.connect(AU.master); src.start(t, Math.random() * 1.5, dur + 0.02);
+}
+function audioTick(now, dt, moved, speedN) {
+  if (!AU.on || !AU.ctx) return; const P = S.player, t = AU.ctx.currentTime;
+  const gust = 0.045 + 0.03 * Math.sin(now / 1900) + 0.02 * Math.sin(now / 730) + 0.015 * Math.sin(now / 310); AU.windG.gain.setTargetAtTime(Math.max(0.01, gust) * (1 + 0.6 * S.windy), t, 0.3);
+  let dmin = 1e9; if (S.liftPts) for (const q of S.liftPts) { const d = Math.hypot(q[0] - P.x, q[1] - P.z); if (d < dmin) dmin = d; }
+  AU.humG.gain.setTargetAtTime(0.09 * Math.max(0, Math.min(1, 1 - (dmin - 12) / 110)), t, 0.4);
+  AU.ambG.gain.setTargetAtTime(0.5 * (1 - 0.5 * S.glow), t, 0.6);
+  P.stepAcc = (P.stepAcc || 0) + moved; const stride = P.run ? 1.05 : 0.78;
+  if (P.stepAcc > stride) { P.stepAcc = 0; let surf = 'dirt'; if (surfaceAt(P.x, P.z) > groundAt(P.x, P.z) + 0.05) surf = 'deck'; else { const w = sampleRGB(S.splatImg, P.x, P.z); if (w && w[1] > 110) surf = 'gravel'; } footstep(surf, 0.5 + 0.5 * speedN); }
+}
+
 /* ---------- sky: three HDRI skies (noon, sunset, night) cross-faded by the sun slider ---------- */
 const SKY = { day: { sunAz: 216.2, sunEl: 49.8, gain: 1.0 }, dusk: { sunAz: 216.0, sunEl: 6.0, gain: 1.05 }, night: { sunAz: 215.6, sunEl: 17.0, gain: 1.0 } };
 function skyDome() {
@@ -838,18 +921,28 @@ function tick(now) {
       if (now - P.lastLook > 2500) { const ty = yawTo(a2, b2); let d2 = ((ty - P.yaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI; P.yaw += d2 * Math.min(1, dt * 1.6); P.pitch += (0 - P.pitch) * Math.min(1, dt * 1.2); }
     }
   } else {
-    const sp = (P.run ? 4.6 : 2.3) * dt, f = P.fwd, r = P.side;
-    if (f || r) { const dx = Math.sin(P.yaw) * f + Math.cos(P.yaw) * r, dz = -Math.cos(P.yaw) * f + Math.sin(P.yaw) * r; const l = Math.hypot(dx, dz) || 1; P.x += dx / l * sp; P.z += dz / l * sp; }
+    const f = P.fwd, r = P.side; let tx = 0, tz = 0;
+    if (f || r) { const dx = Math.sin(P.yaw) * f + Math.cos(P.yaw) * r, dz = -Math.cos(P.yaw) * f + Math.sin(P.yaw) * r; const l = Math.hypot(dx, dz) || 1; const base = P.run ? 4.6 : 2.3;
+      const ahead = groundAt(P.x + dx / l * 2, P.z + dz / l * 2) - groundAt(P.x, P.z); const slope = Math.max(0.45, Math.min(1.15, 1 - ahead * 0.35)); // slower uphill
+      tx = dx / l * base * slope; tz = dz / l * base * slope; }
+    const kk = Math.min(1, dt * (f || r ? 7 : 9)); P.vx = (P.vx || 0) + (tx - (P.vx || 0)) * kk; P.vz = (P.vz || 0) + (tz - (P.vz || 0)) * kk;
+    P.x += P.vx * dt; P.z += P.vz * dt;
   }
+  const px0 = P.px0 == null ? P.x : P.px0, pz0 = P.pz0 == null ? P.z : P.pz0;
   for (const t of S.sc.tents) { const dx = P.x - t[0], dz = P.z - t[1], d = Math.hypot(dx, dz); if (d < 2.65 && d > 0.001) { P.x = t[0] + dx / d * 2.65; P.z = t[1] + dz / d * 2.65; } }
   { const h = S.sc.amen, dx = P.x - h[0], dz = P.z - h[1], d = Math.hypot(dx, dz); if (d < 6 && d > 0.001) { P.x = h[0] + dx / d * 6; P.z = h[1] + dz / d * 6; } }
   treeCollide(P);
   const lim = S.farM / 2 - 200; P.x = Math.max(-lim, Math.min(lim, P.x)); P.z = Math.max(-lim, Math.min(lim, P.z));
+  const moved = Math.hypot(P.x - px0, P.z - pz0); P.px0 = P.x; P.pz0 = P.z;
+  const speedN = Math.min(1, moved / dt / 4.6);
   const gy = surfaceAt(P.x, P.z); P.y += ((gy + EYE) - P.y) * Math.min(1, dt * 8);
-  const cam = S.camera; cam.position.set(P.x, P.y, P.z);
   P.pitch = Math.max(-1.2, Math.min(1.2, P.pitch));
-  cam.rotation.set(0, 0, 0, 'YXZ'); cam.rotation.y = -P.yaw; cam.rotation.x = P.pitch;
+  { const dy = ((P.yaw - (P.syaw == null ? P.yaw : P.syaw) + Math.PI * 3) % (Math.PI * 2)) - Math.PI; const kk = 1 - Math.exp(-dt * 15); P.syaw = (P.syaw == null ? P.yaw : P.syaw) + dy * kk; P.spitch = (P.spitch == null ? P.pitch : P.spitch) + (P.pitch - (P.spitch == null ? P.pitch : P.spitch)) * kk; }
+  P.bob = (P.bob || 0) + moved / 0.78 * Math.PI;
+  const cam = S.camera; cam.position.set(P.x, P.y + Math.sin(P.bob * 2) * 0.026 * speedN, P.z);
+  cam.rotation.set(0, 0, 0, 'YXZ'); cam.rotation.y = -P.syaw; cam.rotation.x = P.spitch; cam.rotation.z = Math.sin(P.bob) * 0.005 * speedN;
   cam.updateMatrixWorld();
+  lifeTick(dt, now); S.windy = Math.max(0, 1 - Math.hypot(P.x - S.sc.summit[0], P.z - S.sc.summit[1]) / 200); audioTick(now, dt, moved, speedN);
   if (S.csm) S.csm.update();
   if (S.sun) { S.sun.position.copy(S.sunDir).multiplyScalar(220).add(cam.position); S.sun.target.position.copy(cam.position); S.sun.target.updateMatrixWorld(); }
   S.skyMesh.position.copy(cam.position);
@@ -929,6 +1022,7 @@ async function boot() {
     S.scene.add(riders(24)); for (let i = 0; i < 24; i++) setRider(i, 0, -100, 0, 0, 0, 0.001);
     S.hangers.forEach((h, k) => { h.rider = k % 2 === 0 ? k / 2 : -1; });
     S.scene.add(signs(sc, S.logo)); S.scene.add(furniture(sc)); S.scene.add(cars(sc));
+    runRiders(sc); S.scene.add(people(sc)); S.liftPts = resamplePath([sc.B, ...sc.towers, sc.T], 10); S.windy = 0;
     { const keep = []; const inKids = (x, z) => { const zn = sc.kidsZone; let inside = false; for (let i = 0, j = zn.length - 1; i < zn.length; j = i++) { if (((zn[i][1] > z) !== (zn[j][1] > z)) && (x < (zn[j][0] - zn[i][0]) * (z - zn[i][1]) / (zn[j][1] - zn[i][1]) + zn[i][0])) inside = !inside; } return inside; };
       const liftPts = resamplePath([sc.B, ...sc.towers, sc.T], 3);
       for (const t of sc.trees) { const x = t[0], z = t[1]; let bad = inKids(x, z) || Math.abs(x - sc.carpark[0]) < 28 && Math.abs(z - sc.carpark[1]) < 18;
@@ -955,7 +1049,10 @@ function resize() {
 function bindUI() {
   if (S.ui) return;
   const $ = (id) => document.getElementById(id);
-  S.ui = { auto: $('game-auto'), sun: $('game-sun'), where: $('game-where'), hint: $('game-hint') };
+  S.ui = { auto: $('game-auto'), sun: $('game-sun'), where: $('game-where'), hint: $('game-hint'), snd: $('game-snd'), fade: $('game-fade'), uiBtn: $('game-ui') };
+  if (S.ui.snd) S.ui.snd.addEventListener('click', () => { audioSet(!AU.on); if (window.LGGame.onSound) window.LGGame.onSound(AU.on); });
+  if (S.ui.uiBtn) S.ui.uiBtn.addEventListener('click', () => $('game').classList.toggle('photo'));
+  window.addEventListener('keydown', (e) => { if (running && (e.key === 'h' || e.key === 'H')) $('game').classList.toggle('photo'); });
   if (PARAMS.has('fps')) { const f = document.createElement('div'); f.id = 'game-fps'; f.style.cssText = 'position:absolute;right:16px;bottom:120px;z-index:3;font:600 11px/1.2 monospace;color:#fff;background:rgba(0,0,0,.55);padding:6px 8px;border-radius:6px;pointer-events:none'; $('game').appendChild(f); S.ui.fps = f; }
   const el = $('game-canvas'); let drag = null;
   el.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; el.setPointerCapture(e.pointerId); S.player.lastLook = performance.now(); S.ui.hint.classList.add('gone'); });
@@ -979,12 +1076,14 @@ function bindUI() {
   $('game-x').addEventListener('click', () => window.LGGame.close());
   window.addEventListener('resize', () => { if (running) resize(); });
 }
-function spawn(k) {
+function spawn(k, instant) {
+  if (!instant && S.ui && S.ui.fade && !S.ui.fade.classList.contains('on')) { S.ui.fade.classList.add('on'); setTimeout(() => { spawn(k, true); setTimeout(() => S.ui.fade.classList.remove('on'), 60); }, 240); return; }
   let sp; if (k && k.indexOf('at:') === 0) { const v = k.slice(3).split(',').map(Number); sp = { x: v[0], z: v[1], yaw: (v[2] || 0) * Math.PI / 180, path: null, pitch: (v[3] || 0) * Math.PI / 180 }; }
   else sp = (SPAWN[k] || SPAWN.deck)(S.sc);
   const P = S.player;
   P.x = sp.x; P.z = sp.z; P.yaw = sp.yaw; P.pitch = sp.pitch != null ? sp.pitch : -0.02; P.path = sp.path; P.seg = 0; P.u = 0; P.auto = !!sp.path; P.lastLook = 0; P.y = surfaceAt(P.x, P.z) + EYE;
   if (sp.path) P.yaw = yawTo(sp.path[0], sp.path[1]);
+  P.syaw = P.yaw; P.spitch = P.pitch; P.vx = 0; P.vz = 0; P.px0 = P.x; P.pz0 = P.z; P.bob = 0;
   S.ui.auto.hidden = !sp.path; S.ui.auto.setAttribute('aria-pressed', P.auto ? 'true' : 'false');
   document.querySelectorAll('[data-spawn]').forEach(b => b.setAttribute('aria-pressed', b.dataset.spawn === k ? 'true' : 'false'));
   const name = { deck: 'A glamping deck', camp: 'Walking the camp', carpark: 'Walking in from the car park', base: 'The lift base', top: 'The top station', kids: 'The kids’ jump park', summit: 'The summit of Langi Ghiran' }[k] || '';
@@ -997,11 +1096,11 @@ window.LGGame = {
     const root = document.getElementById('game'); root.hidden = false; root.classList.add('loading');
     try { await boot(); } catch (e) { root.classList.remove('loading'); root.classList.add('failed'); console.error(e); return; }
     bindUI(); root.classList.remove('loading'); requestAnimationFrame(() => root.classList.add('on'));
-    resize(); if (sunT != null) setSun(sunT); spawn(k || 'deck');
+    resize(); if (sunT != null) setSun(sunT); spawn(k || 'deck', true); audioSet(!!window.LGGame.sound);
     running = true; lastT = performance.now(); fpsT = lastT; requestAnimationFrame(tick);
     S.ui.hint.classList.remove('gone');
   },
-  close() { running = false; const root = document.getElementById('game'); root.classList.remove('on'); setTimeout(() => { if (!running) root.hidden = true; }, 450); if (window.LGGame.onClose) window.LGGame.onClose(); },
+  close() { running = false; audioSet(false); const root = document.getElementById('game'); root.classList.remove('on'); setTimeout(() => { if (!running) root.hidden = true; }, 450); if (window.LGGame.onClose) window.LGGame.onClose(); },
   setSun(t) { if (booted) setSun(t); },
   setQuality(q) { if (TIERS[q]) { try { localStorage.setItem('lg-quality', q); } catch (e) {} } },
   stats() { return { fps, quality: S.quality, calls: S.renderer && S.renderer.info.render.calls, tris: S.renderer && S.renderer.info.render.triangles }; },
