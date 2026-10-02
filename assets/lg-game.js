@@ -22,8 +22,8 @@ let booted = false, bootP = null, running = false, lastT = 0;
 const DPR = Math.max(1, window.devicePixelRatio || 1);
 const TIERS = {
   high:   { pr: Math.min(2, DPR),   post: true,  msaa: 4, smaa: true,  csm: true,  shadow: 2048, bloom: true,  grade: true,  aniso: 8, grass: 9000, treeR: 140 },
-  medium: { pr: Math.min(1.5, DPR), post: true,  msaa: 2, smaa: false, csm: false, shadow: 2048, bloom: true,  grade: true,  aniso: 4, grass: 4500, treeR: 90 },
-  low:    { pr: 1,                  post: false, msaa: 0, smaa: false, csm: false, shadow: 0,    bloom: false, grade: false, aniso: 2, grass: 1500, treeR: 45 }
+  medium: { pr: Math.min(1.3, DPR), post: true,  msaa: 2, smaa: false, csm: false, shadow: 1536, bloom: true,  grade: true,  aniso: 4, grass: 3000, treeR: 70 },
+  low:    { pr: 1,                  post: false, msaa: 0, smaa: false, csm: false, shadow: 0,    bloom: false, grade: false, aniso: 2, grass: 1000, treeR: 40 }
 };
 const PARAMS = new URLSearchParams(location.search);
 function pickQuality() {
@@ -31,7 +31,7 @@ function pickQuality() {
   try { const s = localStorage.getItem('lg-quality'); if (s && TIERS[s]) return s; } catch (e) {}
   const mobile = /Android|iPhone|iPad|Mobi/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && Math.min(screen.width, screen.height) < 900);
   const mem = navigator.deviceMemory || 8, cores = navigator.hardwareConcurrency || 4;
-  if (mem <= 2 || cores <= 2) return 'low';
+  if (mem <= 3 || cores <= 2) return 'low';
   return mobile ? 'medium' : 'high';
 }
 S.quality = pickQuality(); const Q = TIERS[S.quality];
@@ -85,9 +85,11 @@ const TEX = {
 };
 
 /* ---------- loaders ---------- */
-function loadImage(src) { return new Promise((res, rej) => { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = src; }); }
-function loadTex(src, o) { return new Promise((res, rej) => { new THREE.TextureLoader().load(src, (t) => { t.colorSpace = (o && o.linear) ? THREE.NoColorSpace : THREE.SRGBColorSpace; t.anisotropy = Q.aniso; if (o && o.nomip) { t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; } res(t); }, undefined, rej); }); }
-function loadHDR(src) { return new Promise((res, rej) => { new RGBELoader().load(src, res, undefined, rej); }); }
+let loadDone = 0, loadTotal = 0;
+function tally(p) { loadTotal++; return p.then(v => { loadDone++; setLoad('Loading ' + loadDone + ' of ' + loadTotal); return v; }); }
+function loadImage(src) { return tally(new Promise((res, rej) => { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = src; })); }
+function loadTex(src, o) { return tally(new Promise((res, rej) => { new THREE.TextureLoader().load(src, (t) => { t.colorSpace = (o && o.linear) ? THREE.NoColorSpace : THREE.SRGBColorSpace; t.anisotropy = Q.aniso; if (o && o.nomip) { t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; } res(t); }, undefined, rej); })); }
+function loadHDR(src) { return tally(new Promise((res, rej) => { new RGBELoader().load(src, res, undefined, rej); })); }
 function setLoad(txt) { const el = document.querySelector('.game-load span'); if (el) el.textContent = txt; }
 
 /* ---------- height fields ---------- */
@@ -128,20 +130,20 @@ function terrainGeometry(field, size, blendTo, under) {
   geo.computeVertexNormals(); return geo;
 }
 /* near tier: aerial colour as the macro tint, four tiled PBR ground sets mixed by the splat mask, normal-mapped, fading to the macro with distance */
-function splatMaterial(colourTex) {
+function splatMaterial(colourTex, fixedW) {
   const G = S.g;
   const m = new THREE.MeshStandardMaterial({ map: colourTex, roughness: 0.96, metalness: 0, normalMap: G.dirt.n, normalScale: new THREE.Vector2(0.9, 0.9) });
   return custom(m, (sh) => {
-    Object.assign(sh.uniforms, { splatMap: { value: S.splat }, d0: { value: G.dirt.d }, d1: { value: G.gravel.d }, d2: { value: G.grass.d }, d3: { value: G.scrub.d },
+    Object.assign(sh.uniforms, { splatMap: { value: S.splat }, fixedW: { value: fixedW ? new THREE.Vector4(...fixedW) : new THREE.Vector4(0, 0, 0, 0) }, useFixed: { value: fixedW ? 1 : 0 }, d0: { value: G.dirt.d }, d1: { value: G.gravel.d }, d2: { value: G.grass.d }, d3: { value: G.scrub.d },
       n0: { value: G.dirt.n }, n1: { value: G.gravel.n }, n2: { value: G.grass.n }, n3: { value: G.scrub.n }, detRep: { value: 1 / 3.2 }, detNear: { value: 45 }, detFar: { value: 240 } });
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vTPos;')
       .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvTPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
-      varying vec3 vTPos; uniform sampler2D splatMap, d0, d1, d2, d3, n0, n1, n2, n3; uniform float detRep, detNear, detFar;
+      varying vec3 vTPos; uniform sampler2D splatMap, d0, d1, d2, d3, n0, n1, n2, n3; uniform float detRep, detNear, detFar, useFixed; uniform vec4 fixedW;
       vec4 lgW; vec2 lgUv; float lgF;`)
       .replace('#include <map_fragment>', `
         vec4 macro = texture2D(map, vMapUv);
-        vec3 w3 = texture2D(splatMap, vMapUv).rgb; lgW = vec4(w3, max(0.0, 1.0 - w3.r - w3.g - w3.b)); lgW /= max(1e-3, lgW.r + lgW.g + lgW.b + lgW.a);
+        vec3 w3 = texture2D(splatMap, vMapUv).rgb; lgW = vec4(w3, max(0.0, 1.0 - w3.r - w3.g - w3.b)); lgW = mix(lgW, fixedW, useFixed); lgW /= max(1e-3, lgW.r + lgW.g + lgW.b + lgW.a);
         lgUv = vec2(vTPos.x, -vTPos.z) * detRep;
         float lgDist = length(vTPos - cameraPosition); lgF = 1.0 - smoothstep(detNear, detFar, lgDist);
         vec3 det = texture2D(d0, lgUv).rgb * lgW.r + texture2D(d1, lgUv * 1.31).rgb * lgW.g + texture2D(d2, lgUv * 0.79).rgb * lgW.b + texture2D(d3, lgUv * 1.13).rgb * lgW.a;
@@ -152,7 +154,7 @@ function splatMaterial(colourTex) {
         vec3 mapN = (texture2D(n0, lgUv).xyz * lgW.r + texture2D(n1, lgUv * 1.31).xyz * lgW.g + texture2D(n2, lgUv * 0.79).xyz * lgW.b + texture2D(n3, lgUv * 1.13).xyz * lgW.a) * 2.0 - 1.0;
         mapN.xy *= normalScale * lgF;
         normal = normalize( tbn * mapN );`);
-  }, 'terrain-splat');
+  }, fixedW ? 'terrain-splat-fixed' : 'terrain-splat');
 }
 /* far tier: macro colour with a soft grass detail so the horizon hills don't read as a blurred photo */
 function farMaterial(colourTex) {
@@ -701,7 +703,10 @@ function vegetation(sc) {
   const kits = [treeKit(101, 11, 4.2, 22), treeKit(202, 14, 5.2, 28), treeKit(303, 8.5, 3.6, 18)]; const woods = [barkA, barkA, barkB];
   const bakes = kits.map((k, i) => bakeImpostor(k, woods[i], leafM));
   const bbM = bakes.map(b => std({ map: b.tex, alphaTest: 0.35, side: THREE.DoubleSide, roughness: 1, color: '#ffffff' }));
-  const trees = sc.trees.map((t, i) => ({ x: t[0], z: t[1], s: t[2], v: (i * 7 + Math.floor(t[0] * 13)) % 3 & 3, rot: (i * 0.73) % 6.28, y: groundAt(t[0], t[1]) }));
+  const sm = sc.summit; const nearSummit = (t) => Math.hypot(t[0] - sm[0], t[1] - sm[1]) < 170;
+  const summitTrees = (sc.farTrees || []).filter(nearSummit).map(t => [t[0], t[1], 0.85 + ((t[0] * 7 + t[1] * 3) % 10) / 20]);
+  if (sc.farTrees) sc.farTrees = sc.farTrees.filter(t => !nearSummit(t));
+  const trees = sc.trees.concat(summitTrees).map((t, i) => ({ x: t[0], z: t[1], s: t[2], v: (i * 7 + Math.floor(t[0] * 13)) % 3 & 3, rot: (i * 0.73) % 6.28, y: groundAt(t[0], t[1]) }));
   trees.forEach(t => { t.v = Math.abs(t.v) % 3; });
   const N = trees.length; const full = kits.map((k, i) => ({ wood: new THREE.InstancedMesh(k.wood, woods[i], N), leaves: new THREE.InstancedMesh(k.leaves, leafM, N) }));
   const bb = kits.map((k, i) => new THREE.InstancedMesh(billboardGeo(bakes[i].w, bakes[i].h, bakes[i].y0), bbM[i], N));
@@ -711,6 +716,12 @@ function vegetation(sc) {
     const fb = kits.map((k, i) => new THREE.InstancedMesh(billboardGeo(bakes[i].w, bakes[i].h, bakes[i].y0), bbM[i], counts[i]));
     const idx = [0, 0, 0]; far.forEach((t, i) => { const v = i % 3; _q.setFromAxisAngle(_up, (i * 0.37) % 6.28); _v.set(t[0], groundAt(t[0], t[1]) - 0.2, t[1]); _s.set(t[2], t[2] * 0.95, t[2]); _m4.compose(_v, _q, _s); fb[v].setMatrixAt(idx[v]++, _m4); });
     fb.forEach(b => { b.frustumCulled = false; g.add(b); }); }
+  // granite boulders on the summit
+  { const rockM = texMat('bark2', { color: '#9a9a94', roughness: 0.9 }); const rocks = []; const r = rnd(77);
+    for (let k = 0; k < 18; k++) { const a = r() * Math.PI * 2, d = 6 + r() * 40; const x = sm[0] + Math.cos(a) * d, z = sm[1] + Math.sin(a) * d; const sz = 0.8 + r() * 2.6;
+      const geo = new THREE.IcosahedronGeometry(sz, 1); const pos = geo.attributes.position; for (let i = 0; i < pos.count; i++) { const f = 0.78 + r() * 0.4; pos.setXYZ(i, pos.getX(i) * f * 1.2, pos.getY(i) * f * 0.7, pos.getZ(i) * f); } geo.computeVertexNormals(); worldUV(geo, 2.2);
+      xf(geo, x, groundAt(x, z) + sz * 0.15, z, r() * 0.5, r() * 6.28, r() * 0.5); rocks.push(geo); }
+    const rm = mesh(merge(rocks), rockM); g.add(rm); S.rocks = rocks.length; }
   // trunk collision grid
   S.treeGrid = new Map(); trees.forEach(t => { const key = ((t.x / 8) | 0) + ':' + ((t.z / 8) | 0); if (!S.treeGrid.has(key)) S.treeGrid.set(key, []); S.treeGrid.get(key).push(t); });
   S.veg = { trees, full, bb, cx: 1e9, cz: 1e9, leafM, R: Q.treeR };
@@ -1013,7 +1024,7 @@ function tick(now) {
   vegUpdate(false); if (S.veg) { const u = S.veg.leafM.userData.shader; if (u) u.uniforms.time.value = now / 1000; }
   liftTick(dt); fireTick(now);
   S.renderer.info.reset(); if (S.composer) S.composer.render(dt); else S.renderer.render(S.scene, S.camera);
-  frames++; if (now - fpsT > 500) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; if (S.ui.fps) S.ui.fps.textContent = fps + ' fps · ' + S.quality + ' · ' + S.renderer.info.render.calls + ' calls · ' + Math.round(S.renderer.info.render.triangles / 1000) + 'k tris'; }
+  frames++; if (now - fpsT > 500) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; if (S.ui.fps) S.ui.fps.textContent = fps + ' fps · ' + S.quality + ' · ' + S.renderer.info.render.calls + ' calls · ' + Math.round(S.renderer.info.render.triangles / 1000) + 'k tris'; fpsCheck(now); }
   if (S.ui.where && !P.flight && !P.ride) { S.ui.where.textContent = (P.auto ? 'Walking' : 'Standing') + ' · ' + Math.round(gy) + ' m above sea level'; }
 }
 function liftTick(dt) {
@@ -1032,19 +1043,31 @@ function fireTick(now) {
   } else S.fireLights.forEach(L => { L.visible = false; });
 }
 
+/* a poor frame rate after the first seconds drops the quality tier once (stored), then reloads into it */
+let fpsSamples = [], fpsStart = 0;
+function fpsCheck(now) {
+  if (PARAMS.has('quality') || S.quality === 'low' || !running) return; if (!fpsStart) { fpsStart = now; return; }
+  if (now - fpsStart < 4000) return; fpsSamples.push(fps); if (fpsSamples.length < 8) return;
+  const avg = fpsSamples.reduce((a, b) => a + b, 0) / fpsSamples.length; fpsSamples = [];
+  let flagged = false; try { flagged = sessionStorage.getItem('lg-downgraded') === '1'; } catch (e) {}
+  if (avg < 20 && !flagged) { const next = S.quality === 'high' ? 'medium' : 'low'; try { localStorage.setItem('lg-quality', next); sessionStorage.setItem('lg-downgraded', '1'); } catch (e) {}
+    setLoad('Switching to a lighter mode for this device'); const root = document.getElementById('game'); root.classList.add('loading'); setTimeout(() => location.reload(), 900); }
+  else fpsStart = now + 20000;
+}
+
 /* ---------- build ---------- */
 async function boot() {
   if (booted) return; if (bootP) return bootP;
   bootP = (async () => {
-    setLoad('Terrain and sky');
+    setLoad('Loading');
     const gsets = ['dirt', 'gravel', 'grass', 'scrub', 'trail'], msets = ['deck', 'clad', 'iron', 'canvas', 'bark1', 'bark2'];
     const [sc, hnI, hfI, nearI, farI, splatI, skyDay, skyDusk, skyNight, envDay, envDusk, envNight, ...gtex] = await Promise.all([
-      fetch(A + 'lg-game-scene.json').then(r => r.json()), loadImage(A + 'lg-game-hnear.png'), loadImage(A + 'lg-game-hfar.png'), loadImage(A + 'lg-game-near.jpg'), loadImage(A + 'lg-game-far.jpg'), loadImage(A + 'lg-game-splat.jpg'),
+      tally(fetch(A + 'lg-game-scene.json').then(r => r.json())), loadImage(A + 'lg-game-hnear.png'), loadImage(A + 'lg-game-hfar.png'), loadImage(A + 'lg-game-near.jpg'), loadImage(A + 'lg-game-far.jpg'), loadImage(A + 'lg-game-splat.jpg'),
       loadTex(A + 'lg-sky-day.jpg', { nomip: true }), loadTex(A + 'lg-sky-dusk.jpg', { nomip: true }), loadTex(A + 'lg-sky-night.jpg', { nomip: true }),
       loadHDR(A + 'lg-env-day.hdr'), loadHDR(A + 'lg-env-dusk.hdr'), loadHDR(A + 'lg-env-night.hdr'),
       ...gsets.flatMap(k => [loadTex(A + 'lg-g-' + k + '-d.jpg'), loadTex(A + 'lg-g-' + k + '-n.jpg', { linear: true })]),
       ...msets.flatMap(k => [loadTex(A + 'lg-m-' + k + '-d.jpg'), loadTex(A + 'lg-m-' + k + '-n.jpg', { linear: true })]), loadImage(A + 'lg-logo.png').catch(() => null)]);
-    setLoad('Tents, lift and trees');
+    setLoad('Building the park'); await new Promise(r => setTimeout(r, 30));
     S.sc = sc; S.nearM = sc.near_m; S.farM = sc.far_m; S.hn = decodeHeights(hnI); S.hf = decodeHeights(hfI);
     S.g = {}; gsets.forEach((k, i) => { const d = gtex[i * 2], n = gtex[i * 2 + 1]; d.wrapS = d.wrapT = n.wrapS = n.wrapT = THREE.RepeatWrapping; S.g[k] = { d, n }; });
     S.m = {}; msets.forEach((k, i) => { const d = gtex[gsets.length * 2 + i * 2], n = gtex[gsets.length * 2 + i * 2 + 1]; d.wrapS = d.wrapT = n.wrapS = n.wrapT = THREE.RepeatWrapping; S.m[k] = { d, n }; }); S.logo = gtex[gsets.length * 2 + msets.length * 2];
@@ -1053,6 +1076,7 @@ async function boot() {
     S.tex = { ground: TEX.ground() };
     S.tentMats = []; S.lampMats = []; S.fireMats = []; S.fires = [];
     const el = document.getElementById('game-canvas');
+    el.addEventListener('webglcontextlost', (e) => { e.preventDefault(); running = false; const root = document.getElementById('game'); root.classList.add('failed'); const f = root.querySelector('.game-fail span'); if (f) f.textContent = 'The 3D view stopped (graphics memory ran out). Reload the page to continue.'; });
     S.renderer = new THREE.WebGLRenderer({ canvas: el, antialias: !Q.post, powerPreference: 'high-performance' });
     S.renderer.setPixelRatio(Q.pr); S.renderer.shadowMap.enabled = Q.shadow > 0; S.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     S.renderer.outputColorSpace = THREE.SRGBColorSpace; S.renderer.toneMapping = THREE.ACESFilmicToneMapping; S.renderer.toneMappingExposure = 1.0; S.renderer.info.autoReset = false;
@@ -1078,7 +1102,7 @@ async function boot() {
     // terrain
     const nearTex = new THREE.Texture(nearI); nearTex.colorSpace = THREE.SRGBColorSpace; nearTex.anisotropy = Q.aniso; nearTex.needsUpdate = true;
     const farTex = new THREE.Texture(farI); farTex.colorSpace = THREE.SRGBColorSpace; farTex.anisotropy = Math.min(4, Q.aniso); farTex.needsUpdate = true;
-    const far = new THREE.Mesh(terrainGeometry(S.hf, S.farM, null, { f: S.hn, size: S.nearM }), farMaterial(farTex)); far.receiveShadow = true; S.scene.add(far);
+    const far = new THREE.Mesh(terrainGeometry(S.hf, S.farM, null, { f: S.hn, size: S.nearM }), splatMaterial(farTex, [0.15, 0, 0.35, 0.5])); far.receiveShadow = true; S.scene.add(far);
     const near = new THREE.Mesh(terrainGeometry(S.hn, S.nearM, { f: S.hf, size: S.farM }), splatMaterial(nearTex)); near.receiveShadow = true; S.scene.add(near);
     S.scene.add(builtGround(sc));
     if (Q.grass) { S.grass = grassSystem(Q.grass); S.scene.add(S.grass.mesh); }
