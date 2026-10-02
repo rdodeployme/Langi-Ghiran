@@ -33,7 +33,7 @@
 .tour-panel.hide{transform:translateY(calc(100% + 40px));opacity:0;pointer-events:none}
 .tour-panel .count{display:flex;align-items:center;gap:10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin:0 0 10px}
 .tour-panel .dots{display:flex;gap:5px;flex-wrap:wrap}
-.tour-panel .dots button{width:18px;height:4px;border-radius:2px;border:0;padding:0;background:rgba(255,255,255,.25);cursor:pointer}
+.tour-panel .dots button{width:14px;height:4px;border-radius:2px;border:0;padding:0;background:rgba(255,255,255,.25);cursor:pointer}
 .tour-panel .dots button[aria-current="true"]{background:var(--yellow)}
 .tour-panel h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:clamp(1.25rem,2vw,1.55rem);line-height:1.15;margin:0 0 8px;color:#fff;display:flex;align-items:center;gap:10px}
 .tour-panel p{margin:0 0 12px;font-size:.92rem;line-height:1.55;color:rgba(255,255,255,.86)}
@@ -386,7 +386,7 @@
   </div>
 
   <div class="tour-panel" id="tour-panel" aria-live="polite">
-    <div class="count"><span id="tour-count">1 / 12</span><span class="dots" id="tour-dots"></span></div>
+    <div class="count"><span id="tour-count" style="white-space:nowrap">1 / 15</span><span class="dots" id="tour-dots"></span></div>
     <h1 id="tour-title">Langi Ghiran in 3D</h1>
     <div id="tour-body"><p>Loading the terrain…</p></div>
     <div class="tour-ctrl" id="tour-ctrl">
@@ -550,6 +550,8 @@
   var PATH = {};
   ['beginner', 'intermediate', 'expert'].forEach(function (k) { PATH[k] = measure(P.runs[k].line); });
   PATH.lift = measure([P.B, P.T]);
+  var WALK = { glamp: 'Walking the camp', base: 'Walking in from the car park' };
+  PATH.base = (function (kc) { return measure([offs(kc, -115, 70), offs(kc, -72, 46), offs(kc, -30, 33), offs(kc, 18, 31), offs(kc, 40, 14), offs(P.B, -5, 7)]); })(P.kids.centre);
   PATH.glamp = measure([[143.09105, -37.27418], [143.0918, -37.27405], [143.0924, -37.27386], [143.09262, -37.27380], [143.0929, -37.27381], [143.0933, -37.27380], [143.0937, -37.27385], [143.0941, -37.27393], [143.09445, -37.27404], [143.09462, -37.27414], [143.0945, -37.27424], [143.0942, -37.27424], [143.0939, -37.27419], [143.0936, -37.27413], [143.09345, -37.27408]]);
   var liftAng = Math.atan2((P.T[1] - P.B[1]) * KY, (P.T[0] - P.B[0]) * KX);
 
@@ -636,6 +638,9 @@
     expert: 'The most direct line, down the eastern edge beside the lift. Expect the tightest turns, rock features and bigger optional jumps and drops, finishing by the glamping camp.'
   };
   var SITE_C = [143.0906, -37.2762];
+  var SUMMIT = [143.10705, -37.30205];   // highest point of the terrain model (SRTM), about 905 m
+  var RESERVOIR = [143.0997, -37.2824];  // Langi Ghiran Reservoir, from the Vicmap base map
+  var BASE_C = [143.0909, -37.2744];
   var STOPS = [
     { title: 'Langi Ghiran from the plains',
       body: '<p>Langi Ghiran rises from the plains between Ararat and Beaufort, in Victoria’s Grampians region, with the Grampians (Gariwerd) ranges on the far western horizon. This is the real landform, built from elevation data with satellite imagery draped over it.</p><p>Press <b>Play tour</b> for the full fly-through, including virtual rides down each run and up the lift.</p>',
@@ -643,19 +648,29 @@
     { title: 'Lar-ne-jeering',
       body: '<p>In the language of the Djab Wurrung people, the mountain is Lar-ne-jeering: "Home of the Yellow-tailed Black Cockatoos". Granite outcrops and eucalypt woodland cover its slopes.</p>',
       cam: { center: [143.1080, -37.2975], zoom: 14.1, pitch: 72, bearing: 200 }, orbit: true, mk: ['ghiran', 'picnic'] },
+    { title: 'The summit', look: { at: SUMMIT, brg: 300, h: 16, pitch: 76, spin: 8 },
+      body: '<p>Eye level on top of Mount Langi Ghiran, about 950 m up. Turn full circle: the plains to the north, the Grampians (Gariwerd) ranges on the western horizon, and the old quarry down at the foot of the range.</p><p class="tour-key"><span>Slow 360&deg; look-around. Drag to look where you like.</span></p>',
+      cam: { stand: true }, mk: [] },
     { title: 'The picnic ground and Reservoir Track',
       body: '<p>The park’s visitor area sits on its western side. From the picnic ground, the Reservoir Track leads to the reservoir built from local granite in 1880 to supply water to Ararat.</p>',
-      cam: { center: [143.094, -37.293], zoom: 14.4, pitch: 55, bearing: 105 }, mk: ['picnic', 'ghiran', 'site'] },
+      cam: { center: [143.094, -37.293], zoom: 14.4, pitch: 55, bearing: 105 }, mk: ['picnic', 'ghiran', 'site', 'reservoir'] },
+    { title: 'Langi Ghiran Reservoir',
+      body: '<p>Built in 1880 from granite quarried on the mountain, with stone water races feeding it, to supply the town of Ararat. It still holds water in the fold of Easter Creek, a short walk uphill from the picnic ground and about a kilometre from the quarry.</p>',
+      cam: { center: [143.1003, -37.2832], zoom: 16.4, pitch: 66, bearing: 150 }, mk: ['reservoir', 'picnic', 'site'] },
     { title: 'The former quarry',
       body: '<p>This is the area being rehabilitated: a former sand quarry at the foot of the range, off Warrak Road. The pale ground in the middle is the old quarry floor, and the slope rises to the south towards the park.</p><p class="tour-key"><span><i></i>Rehabilitation area (approximate)</span></p>',
       cam: { fit: 'site', pitch: 50, bearing: 165 }, mk: ['site'] },
     { title: 'The bike park', plan: 'all',
       body: '<p>Here’s the concept laid over the real hillside. Three downhill runs leave the top station and wind down to the bottom, with a kids’ jump park by the lift base, a pulley lift to pull riders back up, and 16 glamping sites off to the side. Pick a run to see it up close.</p>',
-      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn" data-stand="bike-park">&#9673; Fly low up the hill</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
+      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn" data-stand="top">&#9673; Stand at the top station</button><button type="button" class="t-btn" data-stand="bike-park">Fly low up the hill</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
       cam: { center: [143.0915, -37.2772], zoom: 15.7, pitch: 72, bearing: 158 }, mk: ['beginner', 'intermediate', 'expert', 'kids', 'glamp', 'top', 'base'] },
+    { title: 'Arriving at the base', plan: 'all', ride: 'base', g: 'g-kids',
+      body: '<p>This is where a visit starts: the base area at the foot of the slope, with the lift base, the kids’ jump park next door, the shelter and the walk across to the glamping camp. Everything in the park leads back here.</p><p><span class="tbc">Car park, shelter and access road TBC</span></p>',
+      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn go" data-film="base">&#9654; Watch the walk in</button><button type="button" class="t-btn" data-ride="base">Walk it in 3D</button><button type="button" class="t-btn" data-stand="base">&#9673; Stand at the base</button></div>'; },
+      cam: { center: BASE_C, zoom: 17.4, pitch: 68, bearing: 158 }, mk: ['base', 'kids', 'glamp', 'top'] },
     { title: 'The pulley lift', plan: 'lift', ride: 'lift', g: 'g-lift',
       body: '<p>Riders roll on at the base, grab the line and get pulled straight up the slope to the top station, bike and all. No pushing, so more time riding.</p>',
-      extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="lift">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="lift">Follow it in 3D</button><button type="button" class="t-btn" data-stand="lift">&#9673; Fly low up the lift</button></div>' + clip('lift', 'Concept clip of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
+      extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="lift">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="lift">Follow it in 3D</button><button type="button" class="t-btn" data-stand="base">&#9673; Stand at the base</button><button type="button" class="t-btn" data-stand="lift">Fly low up the lift</button></div>' + clip('lift', 'Concept clip of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
       cam: { fit: 'lift', pitch: 52, bearing: 152 }, mk: ['top', 'base'] },
     { title: 'Beginner run', plan: 'beginner', ride: 'beginner', g: 'g-beg',
       body: '<p>' + RUN_TXT.beginner + '</p>',
@@ -671,11 +686,11 @@
       cam: { fit: 'expert', pitch: 50, bearing: 330 }, mk: ['expert', 'top', 'base'] },
     { title: 'Kids’ jump park', plan: 'kids', g: 'g-kids',
       body: '<p>Below the three runs, next to the base, a kids’ area: a small pump track with rollers and berms, and a short line of little dirt jumps, so younger riders have their own space while the family rides.</p>',
-      extra: function () { return clip('kids', 'Concept clip of young children riding a small dirt pump track and jumps'); },
+      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn" data-stand="kidspark">&#9673; Stand by the pump track</button></div>' + clip('kids', 'Concept clip of young children riding a small dirt pump track and jumps'); },
       cam: { fit: 'kids', pitch: 50, bearing: 200, maxZoom: 17.4 }, mk: ['kids', 'base'] },
     { title: 'Glamping', plan: 'glamp', ride: 'glamp', g: 'g-glamp',
       body: '<p>Off to the side of the bike park, on the open rise looking back at the range, sit 16 glamping sites: canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift base.</p>',
-      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-film="glamp">&#9654; Watch the walk-through</button><button type="button" class="t-btn" data-ride="glamp">Walk it in 3D</button><button type="button" class="t-btn" data-stand="glamping">&#9673; Fly low over the camp</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
+      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-film="glamp">&#9654; Watch the walk-through</button><button type="button" class="t-btn" data-ride="glamp">Walk it in 3D</button><button type="button" class="t-btn" data-stand="deck">&#9673; Stand on a deck</button><button type="button" class="t-btn" data-stand="glamping">Fly low over the camp</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
       cam: { fit: 'glamp', pitch: 52, bearing: 205 }, mk: ['glamp', 'base'] },
     { title: 'Today, and what it could be', plan: 'future', orbit: 40,
       body: '<p>An artist’s concept of the finished park, laid over the real terrain: revegetated ground, runs down the slope, a kids’ park at the bottom, the lift back to the top and the glamping camp beside it. Slide between today and the concept.</p>',
@@ -684,21 +699,22 @@
         '<p><span class="tbc">Illustrative concept based on the real site. Not a final design</span></p>'; },
       cam: { center: [143.0906, -37.2772], zoom: 15.8, pitch: 62, bearing: 160 }, mk: [] }
   ];
-  var SLUG = ['plains', 'lar-ne-jeering', 'picnic-ground', 'former-quarry', 'bike-park', 'lift', 'beginner', 'intermediate', 'expert', 'kids', 'glamping', 'today-and-tomorrow'];
+  var SLUG = ['plains', 'lar-ne-jeering', 'summit', 'picnic-ground', 'reservoir', 'former-quarry', 'bike-park', 'base', 'lift', 'beginner', 'intermediate', 'expert', 'kids', 'glamping', 'today-and-tomorrow'];
   var IDX = {}; STOPS.forEach(function (s, n) { if (s.ride) IDX[s.ride] = n; });
 
   var MARKERS = [
     { k: 'ghiran', ll: [143.1103, -37.2993], name: 'Langi Ghiran', sub: 'Lar-ne-jeering', stop: 1 },
-    { k: 'picnic', ll: [143.0920, -37.2902], name: 'Picnic ground', sub: 'Reservoir Track', stop: 2 },
-    { k: 'site', ll: [143.0906, -37.2736], name: 'LG Recycling', sub: 'Rehabilitation area', stop: 3, cls: 'site' },
+    { k: 'picnic', ll: [143.0920, -37.2902], name: 'Picnic ground', sub: 'Reservoir Track', stop: 3 },
+    { k: 'reservoir', ll: RESERVOIR, name: 'Reservoir', sub: 'Built 1880', stop: 4 },
+    { k: 'site', ll: [143.0906, -37.2736], name: 'LG Recycling', sub: 'Rehabilitation area', stop: 5, cls: 'site' },
     { k: 'ararat', ll: [142.9280, -37.2830], name: 'Ararat', sub: 'about 14 km west' },
     { k: 'top', ll: P.T, name: 'Top station', icon: 'g-lift', stop: IDX.lift },
     { k: 'base', ll: P.B, name: 'Lift base', icon: 'g-lift', stop: IDX.lift },
     { k: 'beginner', ll: along(PATH.beginner, PATH.beginner.len * 0.42), name: 'Beginner', icon: 'g-beg', stop: IDX.beginner },
     { k: 'intermediate', ll: along(PATH.intermediate, PATH.intermediate.len * 0.5), name: 'Intermediate', icon: 'g-int', stop: IDX.intermediate },
     { k: 'expert', ll: along(PATH.expert, PATH.expert.len * 0.45), name: 'Expert', icon: 'g-exp', stop: IDX.expert },
-    { k: 'kids', ll: P.kids.centre, name: 'Kids’ park', icon: 'g-kids', stop: 9 },
-    { k: 'glamp', ll: offs(P.glamp.centre, 0, 40), name: 'Glamping', sub: '16 sites', icon: 'g-glamp', stop: 10 }
+    { k: 'kids', ll: P.kids.centre, name: 'Kids’ park', icon: 'g-kids', stop: SLUG.indexOf('kids') },
+    { k: 'glamp', ll: offs(P.glamp.centre, 0, 40), name: 'Glamping', sub: '16 sites', icon: 'g-glamp', stop: SLUG.indexOf('glamping') }
   ];
 
   var FIT = {
@@ -887,7 +903,7 @@
 
   var PLAN_LAYERS = ['run-case', 'run-line', 'lift-cable', 'lift-towers', 'kids-outline'];
   // loop time per run (s) and how many riders are on it at once
-  var FLOW = { beginner: [52, 3], intermediate: [30, 2], expert: [21, 2], lift: [36, 3], glamp: [140, 2] };
+  var FLOW = { beginner: [52, 3], intermediate: [30, 2], expert: [21, 2], lift: [36, 3], glamp: [140, 2], base: [90, 2] };
   var flowMode = null, flowRaf = null, flowLast = 0, flowEmpty = true;
   function flowTick(now) {
     flowRaf = requestAnimationFrame(flowTick);
@@ -895,12 +911,12 @@
     var src = map && ready && map.getSource('riders'); if (!src) return;
     var f = [];
     if (flowMode && !riding && mode === 'fly') {
-      var ks = flowMode === 'all' ? ['beginner', 'intermediate', 'expert', 'lift'] : (flowMode === 'lift' || flowMode === 'glamp' ? [flowMode] : (FLOW[flowMode] ? [flowMode, 'lift'] : []));
+      var ks = flowMode === 'all' ? ['beginner', 'intermediate', 'expert', 'lift', 'base'] : (flowMode === 'lift' || WALK[flowMode] ? [flowMode] : (FLOW[flowMode] ? [flowMode, 'lift'] : []));
       ks.forEach(function (k) {
         var p = PATH[k], T = FLOW[k][0] * 1000, n = FLOW[k][1];
         for (var j = 0; j < n; j++) {
           var u = ((now / T) + j / n + (k.length * 0.137)) % 1, o = Math.min(1, u / 0.04, (1 - u) / 0.04);
-          f.push(feat({ c: k === 'lift' || k === 'glamp' ? '#FFFFFF' : COL[k], sc: k === 'expert' ? '#FCC830' : (k === 'lift' ? '#171E21' : '#FFFFFF'), o: Math.max(0, o) }, 'Point', along(p, u * p.len)));
+          f.push(feat({ c: k === 'lift' || WALK[k] ? '#FFFFFF' : COL[k], sc: k === 'expert' ? '#FCC830' : (k === 'lift' ? '#171E21' : '#FFFFFF'), o: Math.max(0, o) }, 'Point', along(p, u * p.len)));
         }
       });
     }
@@ -1030,24 +1046,26 @@
   var rideRaf = null, riding = null;
   // the 3D ride runs in step with the ride film: the film's clock moves the rider and the chase camera
   var RIDE_SECS = { lift: 15, beginner: 15, intermediate: 15, expert: 15 };
-  RIDE_SECS.glamp = 15;
-  var RIDE_ZK = { lift: 17.8, beginner: 17.0, intermediate: 17.4, expert: 17.6, glamp: 18.0 }, RIDE_PITCH = 72;
+  RIDE_SECS.glamp = 15; RIDE_SECS.base = 15;
+  var RIDE_ZK = { lift: 19.5, beginner: 18.9, intermediate: 19.2, expert: 19.4, glamp: 21.2, base: 21.0 }, RIDE_PK = { glamp: 80, base: 80 }, RIDE_PITCH = 74;
+  // how far ahead of the rider the camera looks; for the camp walk it puts the camera on the walker's shoulders
+  var RIDE_LEAD = { lift: 30, beginner: 30, intermediate: 26, expert: 26, glamp: 46, base: 46 };
   function ride(k) {
     if (!ready) { pendingRide = k; return; }
     leaveFree();
     stopRide(true);
     riding = k;
-    var path = PATH[k], col = k === 'lift' || k === 'glamp' ? '#FFFFFF' : COL[k];
+    var path = PATH[k], col = k === 'lift' || WALK[k] ? '#FFFFFF' : COL[k];
     if (IDX[k] !== i) { i = IDX[k]; render(); }
     showPlan(k === 'lift' ? 'lift' : k);
     tour.classList.add('riding'); showMarkers([]);
-    var title = k === 'lift' ? 'Riding the lift' : k === 'glamp' ? 'Walking the camp' : 'Riding the ' + GRADE[k][1].toLowerCase() + ' run';
-    var filmHTML = (!reduce && FILM[k]) ? '<figure class="clip ride"><div class="clip-tag"><video id="ride-film" src="assets/' + FILM[k] + '.mp4" poster="assets/' + FILM[k] + '.webp" muted playsinline preload="auto" aria-label="Concept ride film, in step with the 3D ride"></video></div><figcaption>' + (k === 'glamp' ? 'The walk-through film' : 'The ride film') + ', in step with the 3D view. Illustrative concept only.</figcaption></figure>'
-      : clip(k, 'Concept clip of the ' + (k === 'lift' ? 'lift' : k === 'glamp' ? 'glamping camp' : GRADE[k][1].toLowerCase() + ' run'), 'ride');
-    $('tour-body').innerHTML = filmHTML + '<div class="ride-hud"><span>' + title + '</span><span id="ride-m">0 m</span></div><div class="ride-bar"><i id="ride-bar"></i></div>' + (k === 'glamp' ? '' : profileSVG(k)) +
+    var title = k === 'lift' ? 'Riding the lift' : WALK[k] ? WALK[k] : 'Riding the ' + GRADE[k][1].toLowerCase() + ' run';
+    var filmHTML = (!reduce && FILM[k]) ? '<figure class="clip ride"><div class="clip-tag"><video id="ride-film" src="assets/' + FILM[k] + '.mp4" poster="assets/' + FILM[k] + '.webp" muted playsinline preload="auto" aria-label="Concept ride film, in step with the 3D ride"></video></div><figcaption>' + (WALK[k] ? 'The walk-through film' : 'The ride film') + ', in step with the 3D view. Illustrative concept only.</figcaption></figure>'
+      : clip(k === 'base' ? 'kids' : k, 'Concept clip of the ' + (k === 'lift' ? 'lift' : WALK[k] ? 'walk' : GRADE[k][1].toLowerCase() + ' run'), 'ride');
+    $('tour-body').innerHTML = filmHTML + '<div class="ride-hud"><span>' + title + '</span><span id="ride-m">0 m</span></div><div class="ride-bar"><i id="ride-bar"></i></div>' + (WALK[k] ? '' : profileSVG(k)) +
       '<div class="t-actions"><button type="button" class="t-btn" id="ride-stop">Stop ride</button></div>';
     $('ride-stop').addEventListener('click', function () { stopPlay(); stopRide(); go(i); });
-    var dur = (reduce ? 8 : RIDE_SECS[k]) * 1000, start = null, b0 = null, my = ++seq, RIDE_Z = RIDE_ZK[k];
+    var dur = (reduce ? 8 : RIDE_SECS[k]) * 1000, start = null, b0 = null, my = ++seq, RIDE_Z = RIDE_ZK[k], RP = RIDE_PK[k] || RIDE_PITCH, LEAD = RIDE_LEAD[k] || 22;
     var rv = $('ride-film'), rvOk = false, win = Math.max(40, path.len * 0.05);
     if (rv) { rv.muted = !soundOn; rv.volume = 0.9; if (soundOn) fadeAmb(0.1); }
     // drag the profile or the progress bar to scrub the ride: the film, the rider and the camera move together
@@ -1064,10 +1082,10 @@
     if (rv) { rv.addEventListener('playing', function () { rvOk = true; }); rv.addEventListener('error', function () { rvOk = false; rv = null; }); }
     map.stop();
     var v = view(), rp = { top: Math.round(v.H * 0.2), bottom: v.B, left: v.L, right: 0 };
-    var p0 = along(path, 18), b = brg(along(path, 0), along(path, 40));
+    var p0 = along(path, LEAD), b = brg(along(path, 0), along(path, 40));
     // glide to the start with our own jumpTo steps (easeTo with terrain + padding can dive under the ground),
     // then wait for the imagery under the start to load before rolling
-    camGlide({ center: p0, bearing: b, pitch: RIDE_PITCH, zoom: RIDE_Z, padding: rp }, reduce ? 0 : 2200, my, function () {
+    camGlide({ center: p0, bearing: b, pitch: RP, zoom: RIDE_Z, padding: rp }, reduce ? 0 : 2200, my, function () {
       whenTilesReady(my, 2500, function () {
       if (rv) { try { rv.currentTime = 0; } catch (e) {} var pp = rv.play(); if (pp && pp.catch) pp.catch(function (er) { if (er && er.name !== 'AbortError') rv = null; }); }
       (function step(now) {
@@ -1081,11 +1099,11 @@
         else if (rv) u = 0;
         else u = (now - start) / dur;
         u = Math.max(0, Math.min(1, u));
-        var s = u * path.len, pos = along(path, s), look = along(path, Math.min(path.len, s + 22));
+        var s = u * path.len, pos = along(path, s), look = along(path, Math.min(path.len, s + LEAD));
         var target = brg(along(path, Math.max(0, s - win * 0.4)), along(path, Math.min(path.len, s + win)));
         if (s > path.len - 8) target = b0 == null ? target : b0;
         b0 = b0 == null ? target : b0 + ((((target - b0) % 360) + 540) % 360 - 180) * 0.05;
-        map.jumpTo({ center: look, bearing: b0, pitch: RIDE_PITCH, zoom: RIDE_Z, padding: rp });
+        map.jumpTo({ center: look, bearing: b0, pitch: RP, zoom: RIDE_Z, padding: rp });
         map.getSource('me').setData(fc([feat({ c: col }, 'Point', pos)]));
         var bar = $('ride-bar'); if (bar) bar.style.width = (u * 100).toFixed(1) + '%';
         var m = $('ride-m'); if (m) m.textContent = Math.round(s) + ' / ' + Math.round(path.len) + ' m';
@@ -1146,8 +1164,9 @@
     var s = STOPS[i], my = ++seq;
     if (!introOn && mode === 'fly') try { history.replaceState(null, '', '#' + SLUG[i]); } catch (e) {}
     map.stop(); cancelAnimationFrame(orbitRaf); orbitRaf = null; cancelAnimationFrame(camRaf); camRaf = null;
-    var cam = camFor(s.cam);
     showMarkers(s.mk);
+    if (s.look) { tour.classList.add('standing'); lookAround(s.look, my, reduce ? 0 : 5200); if (playing) timer = setTimeout(function () { if (playing) next(); }, 22000); return; }
+    var cam = camFor(s.cam);
     var dist = map.getCenter().distanceTo(new maplibregl.LngLat(cam.center[0], cam.center[1])), far = dist > 3000;
     // all camera moves are stepped with jumpTo, which re-reads the ground height every frame
     camGlide(cam, reduce ? 0 : (far ? 6500 : 3800), my, function () {
@@ -1190,29 +1209,62 @@
     return orbitRaf;
   }
   // ground-level moments: drop to eye height at a spot and look around slowly
+  // Fly low: a slow sweep 60-70 m up. Stand here: eye level (a few metres up), looking around from a spot in the park.
   var STAND = {
-    glamping: { at: ahead(P.glamp.centre, 332, 30), off: [0, 0], brg: 152, sweep: 56 },
-    'bike-park': { at: along(PATH.lift, 230), off: [-40, 0], brg: 150, sweep: 70 },
-    lift: { at: P.B, off: [3, -4], brg: 156, sweep: 30 }
+    glamping: { at: ahead(P.glamp.centre, 332, 30), brg: 152, sweep: 56, z: 18.9, pitch: 74, d: 90 },
+    'bike-park': { at: offset(along(PATH.lift, 230), -40, 0), brg: 150, sweep: 70, z: 18.9, pitch: 74, d: 90 },
+    lift: { at: offset(P.B, 3, -4), brg: 156, sweep: 30, z: 18.9, pitch: 74, d: 90 },
+    'deck': { at: offset([143.0937531, -37.2740061], 0, -4), brg: 150, sweep: 150, h: 7, pitch: 80 },
+    'top': { at: offset(P.T, -6, 2), brg: 335, sweep: 120, h: 9, pitch: 78 },
+    'base': { at: offset(P.B, 4, -8), brg: 156, sweep: 110, h: 8, pitch: 74 },
+    'kidspark': { at: offset(P.kids.centre, -30, -20), brg: 50, sweep: 140, h: 6, pitch: 80 }
   };
-  var STAND_Z = 18.9, STAND_PITCH = 74, STAND_D = 90, standRaf = null;
+  var standRaf = null;
   function stand(k) {
     var S = STAND[k]; if (!S || !ready) return;
     stopPlay(); if (riding) { stopRide(); render(); }
     var my = ++seq; clearTimeout(timer); clearTimeout(timer2); cancelAnimationFrame(orbitRaf); orbitRaf = null;
     leaveFree(); tour.classList.add('standing'); $('tour-resume').hidden = false; showMarkers([]);
-    var p = offset(S.at, S.off[0], S.off[1]), v = view(), pad = { top: 0, bottom: v.B, left: v.L, right: 0 };
     map.stop();
-    camGlide({ center: ahead(p, S.brg, STAND_D), bearing: S.brg, pitch: STAND_PITCH, zoom: STAND_Z, padding: pad }, reduce ? 0 : 3200, my, function () {
+    lookAround(S, my, reduce ? 0 : 3200);
+  }
+  // the camera sits h metres above a spot: the zoom and the look-at distance come from the terrain under it
+  function eyeCam(S, b) {
+    if (S.z) return { z: S.z, d: S.d };
+    var p = S.pitch * Math.PI / 180, lat = S.at[1] * Math.PI / 180, d = S.h * Math.tan(p), dist = S.h / Math.cos(p);
+    var q = function (ll) { var e = map.queryTerrainElevation ? map.queryTerrainElevation({ lng: ll[0], lat: ll[1] }) : null; return e == null ? null : e; };
+    var eA = q(S.at);
+    if (eA == null) return { z: 18.9, d: 90 };   // ground height unknown: hover instead of risking a camera inside the hill
+    {
+      for (var j = 0; j < 3; j++) {
+        var eC = q(ahead(S.at, b, d)); if (eC == null) break;
+        dist = Math.max(S.h * 0.6, (eA + S.h - eC)) / Math.cos(p); d = dist * Math.sin(p);
+      }
+    }
+    var mpp = dist / (map.transform.cameraToCenterDistance || 969);
+    return { z: Math.min(21.6, Math.log(156543.03 * Math.cos(lat) / mpp) / Math.LN2), d: d };
+  }
+  // glide to the spot, then turn the head: a sweep each way, or a full slow circle
+  function lookAround(S0, my, dur) {
+    var p = S0.at, v = view(), pad = { top: 0, bottom: v.B, left: v.L, right: 0 }, S = S0;
+    // approach from above first, so the ground under the spot is loaded before the camera drops to eye level
+    camGlide({ center: p, bearing: S0.brg, pitch: 58, zoom: 17.6, padding: pad }, dur, my, function () {
+      whenTilesReady(my, 6000, function () {
+        var ec = eyeCam(S0, S0.brg); S = Object.assign({}, S0, { z: ec.z, d: ec.d });
+        camGlide({ center: ahead(p, S.brg, S.d), bearing: S.brg, pitch: S.pitch, zoom: S.z, padding: pad }, reduce ? 0 : 2600, my, function () { turn(); }, 0);
+      });
+    }, 0);
+    function turn() {
       if (reduce) return;
-      var t0 = performance.now();
+      var t0 = performance.now(), last = 0;
       (function step(now) {
         if (my !== seq) { standRaf = null; return; }
-        var b = S.brg + Math.sin((now - t0) / 11000 * Math.PI * 2) * S.sweep / 2;
-        map.jumpTo({ center: ahead(p, b, STAND_D), bearing: b, pitch: STAND_PITCH, zoom: STAND_Z, padding: pad });
         standRaf = requestAnimationFrame(step);
+        if (now - last < 33) return; last = now;
+        var t = (now - t0) / 1000, b = S.spin ? S.brg + S.spin * t : S.brg + Math.sin(t / (S.sweep > 100 ? 18 : 11) * Math.PI * 2) * S.sweep / 2;
+        map.jumpTo({ center: ahead(p, b, S.d), bearing: b, pitch: S.pitch, zoom: S.z, padding: pad });
       })(t0);
-    }, 0);
+    }
   }
   // the camera's height is taken from the terrain under it; if the terrain wasn't loaded when a move began,
   // the camera can end up inside the hill. A no-op jumpTo makes MapLibre re-read the ground height.
@@ -1473,7 +1525,7 @@
   }
 
   /* ---------- ride films ---------- */
-  var FILM = { beginner: 'lg-ride-beginner', intermediate: 'lg-ride-intermediate', expert: 'lg-ride-expert', lift: 'lg-ride-lift', glamp: 'lg-walk-glamp' };
+  var FILM = { beginner: 'lg-ride-beginner', intermediate: 'lg-ride-intermediate', expert: 'lg-ride-expert', lift: 'lg-ride-lift', glamp: 'lg-walk-glamp', base: 'lg-walk-base' };
   var FILM_ORDER = ['beginner', 'intermediate', 'expert', 'lift'];
   var film = $('film'), fv = $('film-v'), filmK = null, filmRaf = null, filmMuted = false, filmPathLen = 0;
   var TRAILER_PORTRAIT = matchMedia('(max-aspect-ratio: 4/5)');
@@ -1499,10 +1551,10 @@
     filmK = k; stopAll(); if (map) map.stop();
     mpCardEl.querySelectorAll('video').forEach(function (v) { v.pause(); });
     if (soundOn) fadeAmb(0, function () { amb.pause(); });
-    var r = k === 'lift' ? P.lift : k === 'glamp' ? { len: Math.round(PATH.glamp.len) } : P.runs[k], name = k === 'lift' ? 'The pulley lift' : k === 'glamp' ? 'Walk through the camp' : GRADE[k][1] + ' run';
-    $('film-title').innerHTML = '<span class="g ' + (k === 'lift' ? 'g-lift' : k === 'glamp' ? 'g-glamp' : GRADE[k][0]) + '"></span>' + name;
+    var r = k === 'lift' ? P.lift : WALK[k] ? { len: Math.round(PATH[k].len) } : P.runs[k], name = k === 'lift' ? 'The pulley lift' : k === 'glamp' ? 'Walk through the camp' : k === 'base' ? 'Walk in from the car park' : GRADE[k][1] + ' run';
+    $('film-title').innerHTML = '<span class="g ' + (k === 'lift' ? 'g-lift' : k === 'glamp' ? 'g-glamp' : k === 'base' ? 'g-kids' : GRADE[k][0]) + '"></span>' + name;
     $('film-of').textContent = '/ ' + r.len.toLocaleString('en-AU') + ' m';
-    $('film-prof').innerHTML = k === 'glamp' ? '' : profileSVG(k).replace('id="prof-dot"', 'id="film-pdot"');
+    $('film-prof').innerHTML = WALK[k] ? '' : profileSVG(k).replace('id="prof-dot"', 'id="film-pdot"');
     // inset: the concept aerial cropped to this line, with the line drawn on it
     var pts = PATH[k].c.map(function (c) { var f = frac(c); return [f[0] * 1000, f[1] * 1000]; });
     var xs = pts.map(function (q) { return q[0]; }), ys = pts.map(function (q) { return q[1]; });
@@ -1513,7 +1565,7 @@
     $('film-path').style.strokeWidth = (w / 60).toFixed(1); $('film-dot').setAttribute('r', (w / 45).toFixed(1));
     filmPathLen = $('film-path').getTotalLength();
     var nx = FILM_ORDER[(FILM_ORDER.indexOf(k) + 1) % FILM_ORDER.length];
-    $('film-actions').innerHTML = '<button type="button" class="t-btn" data-frep="1">&#8634; Watch again</button><button type="button" class="t-btn go" data-film="' + nx + '">Next: ' + (nx === 'lift' ? 'the lift' : GRADE[nx][1].toLowerCase() + ' run') + ' &rarr;</button><button type="button" class="t-btn" data-ffly="' + k + '">' + (k === 'glamp' ? 'Walk it in 3D' : 'Follow it in 3D') + '</button>';
+    $('film-actions').innerHTML = '<button type="button" class="t-btn" data-frep="1">&#8634; Watch again</button><button type="button" class="t-btn go" data-film="' + nx + '">Next: ' + (nx === 'lift' ? 'the lift' : GRADE[nx][1].toLowerCase() + ' run') + ' &rarr;</button><button type="button" class="t-btn" data-ffly="' + k + '">' + (WALK[k] ? 'Walk it in 3D' : 'Follow it in 3D') + '</button>';
     film.classList.remove('ended'); film.hidden = false; requestAnimationFrame(function () { film.classList.add('on'); });
     fv.poster = 'assets/' + FILM[k] + '.webp'; fv.src = 'assets/' + FILM[k] + '.mp4';
     fv.muted = filmMuted; setMuteLabel();
@@ -1523,7 +1575,7 @@
   }
   function filmHud() {
     if (!filmK) return;
-    var r = filmK === 'lift' ? P.lift : filmK === 'glamp' ? { len: Math.round(PATH.glamp.len), prof: null } : P.runs[filmK], u = fv.duration ? Math.min(1, fv.currentTime / fv.duration) : 0, pr = r.prof;
+    var r = filmK === 'lift' ? P.lift : WALK[filmK] ? { len: Math.round(PATH[filmK].len), prof: null } : P.runs[filmK], u = fv.duration ? Math.min(1, fv.currentTime / fv.duration) : 0, pr = r.prof;
     $('film-dist').textContent = Math.round(u * r.len).toLocaleString('en-AU') + ' m';
     if (pr) { var x = u * (pr.length - 1), j = Math.min(pr.length - 2, Math.floor(x)), el = pr[j] + (pr[j + 1] - pr[j]) * (x - j); $('film-elev').textContent = Math.round(el) + ' m above sea level'; }
     else $('film-elev').textContent = '';
@@ -1576,7 +1628,7 @@
     }
   }
   function flyTo3D(k) {
-    var n = k === 'kids' ? SLUG.indexOf('kids') : k === 'glamp' ? SLUG.indexOf('glamping') : IDX[k];
+    var n = k === 'kids' ? SLUG.indexOf('kids') : k === 'glamp' ? SLUG.indexOf('glamping') : k === 'base' ? SLUG.indexOf('base') : IDX[k];
     pendingRide = IDX[k] != null ? k : null;
     i = n; stopAll(); setMode('fly');
   }
