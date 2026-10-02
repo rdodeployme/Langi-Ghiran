@@ -267,6 +267,41 @@
   .film.trailer .film-hud{order:0;padding:20px 16px 40px}
   .film.trailer .film-actions{flex-direction:column}
 }
+/* walk the park: built 3D scene */
+.game{position:absolute;inset:0;z-index:9;background:#0F1416;color:#fff;opacity:0;transition:opacity .5s ease}
+.game.on{opacity:1}
+.game canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.game canvas:active{cursor:grabbing}
+.game-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;padding:14px 16px;z-index:2;pointer-events:none}
+.game-top button{pointer-events:auto}
+.game-title{margin:0 auto 0 0;display:flex;flex-direction:column;gap:4px;font-family:Fraunces,Georgia,serif;font-size:clamp(1.1rem,2vw,1.5rem)}
+.game-tag{font:600 .64rem/1 "Public Sans",system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.game-spawns{position:absolute;top:66px;left:16px;right:16px;z-index:2;display:flex;gap:6px;flex-wrap:wrap}
+.game-spawns button{font:600 .76rem/1 "Public Sans",system-ui,sans-serif;border:1px solid rgba(255,255,255,.35);border-radius:999px;background:rgba(15,20,22,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;padding:9px 12px;cursor:pointer}
+.game-spawns button[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+.game-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;background:rgba(15,20,22,.6);padding:10px 16px;border-radius:999px;font-size:.84rem;pointer-events:none;transition:opacity .6s}
+.game-hint.gone{opacity:0}
+.game-hint .hint-mob{display:none}
+.game-bottom{position:absolute;left:16px;right:16px;bottom:16px;z-index:2;display:flex;align-items:flex-end;gap:12px;pointer-events:none}
+.game-bottom>*{pointer-events:auto}
+.game-where{margin-right:auto;font-size:.78rem;color:rgba(255,255,255,.8);background:rgba(15,20,22,.5);padding:8px 12px;border-radius:999px}
+.game-auto{background:rgba(15,20,22,.6)}
+.game-auto[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}
+.game-auto[hidden]{display:none}
+.game-sunwrap{position:static;display:flex}
+.game-joy{display:none;width:96px;height:96px;border-radius:50%;background:rgba(15,20,22,.45);border:1px solid rgba(255,255,255,.3);position:relative;touch-action:none}
+.game-joy i{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:rgba(255,255,255,.85)}
+.game-load,.game-fail{position:absolute;inset:0;z-index:3;display:none;align-items:center;justify-content:center;text-align:center;background:#0F1416}
+.game.loading .game-load,.game.failed .game-fail{display:flex}
+.game-load b,.game-fail b{display:block;font-family:Fraunces,Georgia,serif;font-weight:500;font-size:1.4rem;margin-bottom:6px}
+.game-load span,.game-fail span{color:rgba(255,255,255,.65);font-size:.9rem}
+.game-load b::after{content:"";display:block;width:120px;height:3px;margin:16px auto 0;border-radius:2px;background:linear-gradient(90deg,var(--yellow),transparent);animation:gload 1.2s linear infinite}
+@keyframes gload{from{background-position:-120px 0}to{background-position:120px 0}}
+@media (hover:none) and (pointer:coarse){.game-joy{display:block}.game-hint .hint-desk{display:none}.game-hint .hint-mob{display:inline}}
+@media (max-width:760px){
+  .game-spawns{top:60px}.game-spawns button{padding:8px 10px;font-size:.72rem}
+  .game-bottom{flex-wrap:wrap;gap:8px}.game-where{order:3;width:100%;margin:0}.game-sunwrap input[type=range]{width:84px}
+}
 /* cinematic intro */
 .tour-intro{position:absolute;inset:0;z-index:8;overflow:hidden;background:var(--ink-3);transition:opacity 1.4s ease,visibility 0s 1.4s}
 .tour-intro.out{opacity:0;visibility:hidden;pointer-events:none}
@@ -415,6 +450,26 @@
   </div>
   <audio id="amb" src="assets/lg-amb-day.m4a" loop preload="none"></audio>
 
+  <div class="game" id="game" hidden>
+    <canvas id="game-canvas"></canvas>
+    <div class="game-top">
+      <p class="game-title"><span class="game-tag">Concept · built 3D</span><b id="game-title">Walk the park</b></p>
+      <button type="button" class="film-btn film-x" id="game-x" aria-label="Close the walk">&times;</button>
+    </div>
+    <div class="game-spawns" role="group" aria-label="Where to stand">
+      <button type="button" data-spawn="deck">Glamping deck</button><button type="button" data-spawn="camp">Walk the camp</button><button type="button" data-spawn="carpark">Walk in</button><button type="button" data-spawn="base">Lift base</button><button type="button" data-spawn="top">Top station</button><button type="button" data-spawn="kids">Kids’ park</button><button type="button" data-spawn="summit">Summit</button>
+    </div>
+    <p class="game-hint" id="game-hint"><span class="hint-desk">Drag to look · W A S D to walk · hold Shift to run</span><span class="hint-mob">Drag to look · joystick to walk</span></p>
+    <div class="game-bottom">
+      <div class="game-joy" id="game-joy" aria-hidden="true"><i></i></div>
+      <span class="game-where" id="game-where"></span>
+      <button type="button" class="t-btn game-auto" id="game-auto" aria-pressed="true">&#9654; Auto-walk</button>
+      <div class="sun game-sunwrap"><span class="sun-ic" aria-hidden="true">&#9728;</span><input type="range" id="game-sun" min="0" max="100" value="0" aria-label="Time of day"><span class="sun-ic" aria-hidden="true">&#9790;</span></div>
+    </div>
+    <div class="game-load"><div><b>Building the park&hellip;</b><span>Terrain, tents, lift and trees</span></div></div>
+    <div class="game-fail"><div><b>3D walk can’t run here</b><span>It needs WebGL. Try another browser or device.</span></div></div>
+  </div>
+
   <div class="tour-intro" id="tour-intro">
     <video src="assets/lg-clip-aerial.mp4" poster="assets/lg-park-concept.webp" muted loop playsinline preload="auto" aria-hidden="true"></video>
     <div class="ti-body">
@@ -504,6 +559,7 @@
     </div>
   </div>
 </footer>
+<script type="module" src="assets/lg-game.js"></script>
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 <script>
 (function () {
@@ -648,8 +704,9 @@
     { title: 'Lar-ne-jeering',
       body: '<p>In the language of the Djab Wurrung people, the mountain is Lar-ne-jeering: "Home of the Yellow-tailed Black Cockatoos". Granite outcrops and eucalypt woodland cover its slopes.</p>',
       cam: { center: [143.1080, -37.2975], zoom: 14.1, pitch: 72, bearing: 200 }, orbit: true, mk: ['ghiran', 'picnic'] },
-    { title: 'The summit', look: { at: SUMMIT, brg: 300, h: 16, pitch: 76, spin: 8 },
-      body: '<p>Eye level on top of Mount Langi Ghiran, about 950 m up. Turn full circle: the plains to the north, the Grampians (Gariwerd) ranges on the western horizon, and the old quarry down at the foot of the range.</p><p class="tour-key"><span>Slow 360&deg; look-around. Drag to look where you like.</span></p>',
+    { title: 'The summit', look: { at: SUMMIT, brg: 300, z: 18.3, pitch: 72, d: 120, spin: 8 },
+      body: '<p>Over the top of Mount Langi Ghiran, about 950 m up. A slow full circle: the plains to the north, the Grampians (Gariwerd) ranges on the western horizon, and the old quarry down at the foot of the range.</p>',
+      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn go" data-walk="summit">&#9673; Stand on the summit</button></div>'; },
       cam: { stand: true }, mk: [] },
     { title: 'The picnic ground and Reservoir Track',
       body: '<p>The park’s visitor area sits on its western side. From the picnic ground, the Reservoir Track leads to the reservoir built from local granite in 1880 to supply water to Ararat.</p>',
@@ -662,15 +719,15 @@
       cam: { fit: 'site', pitch: 50, bearing: 165 }, mk: ['site'] },
     { title: 'The bike park', plan: 'all',
       body: '<p>Here’s the concept laid over the real hillside. Three downhill runs leave the top station and wind down to the bottom, with a kids’ jump park by the lift base, a pulley lift to pull riders back up, and 16 glamping sites off to the side. Pick a run to see it up close.</p>',
-      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn" data-stand="top">&#9673; Stand at the top station</button><button type="button" class="t-btn" data-stand="bike-park">Fly low up the hill</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
+      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn go" data-walk="top">&#9673; Stand at the top station</button><button type="button" class="t-btn" data-stand="bike-park">Fly low up the hill</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
       cam: { center: [143.0915, -37.2772], zoom: 15.7, pitch: 72, bearing: 158 }, mk: ['beginner', 'intermediate', 'expert', 'kids', 'glamp', 'top', 'base'] },
     { title: 'Arriving at the base', plan: 'all', ride: 'base', g: 'g-kids',
       body: '<p>This is where a visit starts: the base area at the foot of the slope, with the lift base, the kids’ jump park next door, the shelter and the walk across to the glamping camp. Everything in the park leads back here.</p><p><span class="tbc">Car park, shelter and access road TBC</span></p>',
-      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn go" data-film="base">&#9654; Watch the walk in</button><button type="button" class="t-btn" data-ride="base">Walk it in 3D</button><button type="button" class="t-btn" data-stand="base">&#9673; Stand at the base</button></div>'; },
+      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn go" data-film="base">&#9654; Watch the walk in</button><button type="button" class="t-btn" data-walk="carpark">Walk it in 3D</button><button type="button" class="t-btn" data-walk="base">&#9673; Stand at the base</button></div>'; },
       cam: { center: BASE_C, zoom: 17.4, pitch: 68, bearing: 158 }, mk: ['base', 'kids', 'glamp', 'top'] },
     { title: 'The pulley lift', plan: 'lift', ride: 'lift', g: 'g-lift',
       body: '<p>Riders roll on at the base, grab the line and get pulled straight up the slope to the top station, bike and all. No pushing, so more time riding.</p>',
-      extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="lift">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="lift">Follow it in 3D</button><button type="button" class="t-btn" data-stand="base">&#9673; Stand at the base</button><button type="button" class="t-btn" data-stand="lift">Fly low up the lift</button></div>' + clip('lift', 'Concept clip of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
+      extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="lift">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="lift">Follow it in 3D</button><button type="button" class="t-btn" data-walk="base">&#9673; Stand at the base</button><button type="button" class="t-btn" data-stand="lift">Fly low up the lift</button></div>' + clip('lift', 'Concept clip of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
       cam: { fit: 'lift', pitch: 52, bearing: 152 }, mk: ['top', 'base'] },
     { title: 'Beginner run', plan: 'beginner', ride: 'beginner', g: 'g-beg',
       body: '<p>' + RUN_TXT.beginner + '</p>',
@@ -686,11 +743,11 @@
       cam: { fit: 'expert', pitch: 50, bearing: 330 }, mk: ['expert', 'top', 'base'] },
     { title: 'Kids’ jump park', plan: 'kids', g: 'g-kids',
       body: '<p>Below the three runs, next to the base, a kids’ area: a small pump track with rollers and berms, and a short line of little dirt jumps, so younger riders have their own space while the family rides.</p>',
-      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn" data-stand="kidspark">&#9673; Stand by the pump track</button></div>' + clip('kids', 'Concept clip of young children riding a small dirt pump track and jumps'); },
+      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn" data-walk="kids">&#9673; Stand by the pump track</button></div>' + clip('kids', 'Concept clip of young children riding a small dirt pump track and jumps'); },
       cam: { fit: 'kids', pitch: 50, bearing: 200, maxZoom: 17.4 }, mk: ['kids', 'base'] },
     { title: 'Glamping', plan: 'glamp', ride: 'glamp', g: 'g-glamp',
       body: '<p>Off to the side of the bike park, on the open rise looking back at the range, sit 16 glamping sites: canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift base.</p>',
-      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-film="glamp">&#9654; Watch the walk-through</button><button type="button" class="t-btn" data-ride="glamp">Walk it in 3D</button><button type="button" class="t-btn" data-stand="deck">&#9673; Stand on a deck</button><button type="button" class="t-btn" data-stand="glamping">Fly low over the camp</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
+      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-film="glamp">&#9654; Watch the walk-through</button><button type="button" class="t-btn" data-walk="camp">Walk it in 3D</button><button type="button" class="t-btn" data-walk="deck">&#9673; Stand on a deck</button><button type="button" class="t-btn" data-stand="glamping">Fly low over the camp</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
       cam: { fit: 'glamp', pitch: 52, bearing: 205 }, mk: ['glamp', 'base'] },
     { title: 'Today, and what it could be', plan: 'future', orbit: 40,
       body: '<p>An artist’s concept of the finished park, laid over the real terrain: revegetated ground, runs down the slope, a kids’ park at the bottom, the lift back to the top and the glamping camp beside it. Slide between today and the concept.</p>',
@@ -833,8 +890,9 @@
     Array.prototype.forEach.call(dots.children, function (b, n) { b.setAttribute('aria-current', n === i ? 'true' : 'false'); });
   }
   $('tour-body').addEventListener('click', function (e) {
-    var t = e.target.closest('[data-go],[data-ride],[data-tf],[data-film],[data-stand]'); if (!t) return;
+    var t = e.target.closest('[data-go],[data-ride],[data-tf],[data-film],[data-stand],[data-walk]'); if (!t) return;
     if (t.dataset.film) { stopPlay(); openFilm(t.dataset.film); return; }
+    if (t.dataset.walk) { openGame(t.dataset.walk); return; }
     if (t.dataset.stand) { stand(t.dataset.stand); return; }
     if (t.dataset.tf) { stopPlay(); clearTimeout(timer2); setDrape(+t.dataset.tf); return; }
     if (t.dataset.go) { stopAll(); go(IDX[t.dataset.go]); }
@@ -991,6 +1049,7 @@
     sunT = Math.max(0, Math.min(1, t));
     var r = $('sun-range'); if (r && Math.abs(+r.value - sunT * 100) > 0.5) r.value = Math.round(sunT * 100);
     tour.classList.toggle('night', sunT > 0.35);
+    if (window.LGGame && !sunSyncing) window.LGGame.setSun(sunT);
     if (!map || !map.getLayer('shade')) return;
     var k = sunT < 0.5 ? [SUN[0], SUN[1], sunT * 2] : [SUN[1], SUN[2], (sunT - 0.5) * 2], a = k[0], b = k[1], u = k[2];
     function lerp(x, y) { return x + (y - x) * u; }
@@ -1377,7 +1436,7 @@
     mpCardEl.innerHTML = '<div class="mp-top"><button type="button" data-mp="-1">&larr; All</button><span>' + (mpSel + 1) + ' / ' + N + '</span><span class="mp-arrows"><button type="button" data-mp="' + ((mpSel + N - 1) % N) + '" aria-label="Previous">&larr;</button><button type="button" data-mp="' + ((mpSel + 1) % N) + '" aria-label="Next">&rarr;</button></span></div>' +
       clip(f.k, 'Concept clip: ' + f.name) +
       '<h2><span class="g ' + f.g + '"></span>' + f.name + '</h2><p>' + MP_TXT[f.k] + '</p>' +
-      '<div class="t-actions">' + (f.ride ? '<button type="button" class="t-btn go" data-film="' + f.k + '">&#9654; ' + (f.k === 'glamp' ? 'Watch the walk-through' : 'Watch the ride') + '</button><button type="button" class="t-btn" data-fly="' + f.k + '">' + (f.k === 'glamp' ? 'Walk it in 3D' : 'Follow it in 3D') + '</button>' : '<button type="button" class="t-btn go" data-fly="' + f.k + '">See it in 3D</button>') + '</div>' + stats +
+      '<div class="t-actions">' + (f.ride ? '<button type="button" class="t-btn go" data-film="' + f.k + '">&#9654; ' + (f.k === 'glamp' ? 'Watch the walk-through' : 'Watch the ride') + '</button>' + (f.k === 'glamp' ? '<button type="button" class="t-btn" data-walk="camp">Walk it in 3D</button>' : '<button type="button" class="t-btn" data-fly="' + f.k + '">Follow it in 3D</button>') : '<button type="button" class="t-btn go" data-fly="' + f.k + '">See it in 3D</button>') + '</div>' + stats +
       (f.ride && f.k !== 'glamp' ? '' : '<p style="margin:0"><span class="tbc">' + (f.k === 'glamp' ? 'Site layout and facilities TBC' : 'Final layout TBC') + '</span></p>');
   }
   function mpGo(n, dur) {
@@ -1389,7 +1448,8 @@
     if (!introOn && mode === 'park') try { history.replaceState(null, '', '#park' + (n >= 0 ? '-' + MP[n].k : '')); } catch (e) {}
   }
   mpEl.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-mp],[data-fly],[data-mptf],[data-film],#mp-snd'); if (!t) return;
+    var t = e.target.closest('[data-mp],[data-fly],[data-mptf],[data-film],[data-walk],#mp-snd'); if (!t) return;
+    if (t.dataset.walk) { openGame(t.dataset.walk); return; }
     if (t.id === 'mp-snd') { setSound(!soundOn); return; }
     if (t.dataset.film) { openFilm(t.dataset.film); return; }
     if (t.dataset.mptf) { setView(t.dataset.mptf); return; }
@@ -1565,7 +1625,7 @@
     $('film-path').style.strokeWidth = (w / 60).toFixed(1); $('film-dot').setAttribute('r', (w / 45).toFixed(1));
     filmPathLen = $('film-path').getTotalLength();
     var nx = FILM_ORDER[(FILM_ORDER.indexOf(k) + 1) % FILM_ORDER.length];
-    $('film-actions').innerHTML = '<button type="button" class="t-btn" data-frep="1">&#8634; Watch again</button><button type="button" class="t-btn go" data-film="' + nx + '">Next: ' + (nx === 'lift' ? 'the lift' : GRADE[nx][1].toLowerCase() + ' run') + ' &rarr;</button><button type="button" class="t-btn" data-ffly="' + k + '">' + (WALK[k] ? 'Walk it in 3D' : 'Follow it in 3D') + '</button>';
+    $('film-actions').innerHTML = '<button type="button" class="t-btn" data-frep="1">&#8634; Watch again</button><button type="button" class="t-btn go" data-film="' + nx + '">Next: ' + (nx === 'lift' ? 'the lift' : GRADE[nx][1].toLowerCase() + ' run') + ' &rarr;</button><button type="button" class="t-btn" ' + (WALK[k] ? 'data-walk="' + (k === 'base' ? 'carpark' : 'camp') + '"' : 'data-ffly="' + k + '"') + '>' + (WALK[k] ? 'Walk it in 3D' : 'Follow it in 3D') + '</button>';
     film.classList.remove('ended'); film.hidden = false; requestAnimationFrame(function () { film.classList.add('on'); });
     fv.poster = 'assets/' + FILM[k] + '.webp'; fv.src = 'assets/' + FILM[k] + '.mp4';
     fv.muted = filmMuted; setMuteLabel();
@@ -1596,13 +1656,25 @@
   $('film-x').addEventListener('click', closeFilm);
   $('film-mute').addEventListener('click', function () { fv.muted = !fv.muted; filmMuted = fv.muted; setMuteLabel(); });
   film.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-film],[data-frep],[data-ffly],[data-fgo]');
+    var t = e.target.closest('[data-film],[data-frep],[data-ffly],[data-fgo],[data-walk]');
+    if (t && t.dataset.walk) { closeFilm(); openGame(t.dataset.walk); return; }
     if (!t) { if (e.target === fv || e.target === film) { if (fv.paused) fv.play(); else fv.pause(); } return; }
     if (t.dataset.frep) { fv.currentTime = 0; fv.play(); }
     else if (t.dataset.fgo) { var g = t.dataset.fgo; closeFilm(); if (introOn) $(g === 'fly' ? 'ti-fly' : 'ti-go').click(); else if (g === 'fly') { if (mode !== 'fly') { i = 0; setMode('fly'); } } else { if (mode !== 'park') setMode('park'); mpGo(-1); } }
     else if (t.dataset.film) openFilm(t.dataset.film);
     else if (t.dataset.ffly) { var k = t.dataset.ffly; closeFilm(); if (mode === 'park') flyTo3D(k); else ride(k); }
   });
+
+  /* ---------- walk the park: the built 3D scene ---------- */
+  function openGame(k) {
+    stopPlay(); if (riding) stopRide(); if (map) map.stop(); seq++; clearTimeout(timer); clearTimeout(timer2);
+    mpCardEl.querySelectorAll('video').forEach(function (v) { v.pause(); });
+    var G = window.LGGame; if (!G) { setTimeout(function () { openGame(k); }, 300); return; }
+    G.onSun = function (t) { if (!sunSyncing) { sunSyncing = true; setSun(t); if (mode === 'park') { if (t > 0.4 && mpView !== 'dusk') setView('dusk'); else if (t <= 0.4 && mpView === 'dusk') setView('concept'); } sunSyncing = false; } };
+    G.onClose = function () { if (mode === 'park') { mpCardEl.querySelectorAll('video').forEach(function (v) { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); }); mpGo(mpSel, 0); } else if (map && ready) go(i); };
+    G.open(k, sunT);
+    try { history.replaceState(null, '', '#walk-' + k); } catch (e) {}
+  }
 
   /* ---------- modes ---------- */
   function setMode(m) {
@@ -1650,6 +1722,7 @@
   document.addEventListener('keydown', function (e) {
     if (e.altKey || e.ctrlKey || e.metaKey || /input|textarea|select/i.test(e.target.tagName)) return;
     var r = tour.getBoundingClientRect(); if (r.bottom < 80 || r.top > innerHeight - 80) return;
+    if (window.LGGame && window.LGGame.isOpen()) { if (e.key === 'Escape') window.LGGame.close(); return; }
     if (filmK) { if (e.key === 'Escape') closeFilm(); else if (e.key === ' ') { e.preventDefault(); if (fv.paused) fv.play(); else fv.pause(); } return; }
     if (introOn) { if (e.key === 'Enter') { e.preventDefault(); $('ti-go').click(); } return; }
     if (mode === 'park') {
@@ -1664,7 +1737,8 @@
   });
 
   var startFilm = (hash.match(/^ride-(\w+)$/) || [])[1];
-  if (hash === 'film' || hash === 'trailer') { mpGo(-1, 0); openTrailer(); }
+  if (/^walk-/.test(hash)) { intro.classList.add('out'); introOn = false; mpGo(-1, 0); openGame(hash.slice(5)); }
+  else if (hash === 'film' || hash === 'trailer') { mpGo(-1, 0); openTrailer(); }
   else if (startFilm && FILM[startFilm]) { intro.classList.add('out'); introOn = false; mpGo(MP.findIndex(function (f) { return f.k === startFilm; }), 0); }
   else if (startAt > -1) { i = startAt; setMode('fly'); }
   else { mpGo(startMp > -1 ? startMp : -1, 0); }
