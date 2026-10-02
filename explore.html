@@ -67,6 +67,9 @@
 .tour.night .tour-marker{background:rgba(5,8,14,.86)}
 .tour #tour-map canvas{cursor:grab}
 .tour #tour-map canvas:active{cursor:grabbing}
+.mkw{pointer-events:none}
+.tour-marker{opacity:0;transform:translateY(4px);transition:opacity .4s ease,transform .4s ease;pointer-events:none}
+.tour-marker.on{opacity:1;transform:none;pointer-events:auto}
 .tour-marker{display:flex;align-items:center;gap:7px;background:rgba(15,20,22,.82);color:#fff;font:600 .74rem/1.1 "Public Sans",system-ui,sans-serif;padding:6px 10px 6px 7px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);cursor:pointer}
 .tour-marker i{width:10px;height:10px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 3px rgba(252,200,48,.3);flex:none}
 .tour-marker small{display:block;font-weight:500;color:rgba(255,255,255,.65);font-size:.7rem}
@@ -730,6 +733,10 @@
             sat: { type: 'raster', tileSize: 256, maxzoom: 18,
               tiles: ['https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/20512/{z}/{y}/{x}'],
               attribution: 'Imagery &copy; Esri World Imagery (Wayback, Oct 2025), Maxar, Earthstar Geographics' },
+            // Victoria's own aerial imagery (about 15 cm on the ground) for the close views; the satellite stays for the wide ones
+            vic: { type: 'raster', tileSize: 256, minzoom: 12, maxzoom: 20,
+              tiles: ['https://base.maps.vic.gov.au/service?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=AERIAL_WM_256&STYLE=default&TILEMATRIXSET=EPSG:3857:256&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png'],
+              attribution: 'Aerial imagery &copy; State Government of Victoria (Vicmap Basemap, CC BY 4.0)' },
             dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
               tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
               attribution: 'Terrain: Mapzen, AWS Open Data' },
@@ -739,6 +746,7 @@
           layers: [
             { id: 'bg', type: 'background', paint: { 'background-color': '#8A8165' } },
             { id: 'sat', type: 'raster', source: 'sat', paint: { 'raster-saturation': -0.02, 'raster-contrast': 0.1, 'raster-brightness-min': 0.03 } },
+            { id: 'vic', type: 'raster', source: 'vic', minzoom: 14.4, paint: { 'raster-opacity': ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.4, 1], 'raster-brightness-max': 0.9, 'raster-saturation': 0.1, 'raster-contrast': -0.08, 'raster-fade-duration': 400 } },
             { id: 'shade', type: 'hillshade', source: 'shade', paint: { 'hillshade-exaggeration': ['interpolate', ['linear'], ['zoom'], 10, 0.5, 13, 0.34, 16, 0.14], 'hillshade-illumination-direction': 315, 'hillshade-illumination-anchor': 'map', 'hillshade-shadow-color': '#14201C', 'hillshade-highlight-color': '#FFF4DC', 'hillshade-accent-color': '#0F1416' } }
           ],
           terrain: { source: 'dem', exaggeration: 1.4 },
@@ -768,9 +776,11 @@
     map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
 
     MARKERS.forEach(function (m) {
-      var el = document.createElement('div');
-      el.className = 'tour-marker' + (m.cls ? ' ' + m.cls : ''); el.dataset.k = m.k; el.style.display = 'none'; MK[m.k] = el;
-      el.innerHTML = (m.icon ? '<span class="g ' + m.icon + '"></span>' : '<i></i>') + '<span>' + m.name + (m.sub ? '<small>' + m.sub + '</small>' : '') + '</span>';
+      var el = document.createElement('div'), pill = document.createElement('div');
+      el.className = 'mkw'; el.dataset.k = m.k; MK[m.k] = pill;
+      pill.className = 'tour-marker' + (m.cls ? ' ' + m.cls : '');
+      pill.innerHTML = (m.icon ? '<span class="g ' + m.icon + '"></span>' : '<i></i>') + '<span>' + m.name + (m.sub ? '<small>' + m.sub + '</small>' : '') + '</span>';
+      el.appendChild(pill);
       if (m.stop != null) {
         el.setAttribute('role', 'button'); el.tabIndex = 0;
         el.addEventListener('click', function (ev) { ev.stopPropagation(); stopAll(); go(m.stop); });
@@ -789,7 +799,7 @@
     var unveil = function () { tour.classList.add('loaded'); };
     map.once('load', unveil); map.once('idle', unveil); setTimeout(unveil, 3500);
   }
-  function showMarkers(list) { Object.keys(MK).forEach(function (k) { MK[k].style.display = list && list.indexOf(k) > -1 ? 'flex' : 'none'; }); }
+  function showMarkers(list) { Object.keys(MK).forEach(function (k) { MK[k].classList.toggle('on', !!(list && list.indexOf(k) > -1)); }); }
 
   var dots = $('tour-dots');
   STOPS.forEach(function (s, n) {
@@ -950,7 +960,17 @@
   ];
   function hex(c) { return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)]; }
   function mix(a, b, u) { var A = hex(a), B = hex(b); return '#' + A.map(function (v, j) { return ('0' + Math.round(v + (B[j] - v) * u).toString(16)).slice(-2); }).join(''); }
-  var sunT = 0, sunSyncing = false;
+  var sunT = 0, sunSyncing = false, sunRaf = null;
+  function tweenSun(t, dur) {
+    cancelAnimationFrame(sunRaf);
+    if (reduce || !map) return setSun(t);
+    var from = sunT, t0 = performance.now();
+    (function step(now) {
+      var u = Math.max(0, Math.min(1, (now - t0) / dur)), e = u * u * (3 - 2 * u);
+      setSun(from + (t - from) * e);
+      if (u < 1) sunRaf = requestAnimationFrame(step); else sunRaf = null;
+    })(t0);
+  }
   function setSun(t) {
     sunT = Math.max(0, Math.min(1, t));
     var r = $('sun-range'); if (r && Math.abs(+r.value - sunT * 100) > 0.5) r.value = Math.round(sunT * 100);
@@ -965,6 +985,8 @@
     map.setPaintProperty('shade', 'hillshade-exaggeration', ['interpolate', ['linear'], ['zoom'], 10, 0.5 + 0.2 * sunT, 13, 0.34 + 0.2 * sunT, 16, 0.14 + 0.16 * sunT]);
     map.setPaintProperty('sat', 'raster-brightness-max', lerp(a.bmax, b.bmax));
     map.setPaintProperty('sat', 'raster-saturation', lerp(a.sat, b.sat));
+    map.setPaintProperty('vic', 'raster-brightness-max', lerp(a.bmax, b.bmax) * 0.9);
+    map.setPaintProperty('vic', 'raster-saturation', lerp(a.sat, b.sat) + 0.1);
     if (ready) {
       map.setPaintProperty('drape', 'raster-brightness-max', lerp(a.bmax, b.bmax));
       map.setPaintProperty('drape', 'raster-saturation', lerp(a.sat, b.sat));
@@ -1084,7 +1106,9 @@
       if (my !== seq) { camRaf = null; return; }
       var u = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
       var z = z0 + (to.zoom - z0) * e - (arc || 0) * Math.sin(Math.PI * u);
-      map.jumpTo({ center: [c0.lng + (to.center[0] - c0.lng) * e, c0.lat + (to.center[1] - c0.lat) * e], zoom: z, pitch: p0 + (to.pitch - p0) * e, bearing: b0 + db * e,
+      // on a long hop the camera looks down more at the top of the arc, then levels out on approach
+      var pd = (arc || 0) > 0.3 ? Math.min(24, arc * 11) * Math.sin(Math.PI * u) : 0;
+      map.jumpTo({ center: [c0.lng + (to.center[0] - c0.lng) * e, c0.lat + (to.center[1] - c0.lat) * e], zoom: z, pitch: Math.max(0, p0 + (to.pitch - p0) * e - pd), bearing: b0 + db * e,
         padding: { top: Math.max(0, pd0.top + (pd1.top - pd0.top) * e), bottom: Math.max(0, pd0.bottom + (pd1.bottom - pd0.bottom) * e), left: Math.max(0, pd0.left + (pd1.left - pd0.left) * e), right: Math.max(0, pd0.right + (pd1.right - pd0.right) * e) } });
       if (u < 1) { camRaf = requestAnimationFrame(step); return; }
       camRaf = null; done();
@@ -1129,7 +1153,7 @@
     camGlide(cam, reduce ? 0 : (far ? 6500 : 3800), my, function () {
       if (pendingRide && ready && s.ride === pendingRide) { var pr = pendingRide; pendingRide = null; timer = setTimeout(function () { if (my === seq) ride(pr); }, 700); return; }
       if (s.plan === 'future') timer2 = setTimeout(function () { if (my === seq) setDrape(1); }, reduce ? 0 : 900);
-      if (s.orbit && !reduce) orbit(s.orbit === true ? 70 : s.orbit, 14000, my);
+      if (s.orbit && !reduce) orbit(s.orbit === true ? 70 : s.orbit, 14000, my); else if (!s.ride || !playing) sway(my);
       if (playing) {
         timer = setTimeout(function () {
           if (!playing) return;
@@ -1148,8 +1172,22 @@
       if (my !== seq || riding) { orbitRaf = null; return; }
       var u = Math.max(0, Math.min(1, (now - t0) / dur));
       map.jumpTo({ bearing: b0 + deg * u });
-      orbitRaf = u < 1 ? requestAnimationFrame(step) : null;
+      orbitRaf = u < 1 ? requestAnimationFrame(step) : sway(my);
     })(t0);
+  }
+  // a slow sway once a stop has settled: a few degrees each way, like a hovering drone
+  function sway(my) {
+    if (reduce) return null;
+    var b0 = map.getBearing(), p0 = map.getPitch(), t0 = performance.now(), last = 0;
+    cancelAnimationFrame(orbitRaf);
+    (function step(now) {
+      if (my !== seq || riding) { orbitRaf = null; return; }
+      orbitRaf = requestAnimationFrame(step);
+      if (now - last < 33) return; last = now;
+      var t = (now - t0) / 1000;
+      map.jumpTo({ bearing: b0 + 2.6 * Math.sin(t / 14 * Math.PI * 2), pitch: Math.min(82, p0 + 0.9 * Math.sin(t / 9 * Math.PI * 2)) });
+    })(t0);
+    return orbitRaf;
   }
   // ground-level moments: drop to eye height at a spot and look around slowly
   var STAND = {
@@ -1206,7 +1244,7 @@
   function stopAll() { stopPlay(); if (riding) stopRide(); }
 
   $('tour-resume').addEventListener('click', function () { go(i); });
-  $('sun-range').addEventListener('input', function (e) { setSun(e.target.value / 100); });
+  $('sun-range').addEventListener('input', function (e) { cancelAnimationFrame(sunRaf); sunRaf = null; setSun(e.target.value / 100); });
   $('fly-snd').addEventListener('click', function () { setSound(!soundOn); });
   $('tour-play').addEventListener('click', function () { if (playing) { stopPlay(); stopRide(); map.stop(); } else startPlay(); });
   $('tour-prev').addEventListener('click', function () { stopAll(); go(i - 1); });
@@ -1417,7 +1455,7 @@
     if (MP[mpSel] && MP[mpSel].k === 'glamp') mpCard();
     if (soundOn) fadeAmb(ambLevel());
     // the 3D keeps the same time of day as the explorer
-    if (!sunSyncing) { sunSyncing = true; setSun(duskOn ? 0.62 : 0); sunSyncing = false; }
+    if (!sunSyncing) { sunSyncing = true; tweenSun(duskOn ? 0.62 : 0, 1400); sunSyncing = false; }
   }
   function ambLevel() { return mode === 'fly' ? 0.35 : (duskOn ? 0.32 : 0.6); }
 
