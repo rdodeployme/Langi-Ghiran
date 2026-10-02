@@ -56,6 +56,15 @@
 .tour-resume{position:absolute;left:50%;top:70px;transform:translateX(-50%);z-index:6;font:600 .88rem/1 "Public Sans",system-ui,sans-serif;border:0;border-radius:999px;padding:12px 18px;background:var(--yellow);color:var(--ink);cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.35)}
 .tour-resume:hover{background:#fff}
 .tour-resume[hidden]{display:none}
+.sun{position:absolute;right:16px;bottom:92px;z-index:5;display:flex;align-items:center;gap:8px;padding:7px 8px 7px 12px;border-radius:999px;background:rgba(15,20,22,.74);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.tour[data-mode="park"] .sun{display:none}
+.sun-ic{font-size:.95rem;line-height:1;opacity:.85}
+.sun input[type=range]{-webkit-appearance:none;appearance:none;width:118px;height:4px;border-radius:2px;background:linear-gradient(90deg,#FCC830,#E07A3F 55%,#2B3550);outline:none;margin:0;cursor:pointer}
+.sun input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.4);cursor:grab}
+.sun input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--ink);cursor:grab}
+.sun .mp-snd{margin-left:4px;border:1px solid rgba(255,255,255,.35);border-radius:999px;background:transparent;color:#fff;padding:6px;cursor:pointer}
+.sun .mp-snd[aria-pressed="true"]{background:#fff;color:var(--ink)}
+.tour.night .tour-marker{background:rgba(5,8,14,.86)}
 .tour #tour-map canvas{cursor:grab}
 .tour #tour-map canvas:active{cursor:grabbing}
 .tour-marker{display:flex;align-items:center;gap:7px;background:rgba(15,20,22,.82);color:#fff;font:600 .74rem/1.1 "Public Sans",system-ui,sans-serif;padding:6px 10px 6px 7px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);cursor:pointer}
@@ -86,12 +95,14 @@
 .stats div{background:rgba(255,255,255,.06);border-radius:10px;padding:8px 10px}
 .stats b{display:block;font-family:Fraunces,Georgia,serif;font-weight:500;font-size:1.25rem;line-height:1.1}
 .stats span{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.stats em{display:block;font-style:normal;text-transform:none;letter-spacing:0;font-size:.7rem;color:rgba(255,255,255,.5);margin-top:2px}
 .profile{display:block;width:100%;height:64px;margin:0 0 12px}
 .profile .pl{fill:none;stroke-width:2}
 .profile .pa{opacity:.18}
 .profile text{fill:rgba(255,255,255,.55);font:500 9px "Public Sans",system-ui,sans-serif}
 .ride-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.15);overflow:hidden;margin:6px 0 12px}
 .ride-bar i{display:block;height:100%;width:0;background:var(--yellow)}
+.scrub{cursor:ew-resize;touch-action:none}
 .ride-hud{display:flex;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:4px}
 .tour-key{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;font-size:.82rem!important;color:rgba(255,255,255,.75)!important}
 .tour-key span{display:inline-flex;align-items:center;gap:6px}
@@ -299,6 +310,8 @@
   .tour-show{left:12px;bottom:12px}
   .tour-hint{top:108px;bottom:auto;left:50%;font-size:.72rem}
   .tour-resume{top:60px}
+  .sun{left:10px;right:auto;bottom:auto;top:160px;padding:6px 8px 6px 10px;gap:6px}
+  .sun input[type=range]{width:84px}
   .tour-about .wrap{grid-template-columns:1fr;gap:24px}
   .tour-panel figure.clip video{aspect-ratio:16/6}
   .tour-intro::after{background:linear-gradient(0deg,rgba(15,20,22,.95) 0%,rgba(15,20,22,.75) 45%,rgba(15,20,22,.1) 80%)}
@@ -334,6 +347,12 @@
   </div>
 
   <button type="button" class="tour-resume" id="tour-resume" hidden>&#8634; Back to the tour</button>
+  <div class="sun" id="sun" role="group" aria-label="Time of day and sound">
+    <span class="sun-ic" aria-hidden="true">&#9728;</span>
+    <input type="range" id="sun-range" min="0" max="100" value="0" aria-label="Time of day, from midday to night">
+    <span class="sun-ic" aria-hidden="true">&#9790;</span>
+    <button type="button" class="mp-snd" id="fly-snd" aria-pressed="false" aria-label="Bush sounds"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path class="on" fill="currentColor" d="M16 8.5a4 4 0 010 7v-7zM16 5a7.5 7.5 0 010 14v-2a5.5 5.5 0 000-10V5z"/><path class="off" fill="currentColor" d="M18.6 8L17.2 9.4 19 11.2l-1.8 1.8 1.4 1.4 1.8-1.8 1.8 1.8 1.4-1.4-1.8-1.8 1.8-1.8-1.4-1.4-1.8 1.8z"/></svg></button>
+  </div>
   <p class="tour-hint gone" id="fly-hint"><span class="hint-desk">Drag to move · scroll to zoom · right-drag to turn and tilt</span><span class="hint-touch">Drag to move · pinch to zoom · two fingers to turn</span></p>
 
   <div class="mp" id="mp">
@@ -532,6 +551,41 @@
   var liftAng = Math.atan2((P.T[1] - P.B[1]) * KY, (P.T[0] - P.B[0]) * KX);
 
   function fc(f) { return { type: 'FeatureCollection', features: f }; }
+  function ngon(c, r, n) { var pts = []; for (var j = 0; j <= n; j++) { var a = j / n * Math.PI * 2; pts.push([c[0] + r * Math.cos(a) / KX, c[1] + r * Math.sin(a) / KY]); } return [pts]; }
+  function offset(ll, dx, dy) { return [ll[0] + dx / KX, ll[1] + dy / KY]; }
+  function ahead(ll, b, d) { var r = b * Math.PI / 180; return offset(ll, Math.sin(r) * d, Math.cos(r) * d); }
+  // the park as real objects on the terrain: bell tents on decks, the amenities hut, lift towers with the cable in the air, and the two stations
+  var OBJ = { deck: '#7E6446', tent: '#EFE6D2', hut: '#4F3E2F', tower: '#B9BEC2', cable: '#F4F4F2', station: '#3A3F42' };
+  var OBJ_NIGHT = { deck: '#2A241C', tent: '#FFD08A', hut: '#241E16', tower: '#3E444A', cable: '#8E959B', station: '#181C1F' };
+  function objsFC() {
+    var f = [];
+    P.glamp.tents.forEach(function (t) {
+      f.push(feat({ k: 'deck', h: 0.45, b: 0, go: 'glamping' }, 'Polygon', box(t, 5.6, 5.6, 0)));
+      f.push(feat({ k: 'tent', h: 1.6, b: 0.45, go: 'glamping' }, 'Polygon', ngon(t, 2.5, 8)));
+      f.push(feat({ k: 'tent', h: 2.6, b: 1.6, go: 'glamping' }, 'Polygon', ngon(t, 1.75, 8)));
+      f.push(feat({ k: 'tent', h: 3.5, b: 2.6, go: 'glamping' }, 'Polygon', ngon(t, 0.95, 8)));
+    });
+    f.push(feat({ k: 'hut', h: 3.2, b: 0, go: 'glamping' }, 'Polygon', box(P.glamp.amen, 9, 5.5, 0.35)));
+    P.lift.towers.forEach(function (t) {
+      f.push(feat({ k: 'tower', h: 7.5, b: 0, go: 'lift' }, 'Polygon', box(t, 0.7, 0.7, liftAng)));
+      f.push(feat({ k: 'tower', h: 7.5, b: 7.0, go: 'lift' }, 'Polygon', box(t, 0.35, 2.8, liftAng)));
+    });
+    // short overlapping pieces, each at its own ground height, so the cable follows the slope without visible steps
+    var L = PATH.lift, n = Math.ceil(L.len / 2.5);
+    for (var j = 0; j < n; j++) { var s0 = j * L.len / n, s1 = (j + 1) * L.len / n; f.push(feat({ k: 'cable', h: 6.95, b: 6.68, go: 'lift' }, 'Polygon', box(along(L, (s0 + s1) / 2), (s1 - s0) + 1.4, 0.3, liftAng))); }
+    f.push(feat({ k: 'station', h: 3.2, b: 0, go: 'lift' }, 'Polygon', box(P.T, 7, 4.5, liftAng)));
+    f.push(feat({ k: 'station', h: 3.2, b: 0, go: 'lift' }, 'Polygon', box(P.B, 7, 4.5, liftAng)));
+    return fc(f);
+  }
+  // lights that come on at dusk: tents lit from inside, a fire pit by each deck, festoons along the camp path, the hut and the stations
+  function lightsFC() {
+    var f = []; function L(ll, s, p) { f.push(feat({ s: s, p: p }, 'Point', ll)); }
+    P.glamp.tents.forEach(function (t, j) { L(t, 1, j * 1.7); L(offset(t, 3.6, -2.2), 0.5, j * 2.3 + 1); });
+    for (var d = 4; d < PATH.glamp.len; d += 7) L(along(PATH.glamp, d), 0.28, d * 0.37);
+    L(P.glamp.amen, 1.3, 0.5); L(P.T, 1, 2); L(P.B, 1, 3); L(P.kids.centre, 0.9, 4);
+    return fc(f);
+  }
+
   function feat(props, type, coords) { return { type: 'Feature', properties: props, geometry: { type: type, coordinates: coords } }; }
   var runsFC = fc(['beginner', 'intermediate', 'expert'].map(function (k) { return feat({ run: k }, 'LineString', PATH[k].c); }));
   var liftFC = fc([feat({ kind: 'cable' }, 'LineString', [P.B, P.T])]);
@@ -541,9 +595,10 @@
   /* ---------- tour stops ---------- */
   function statsHTML(k) {
     var r = k === 'lift' ? P.lift : P.runs[k];
-    var a = k === 'lift' ? [['Length', r.len + ' m'], ['Climb', r.rise + ' m'], ['Towers', P.lift.towers.length]]
-      : [['Length', r.len.toLocaleString('en-AU') + ' m'], ['Drop', r.drop + ' m'], ['Style', STYLE[k]]];
-    return '<div class="stats">' + a.map(function (x) { return '<div><b>' + x[1] + '</b><span>' + x[0] + '</span></div>'; }).join('') + '</div>' + profileSVG(k);
+    var st = Math.round((k === 'lift' ? r.rise : r.drop) / 3) + ' storeys';
+    var a = k === 'lift' ? [['Length', r.len + ' m'], ['Climb', r.rise + ' m', st], ['Towers', P.lift.towers.length]]
+      : [['Length', r.len.toLocaleString('en-AU') + ' m'], ['Drop', r.drop + ' m', st], ['Style', STYLE[k]]];
+    return '<div class="stats">' + a.map(function (x) { return '<div><b>' + x[1] + '</b><span>' + x[0] + (x[2] ? '<em>&asymp; ' + x[2] + '</em>' : '') + '</span></div>'; }).join('') + '</div>' + profileSVG(k);
   }
   var STYLE = { beginner: 'Cruisy', intermediate: 'Flow', expert: 'Tech' };
   function profileSVG(k) {
@@ -593,11 +648,11 @@
       cam: { fit: 'site', pitch: 50, bearing: 165 }, mk: ['site'] },
     { title: 'The bike park', plan: 'all',
       body: '<p>Here’s the concept laid over the real hillside. Three downhill runs leave the top station and wind down to the bottom, with a kids’ jump park by the lift base, a pulley lift to pull riders back up, and 16 glamping sites off to the side. Pick a run to see it up close.</p>',
-      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
+      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn" data-stand="bike-park">&#9673; Fly low up the hill</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
       cam: { center: [143.0915, -37.2772], zoom: 15.7, pitch: 72, bearing: 158 }, mk: ['beginner', 'intermediate', 'expert', 'kids', 'glamp', 'top', 'base'] },
     { title: 'The pulley lift', plan: 'lift', ride: 'lift', g: 'g-lift',
       body: '<p>Riders roll on at the base, grab the line and get pulled straight up the slope to the top station, bike and all. No pushing, so more time riding.</p>',
-      extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="lift">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="lift">Follow it in 3D</button></div>' + clip('lift', 'Concept clip of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
+      extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="lift">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="lift">Follow it in 3D</button><button type="button" class="t-btn" data-stand="lift">&#9673; Fly low up the lift</button></div>' + clip('lift', 'Concept clip of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
       cam: { fit: 'lift', pitch: 52, bearing: 152 }, mk: ['top', 'base'] },
     { title: 'Beginner run', plan: 'beginner', ride: 'beginner', g: 'g-beg',
       body: '<p>' + RUN_TXT.beginner + '</p>',
@@ -617,7 +672,7 @@
       cam: { fit: 'kids', pitch: 50, bearing: 200, maxZoom: 17.4 }, mk: ['kids', 'base'] },
     { title: 'Glamping', plan: 'glamp', ride: 'glamp', g: 'g-glamp',
       body: '<p>Off to the side of the bike park, on the open rise looking back at the range, sit 16 glamping sites: canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift base.</p>',
-      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-film="glamp">&#9654; Watch the walk-through</button><button type="button" class="t-btn" data-ride="glamp">Walk it in 3D</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
+      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-film="glamp">&#9654; Watch the walk-through</button><button type="button" class="t-btn" data-ride="glamp">Walk it in 3D</button><button type="button" class="t-btn" data-stand="glamping">&#9673; Fly low over the camp</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
       cam: { fit: 'glamp', pitch: 52, bearing: 205 }, mk: ['glamp', 'base'] },
     { title: 'Today, and what it could be', plan: 'future', orbit: 40,
       body: '<p>An artist’s concept of the finished park, laid over the real terrain: revegetated ground, runs down the slope, a kids’ park at the bottom, the lift back to the top and the glamping camp beside it. Slide between today and the concept.</p>',
@@ -667,7 +722,7 @@
         container: 'tour-map',
         attributionControl: { compact: true },
         // free to look around, but kept to the Langi Ghiran area and sensible zooms
-        maxBounds: [[142.86, -37.40], [143.24, -37.18]], minZoom: 10, maxZoom: 17.8, maxPitch: 78,
+        maxBounds: [[142.86, -37.40], [143.24, -37.18]], minZoom: 10, maxZoom: 22, maxPitch: 82,
         center: [143.060, -37.31], zoom: 10.6, pitch: 45, bearing: 60,
         style: {
           version: 8,
@@ -697,15 +752,17 @@
     map.addControl(new maplibregl.FullscreenControl({ container: tour }), 'top-right');
     // any hand on the map pauses the tour; "Back to the tour" picks it up again
     map.on('movestart', function (e) { if (e.originalEvent) enterFree(); });
-    map.on('moveend', function () { if (!camRaf && !orbitRaf && !rideRaf) setTimeout(syncElevation, 30); });
+    map.on('moveend', function () { if (!camRaf && !orbitRaf && !rideRaf && !standRaf) setTimeout(syncElevation, 30); });
     map.on('click', function (e) {
       if (!ready) return;
-      var f = map.queryRenderedFeatures([[e.point.x - 10, e.point.y - 10], [e.point.x + 10, e.point.y + 10]], { layers: ['run-line'] });
-      if (f.length && IDX[f[0].properties.run] != null) { stopAll(); go(IDX[f[0].properties.run]); }
+      var f = map.queryRenderedFeatures([[e.point.x - 10, e.point.y - 10], [e.point.x + 10, e.point.y + 10]], { layers: ['run-line', 'objs'] });
+      if (!f.length) return;
+      var pr = f[0].properties, n = pr.run ? IDX[pr.run] : SLUG.indexOf(pr.go);
+      if (n != null && n > -1) { stopAll(); go(n); }
     });
     map.on('mousemove', function (e) {
       if (!ready) return;
-      var f = map.queryRenderedFeatures([[e.point.x - 10, e.point.y - 10], [e.point.x + 10, e.point.y + 10]], { layers: ['run-line'] });
+      var f = map.queryRenderedFeatures([[e.point.x - 10, e.point.y - 10], [e.point.x + 10, e.point.y + 10]], { layers: ['run-line', 'objs'] });
       map.getCanvas().style.cursor = f.length ? 'pointer' : '';
     });
     map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
@@ -750,8 +807,9 @@
     Array.prototype.forEach.call(dots.children, function (b, n) { b.setAttribute('aria-current', n === i ? 'true' : 'false'); });
   }
   $('tour-body').addEventListener('click', function (e) {
-    var t = e.target.closest('[data-go],[data-ride],[data-tf],[data-film]'); if (!t) return;
+    var t = e.target.closest('[data-go],[data-ride],[data-tf],[data-film],[data-stand]'); if (!t) return;
     if (t.dataset.film) { stopPlay(); openFilm(t.dataset.film); return; }
+    if (t.dataset.stand) { stand(t.dataset.stand); return; }
     if (t.dataset.tf) { stopPlay(); clearTimeout(timer2); setDrape(+t.dataset.tf); return; }
     if (t.dataset.go) { stopAll(); go(IDX[t.dataset.go]); }
     if (t.dataset.ride) { stopPlay(); ride(t.dataset.ride); }
@@ -800,8 +858,13 @@
     map.addLayer({ id: 'kids-outline', type: 'line', source: 'kids', layout: { visibility: 'none' }, paint: { 'line-color': '#FCC830', 'line-width': 2, 'line-dasharray': [2, 1] } });
     map.addLayer({ id: 'run-case', type: 'line', source: 'runs', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#0F1416', 'line-width': ['interpolate', ['linear'], ['zoom'], 14, 3, 17, 8], 'line-opacity': 0.55, 'line-blur': 1 } });
     map.addLayer({ id: 'run-line', type: 'line', source: 'runs', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': ['match', ['get', 'run'], 'beginner', COL.beginner, 'intermediate', COL.intermediate, '#FFFFFF'], 'line-width': ['interpolate', ['linear'], ['zoom'], 14, 1.4, 17, 3.5] } });
-    map.addLayer({ id: 'lift-cable', type: 'line', source: 'lift', layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-opacity': 0.9, 'line-width': ['interpolate', ['linear'], ['zoom'], 14, 1, 17, 2] } });
+    map.addLayer({ id: 'lift-cable', type: 'line', source: 'lift', layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-opacity': ['interpolate', ['linear'], ['zoom'], 16.5, 0.9, 17.6, 0], 'line-width': ['interpolate', ['linear'], ['zoom'], 14, 1, 17, 2] } });
     map.addLayer({ id: 'lift-towers', type: 'circle', source: 'liftpts', layout: { visibility: 'none' }, paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 3, 17, 7], 'circle-color': '#FCC830', 'circle-stroke-color': '#0F1416', 'circle-stroke-width': 1.5, 'circle-pitch-alignment': 'map' } });
+    map.addSource('objs', { type: 'geojson', data: objsFC() });
+    map.addLayer({ id: 'objs', type: 'fill-extrusion', source: 'objs', layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': '#EFE6D2', 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': ['get', 'b'], 'fill-extrusion-opacity': 1, 'fill-extrusion-vertical-gradient': true } });
+    map.addSource('lights', { type: 'geojson', data: lightsFC() });
+    map.addLayer({ id: 'light-glow', type: 'circle', source: 'lights', layout: { visibility: 'none' }, paint: { 'circle-pitch-alignment': 'map', 'circle-blur': 1, 'circle-color': '#FFB65C', 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, ['*', ['get', 's'], 3], 16, ['*', ['get', 's'], 10], 18, ['*', ['get', 's'], 26], 21, ['*', ['get', 's'], 90]], 'circle-opacity': 0 } });
+    map.addLayer({ id: 'light-core', type: 'circle', source: 'lights', layout: { visibility: 'none' }, paint: { 'circle-pitch-alignment': 'map', 'circle-blur': 0.4, 'circle-color': '#FFE6B3', 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, ['*', ['get', 's'], 1], 16, ['*', ['get', 's'], 2.5], 18, ['*', ['get', 's'], 6], 21, ['*', ['get', 's'], 18]], 'circle-opacity': 0 } });
     // riders flowing down the runs and up the lift, so the park feels used
     map.addSource('riders', { type: 'geojson', data: fc([]) });
     map.addLayer({ id: 'rider-halo', type: 'circle', source: 'riders', paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 13, 4, 17, 11], 'circle-color': ['get', 'c'], 'circle-opacity': ['*', ['get', 'o'], 0.28], 'circle-blur': 0.6 } });
@@ -809,6 +872,7 @@
     map.addLayer({ id: 'me-halo', type: 'circle', source: 'me', paint: { 'circle-radius': 18, 'circle-color': ['get', 'c'], 'circle-opacity': 0.25, 'circle-pitch-alignment': 'map' } });
     map.addLayer({ id: 'me', type: 'circle', source: 'me', paint: { 'circle-radius': 8, 'circle-color': ['get', 'c'], 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 3, 'circle-pitch-alignment': 'map' } });
     ready = true;
+    objColours(); setSun(sunT);
   }
 
   var PLAN_LAYERS = ['run-case', 'run-line', 'lift-cable', 'lift-towers', 'kids-outline'];
@@ -866,6 +930,7 @@
       var u = d ? Math.max(0, Math.min(1, (now - t0) / d)) : 1, e = u * u * (3 - 2 * u);
       drapeV = from + (v - from) * e;
       map.setPaintProperty('drape', 'raster-opacity', Math.max(0, Math.min(1, drapeV)));
+      objScale(drapeV); lightsOn();
       if (u < 1) { drapeRaf = requestAnimationFrame(step); return; }
       if (v === 0) map.setLayoutProperty('drape', 'visibility', 'none');
     })(t0);
@@ -877,12 +942,74 @@
     stopPlay(); clearTimeout(timer2); setDrape(e.target.value / 100, true);
   });
 
+  /* ---------- time of day ---------- */
+  var SUN = [ // midday, dusk, night
+    { sky: '#6E9CC4', hor: '#EFE7D6', fog: '#DDD8C9', dir: 315, sh: '#14201C', hl: '#FFF4DC', bmax: 1, sat: -0.02 },
+    { sky: '#4A5A8C', hor: '#F2B079', fog: '#D6AE92', dir: 275, sh: '#1A1830', hl: '#FFD2A0', bmax: 0.62, sat: 0.02 },
+    { sky: '#080C18', hor: '#1B243E', fog: '#111626', dir: 300, sh: '#04060B', hl: '#55668A', bmax: 0.22, sat: -0.45 }
+  ];
+  function hex(c) { return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)]; }
+  function mix(a, b, u) { var A = hex(a), B = hex(b); return '#' + A.map(function (v, j) { return ('0' + Math.round(v + (B[j] - v) * u).toString(16)).slice(-2); }).join(''); }
+  var sunT = 0, sunSyncing = false;
+  function setSun(t) {
+    sunT = Math.max(0, Math.min(1, t));
+    var r = $('sun-range'); if (r && Math.abs(+r.value - sunT * 100) > 0.5) r.value = Math.round(sunT * 100);
+    tour.classList.toggle('night', sunT > 0.35);
+    if (!map || !map.getLayer('shade')) return;
+    var k = sunT < 0.5 ? [SUN[0], SUN[1], sunT * 2] : [SUN[1], SUN[2], (sunT - 0.5) * 2], a = k[0], b = k[1], u = k[2];
+    function lerp(x, y) { return x + (y - x) * u; }
+    map.setSky({ 'sky-color': mix(a.sky, b.sky, u), 'horizon-color': mix(a.hor, b.hor, u), 'fog-color': mix(a.fog, b.fog, u), 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.55, 'atmosphere-blend': 0 });
+    map.setPaintProperty('shade', 'hillshade-illumination-direction', lerp(a.dir, b.dir));
+    map.setPaintProperty('shade', 'hillshade-shadow-color', mix(a.sh, b.sh, u));
+    map.setPaintProperty('shade', 'hillshade-highlight-color', mix(a.hl, b.hl, u));
+    map.setPaintProperty('shade', 'hillshade-exaggeration', ['interpolate', ['linear'], ['zoom'], 10, 0.5 + 0.2 * sunT, 13, 0.34 + 0.2 * sunT, 16, 0.14 + 0.16 * sunT]);
+    map.setPaintProperty('sat', 'raster-brightness-max', lerp(a.bmax, b.bmax));
+    map.setPaintProperty('sat', 'raster-saturation', lerp(a.sat, b.sat));
+    if (ready) {
+      map.setPaintProperty('drape', 'raster-brightness-max', lerp(a.bmax, b.bmax));
+      map.setPaintProperty('drape', 'raster-saturation', lerp(a.sat, b.sat));
+      objColours(); lightsOn();
+    }
+  }
+  function objColours() {
+    if (!map || !map.getLayer('objs')) return;
+    var g = Math.max(0, Math.min(1, (sunT - 0.3) / 0.7)), d = sunT * 0.8, m = ['match', ['get', 'k']];
+    Object.keys(OBJ).forEach(function (k) { m.push(k, k === 'tent' ? mix(OBJ.tent, OBJ_NIGHT.tent, g) : mix(OBJ[k], OBJ_NIGHT[k], d)); });
+    m.push('#888888');
+    map.setPaintProperty('objs', 'fill-extrusion-color', m);
+  }
+  function objScale(v) {
+    if (!map || !map.getLayer('objs')) return;
+    if (v <= 0.001) { map.setLayoutProperty('objs', 'visibility', 'none'); return; }
+    map.setLayoutProperty('objs', 'visibility', 'visible');
+    var sc = Math.max(0.01, Math.min(1, v));
+    map.setPaintProperty('objs', 'fill-extrusion-height', ['*', ['get', 'h'], sc]);
+    map.setPaintProperty('objs', 'fill-extrusion-base', ['*', ['get', 'b'], sc]);
+  }
+  var lightRaf = null, lightLast = 0, lightLevel = 0;
+  function lightsOn() {
+    if (!map || !map.getLayer('light-glow')) return;
+    var L = Math.max(0, Math.min(1, (sunT - 0.25) / 0.5)) * Math.max(0, Math.min(1, drapeV));
+    lightLevel = L;
+    if (L <= 0.001) { map.setLayoutProperty('light-glow', 'visibility', 'none'); map.setLayoutProperty('light-core', 'visibility', 'none'); cancelAnimationFrame(lightRaf); lightRaf = null; return; }
+    map.setLayoutProperty('light-glow', 'visibility', 'visible'); map.setLayoutProperty('light-core', 'visibility', 'visible');
+    if (reduce) { map.setPaintProperty('light-glow', 'circle-opacity', L * 0.55); map.setPaintProperty('light-core', 'circle-opacity', L * 0.95); return; }
+    lightLast = 0; if (!lightRaf) lightRaf = requestAnimationFrame(lightTick);
+  }
+  function lightTick(now) {
+    lightRaf = requestAnimationFrame(lightTick);
+    if (now - lightLast < 120 || document.hidden || mode !== 'fly') return; lightLast = now;
+    var fl = ['+', 0.82, ['*', 0.18, ['sin', ['+', ['get', 'p'], now / 260]]]];
+    map.setPaintProperty('light-glow', 'circle-opacity', ['*', lightLevel * 0.55, fl]);
+    map.setPaintProperty('light-core', 'circle-opacity', ['*', lightLevel * 0.95, fl]);
+  }
+
   /* ---------- virtual rides ---------- */
   var rideRaf = null, riding = null;
   // the 3D ride runs in step with the ride film: the film's clock moves the rider and the chase camera
   var RIDE_SECS = { lift: 15, beginner: 15, intermediate: 15, expert: 15 };
   RIDE_SECS.glamp = 15;
-  var RIDE_ZK = { lift: 17.0, beginner: 16.3, intermediate: 16.8, expert: 17.0, glamp: 17.4 }, RIDE_PITCH = 70;
+  var RIDE_ZK = { lift: 17.8, beginner: 17.0, intermediate: 17.4, expert: 17.6, glamp: 18.0 }, RIDE_PITCH = 72;
   function ride(k) {
     if (!ready) { pendingRide = k; return; }
     leaveFree();
@@ -900,6 +1027,18 @@
     $('ride-stop').addEventListener('click', function () { stopPlay(); stopRide(); go(i); });
     var dur = (reduce ? 8 : RIDE_SECS[k]) * 1000, start = null, b0 = null, my = ++seq, RIDE_Z = RIDE_ZK[k];
     var rv = $('ride-film'), rvOk = false, win = Math.max(40, path.len * 0.05);
+    if (rv) { rv.muted = !soundOn; rv.volume = 0.9; if (soundOn) fadeAmb(0.1); }
+    // drag the profile or the progress bar to scrub the ride: the film, the rider and the camera move together
+    var scrubbing = false, wasPlaying = false;
+    function scrubTo(ev, el) { var rc = el.getBoundingClientRect(), u = Math.max(0, Math.min(1, (ev.clientX - rc.left) / rc.width)); b0 = null;
+      if (rv && rv.duration) { try { rv.currentTime = u * rv.duration; } catch (e) {} } else if (!rv) start = performance.now() - u * dur; }
+    $('tour-body').querySelectorAll('.profile, .ride-bar').forEach(function (el) {
+      el.classList.add('scrub');
+      el.addEventListener('pointerdown', function (ev) { scrubbing = true; try { el.setPointerCapture(ev.pointerId); } catch (e) {} if (rv) { wasPlaying = !rv.paused && !rv.ended; rv.pause(); } scrubTo(ev, el); ev.preventDefault(); });
+      el.addEventListener('pointermove', function (ev) { if (scrubbing) scrubTo(ev, el); });
+      function up() { if (!scrubbing) return; scrubbing = false; if (rv && rv.duration && rv.currentTime < rv.duration - 0.05) { var pp = rv.play(); if (pp && pp.catch) pp.catch(function () {}); } }
+      el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    });
     if (rv) { rv.addEventListener('playing', function () { rvOk = true; }); rv.addEventListener('error', function () { rvOk = false; rv = null; }); }
     map.stop();
     var v = view(), rp = { top: Math.round(v.H * 0.2), bottom: v.B, left: v.L, right: 0 };
@@ -966,6 +1105,7 @@
   }
   function stopRide(silent) {
     if (rideRaf) cancelAnimationFrame(rideRaf); rideRaf = null; cancelAnimationFrame(camRaf); camRaf = null; riding = null;
+    if (soundOn && mode === 'fly') fadeAmb(0.35);
     tour.classList.remove('riding');
     if (ready) map.getSource('me').setData(fc([]));
     showMarkers(STOPS[i] && STOPS[i].mk);
@@ -973,7 +1113,7 @@
 
   /* ---------- navigation ---------- */
   function go(n) {
-    leaveFree();
+    leaveFree(); tour.classList.remove('standing'); cancelAnimationFrame(standRaf); standRaf = null; $('tour-resume').hidden = true;
     stopRide(true);
     i = (n + STOPS.length) % STOPS.length;
     render();
@@ -1011,11 +1151,36 @@
       orbitRaf = u < 1 ? requestAnimationFrame(step) : null;
     })(t0);
   }
+  // ground-level moments: drop to eye height at a spot and look around slowly
+  var STAND = {
+    glamping: { at: ahead(P.glamp.centre, 332, 30), off: [0, 0], brg: 152, sweep: 56 },
+    'bike-park': { at: along(PATH.lift, 230), off: [-40, 0], brg: 150, sweep: 70 },
+    lift: { at: P.B, off: [3, -4], brg: 156, sweep: 30 }
+  };
+  var STAND_Z = 18.9, STAND_PITCH = 74, STAND_D = 90, standRaf = null;
+  function stand(k) {
+    var S = STAND[k]; if (!S || !ready) return;
+    stopPlay(); if (riding) { stopRide(); render(); }
+    var my = ++seq; clearTimeout(timer); clearTimeout(timer2); cancelAnimationFrame(orbitRaf); orbitRaf = null;
+    leaveFree(); tour.classList.add('standing'); $('tour-resume').hidden = false; showMarkers([]);
+    var p = offset(S.at, S.off[0], S.off[1]), v = view(), pad = { top: 0, bottom: v.B, left: v.L, right: 0 };
+    map.stop();
+    camGlide({ center: ahead(p, S.brg, STAND_D), bearing: S.brg, pitch: STAND_PITCH, zoom: STAND_Z, padding: pad }, reduce ? 0 : 3200, my, function () {
+      if (reduce) return;
+      var t0 = performance.now();
+      (function step(now) {
+        if (my !== seq) { standRaf = null; return; }
+        var b = S.brg + Math.sin((now - t0) / 11000 * Math.PI * 2) * S.sweep / 2;
+        map.jumpTo({ center: ahead(p, b, STAND_D), bearing: b, pitch: STAND_PITCH, zoom: STAND_Z, padding: pad });
+        standRaf = requestAnimationFrame(step);
+      })(t0);
+    }, 0);
+  }
   // the camera's height is taken from the terrain under it; if the terrain wasn't loaded when a move began,
   // the camera can end up inside the hill. A no-op jumpTo makes MapLibre re-read the ground height.
   var syncing = false;
   function syncElevation() {
-    if (!map || syncing || camRaf || rideRaf || orbitRaf || map.isMoving()) return;
+    if (!map || syncing || camRaf || rideRaf || orbitRaf || standRaf || map.isMoving()) return;
     syncing = true; map._elevationFreeze = false; map.jumpTo({ center: map.getCenter() }); syncing = false;
   }
   var freeLook = false;
@@ -1025,7 +1190,7 @@
     freeLook = true; stopPlay(); if (riding) { stopRide(); render(); }
     seq++; clearTimeout(timer); clearTimeout(timer2);
     cancelAnimationFrame(camRaf); camRaf = null; cancelAnimationFrame(orbitRaf); orbitRaf = null;
-    $('tour-resume').hidden = false; tour.classList.add('free');
+    $('tour-resume').hidden = false; tour.classList.add('free'); tour.classList.remove('standing');
   }
   function leaveFree() { if (!freeLook) return; freeLook = false; $('tour-resume').hidden = true; tour.classList.remove('free'); }
   var flyHintT = null, flyHintShown = false;
@@ -1041,6 +1206,8 @@
   function stopAll() { stopPlay(); if (riding) stopRide(); }
 
   $('tour-resume').addEventListener('click', function () { go(i); });
+  $('sun-range').addEventListener('input', function (e) { setSun(e.target.value / 100); });
+  $('fly-snd').addEventListener('click', function () { setSound(!soundOn); });
   $('tour-play').addEventListener('click', function () { if (playing) { stopPlay(); stopRide(); map.stop(); } else startPlay(); });
   $('tour-prev').addEventListener('click', function () { stopAll(); go(i - 1); });
   $('tour-next').addEventListener('click', function () { stopAll(); go(i + 1); });
@@ -1248,8 +1415,11 @@
     mpEl.classList.toggle('today', v === 'today'); mpEl.classList.toggle('dusk', duskOn);
     document.querySelectorAll('[data-mptf]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mptf === v ? 'true' : 'false'); });
     if (MP[mpSel] && MP[mpSel].k === 'glamp') mpCard();
-    if (soundOn) fadeAmb(duskOn ? 0.32 : 0.6);
+    if (soundOn) fadeAmb(ambLevel());
+    // the 3D keeps the same time of day as the explorer
+    if (!sunSyncing) { sunSyncing = true; setSun(duskOn ? 0.62 : 0); sunSyncing = false; }
   }
+  function ambLevel() { return mode === 'fly' ? 0.35 : (duskOn ? 0.32 : 0.6); }
 
   /* ---------- bush sounds ---------- */
   var amb = $('amb'), soundOn = false, ambRaf = null;
@@ -1258,8 +1428,9 @@
     (function step(now) { var u = Math.max(0, Math.min(1, (now - t0) / 900)); amb.volume = Math.max(0, Math.min(1, from + (to - from) * u)); if (u < 1) ambRaf = requestAnimationFrame(step); else if (done) done(); })(t0);
   }
   function setSound(on) {
-    soundOn = on; $('mp-snd').setAttribute('aria-pressed', on ? 'true' : 'false');
-    if (on) { amb.volume = 0; var pp = amb.play(); if (pp && pp.catch) pp.catch(function () {}); fadeAmb(duskOn ? 0.32 : 0.6); }
+    soundOn = on; $('mp-snd').setAttribute('aria-pressed', on ? 'true' : 'false'); $('fly-snd').setAttribute('aria-pressed', on ? 'true' : 'false');
+    var rv = $('ride-film'); if (rv) rv.muted = !on;
+    if (on) { amb.volume = 0; var pp = amb.play(); if (pp && pp.catch) pp.catch(function () {}); fadeAmb(rv ? 0.1 : ambLevel()); }
     else fadeAmb(0, function () { amb.pause(); });
   }
 
@@ -1326,7 +1497,7 @@
     if (!filmK) return; var wasTrailer = filmK === 'trailer'; filmK = null; fv.pause(); cancelAnimationFrame(filmRaf);
     film.classList.remove('on'); setTimeout(function () { if (!filmK) { film.hidden = true; fv.removeAttribute('src'); fv.load(); } }, 500);
     if (wasTrailer && introOn) { if (introVid && !reduce) { var ip = introVid.play(); if (ip && ip.catch) ip.catch(function () {}); } try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} return; }
-    if (soundOn && mode === 'park') { var pp = amb.play(); if (pp && pp.catch) pp.catch(function () {}); fadeAmb(duskOn ? 0.32 : 0.6); }
+    if (soundOn) { var pp = amb.play(); if (pp && pp.catch) pp.catch(function () {}); fadeAmb(ambLevel()); }
     if (mode === 'park') { mpCardEl.querySelectorAll('video').forEach(function (v) { var pp2 = v.play(); if (pp2 && pp2.catch) pp2.catch(function () {}); }); mpGo(mpSel, 0); }
     else try { history.replaceState(null, '', '#' + SLUG[i]); } catch (e) {}
   }
@@ -1349,7 +1520,7 @@
     document.querySelectorAll('[data-mode-btn]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.modeBtn === m ? 'true' : 'false'); });
     mpCardEl.querySelectorAll('video').forEach(function (v) { if (m === 'fly') v.pause(); else { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); } });
     if (m === 'fly') {
-      if (soundOn) fadeAmb(0, function () { amb.pause(); });
+      if (soundOn) fadeAmb(0.35);
       setTimeout(function () { if (mode === 'fly' && !freeLook) flyHint(true); }, 1500);
       if (!map) {
         initMap(); if (!map) return;
@@ -1359,8 +1530,12 @@
         map.once('idle', goNow); setTimeout(goNow, 3000);
       } else go(i);
     }
-    else if (soundOn) { var pa = amb.play(); if (pa && pa.catch) pa.catch(function () {}); fadeAmb(duskOn ? 0.32 : 0.6); }
-    else { stopAll(); if (map) map.stop(); mpGo(mpSel, 0); }
+    else {
+      stopAll(); if (map) map.stop(); mpGo(mpSel, 0);
+      // carry the time of day back: dusk in 3D means dusk in the explorer
+      if (!sunSyncing) { sunSyncing = true; if (sunT > 0.4 && mpView !== 'dusk') setView('dusk'); else if (sunT <= 0.4 && mpView === 'dusk') setView('concept'); sunSyncing = false; }
+      if (soundOn) { var pa = amb.play(); if (pa && pa.catch) pa.catch(function () {}); fadeAmb(ambLevel()); }
+    }
   }
   function flyTo3D(k) {
     var n = k === 'kids' ? SLUG.indexOf('kids') : k === 'glamp' ? SLUG.indexOf('glamping') : IDX[k];
