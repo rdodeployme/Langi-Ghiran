@@ -728,35 +728,35 @@
       cam: { fit: 'site', pitch: 50, bearing: 165 }, mk: ['site'] },
     { title: 'The bike park', plan: 'all',
       body: '<p>Here’s the concept laid over the real hillside. Three downhill runs leave the top station and wind down to the bottom, with a kids’ jump park by the lift base, a pulley lift to pull riders back up, and 16 glamping sites off to the side. Pick a run to see it up close.</p>',
-      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn go" data-walk="top">&#9673; Stand at the top station</button><button type="button" class="t-btn" data-stand="bike-park">Fly low up the hill</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
+      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn go" data-walk="fly-park">&#9654; Drone view of the park</button><button type="button" class="t-btn" data-walk="top">&#9673; Stand at the top station</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
       cam: { center: [143.0915, -37.2772], zoom: 15.7, pitch: 72, bearing: 158 }, mk: ['beginner', 'intermediate', 'expert', 'kids', 'glamp', 'top', 'base'] },
     { title: 'Arriving at the base', plan: 'all', ride: 'base', g: 'g-kids',
       body: '<p>This is where a visit starts: the base area at the foot of the slope, with the lift base, the kids’ jump park next door, the shelter and the walk across to the glamping camp. Everything in the park leads back here.</p><p><span class="tbc">Car park, shelter and access road TBC</span></p>',
-      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn go" data-film="base">&#9654; Watch the walk in</button><button type="button" class="t-btn" data-walk="carpark">Walk it in 3D</button><button type="button" class="t-btn" data-walk="base">&#9673; Stand at the base</button></div>'; },
-      cam: { center: BASE_C, zoom: 17.4, pitch: 68, bearing: 158 }, mk: ['base', 'kids', 'glamp', 'top'] },
+      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn go" data-walk="carpark">&#9654; Walk in from the car park</button><button type="button" class="t-btn" data-walk="fly-base">Drone view</button><button type="button" class="t-btn" data-walk="base">&#9673; Stand at the base</button><button type="button" class="t-btn" data-film="base">Concept film</button></div>'; },
+      cam: { center: BASE_C, zoom: 16.3, pitch: 64, bearing: 158 }, mk: ['base', 'kids', 'glamp', 'top'] },
     { title: 'The pulley lift', plan: 'lift', ride: 'lift', g: 'g-lift',
       body: '<p>Riders roll on at the base, grab the line and get pulled straight up the slope to the top station, bike and all. No pushing, so more time riding.</p>',
-      extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="lift">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="lift">Follow it in 3D</button><button type="button" class="t-btn" data-walk="base">&#9673; Stand at the base</button><button type="button" class="t-btn" data-stand="lift">Fly low up the lift</button></div>' + clip('lift', 'Concept clip of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
+      extra: function () { return statsHTML('lift') + '<div class="t-actions"><button type="button" class="t-btn go" data-walk="ride-lift">&#9654; Ride the lift</button><button type="button" class="t-btn" data-walk="fly-lift">Drone view</button><button type="button" class="t-btn" data-walk="base">&#9673; Stand at the base</button><button type="button" class="t-btn" data-film="lift">Concept film</button></div>' + clip('lift', 'Concept clip of a rider being towed uphill by a pulley bike lift beside a dirt trail'); },
       cam: { fit: 'lift', pitch: 52, bearing: 152 }, mk: ['top', 'base'] },
     { title: 'Beginner run', plan: 'beginner', ride: 'beginner', g: 'g-beg',
       body: '<p>' + RUN_TXT.beginner + '</p>',
-      extra: function () { return statsHTML('beginner') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="beginner">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="beginner">Follow it in 3D</button></div>' + clip('beginner', RUN_IMG.beginner[1]); },
+      extra: function () { return statsHTML('beginner') + '<div class="t-actions"><button type="button" class="t-btn go" data-walk="ride-beginner">&#9654; Ride it</button><button type="button" class="t-btn" data-walk="fly-park">Drone view</button><button type="button" class="t-btn" data-film="beginner">Concept film</button></div>' + clip('beginner', RUN_IMG.beginner[1]); },
       cam: { fit: 'beginner', pitch: 50, bearing: 345 }, mk: ['beginner', 'top', 'base'] },
     { title: 'Intermediate run', plan: 'intermediate', ride: 'intermediate', g: 'g-int',
       body: '<p>' + RUN_TXT.intermediate + '</p>',
-      extra: function () { return statsHTML('intermediate') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="intermediate">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="intermediate">Follow it in 3D</button></div>' + clip('intermediate', RUN_IMG.intermediate[1]); },
+      extra: function () { return statsHTML('intermediate') + '<div class="t-actions"><button type="button" class="t-btn go" data-walk="ride-intermediate">&#9654; Ride it</button><button type="button" class="t-btn" data-walk="fly-park">Drone view</button><button type="button" class="t-btn" data-film="intermediate">Concept film</button></div>' + clip('intermediate', RUN_IMG.intermediate[1]); },
       cam: { fit: 'intermediate', pitch: 50, bearing: 345 }, mk: ['intermediate', 'top', 'base'] },
     { title: 'Expert run', plan: 'expert', ride: 'expert', g: 'g-exp',
       body: '<p>' + RUN_TXT.expert + '</p>',
-      extra: function () { return statsHTML('expert') + '<div class="t-actions"><button type="button" class="t-btn go" data-film="expert">&#9654; Watch the ride</button><button type="button" class="t-btn" data-ride="expert">Follow it in 3D</button></div>' + clip('expert', RUN_IMG.expert[1]); },
+      extra: function () { return statsHTML('expert') + '<div class="t-actions"><button type="button" class="t-btn go" data-walk="ride-expert">&#9654; Ride it</button><button type="button" class="t-btn" data-walk="fly-park">Drone view</button><button type="button" class="t-btn" data-film="expert">Concept film</button></div>' + clip('expert', RUN_IMG.expert[1]); },
       cam: { fit: 'expert', pitch: 50, bearing: 330 }, mk: ['expert', 'top', 'base'] },
     { title: 'Kids’ jump park', plan: 'kids', g: 'g-kids',
       body: '<p>Below the three runs, next to the base, a kids’ area: a small pump track with rollers and berms, and a short line of little dirt jumps, so younger riders have their own space while the family rides.</p>',
-      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn" data-walk="kids">&#9673; Stand by the pump track</button></div>' + clip('kids', 'Concept clip of young children riding a small dirt pump track and jumps'); },
-      cam: { fit: 'kids', pitch: 50, bearing: 200, maxZoom: 17.4 }, mk: ['kids', 'base'] },
+      extra: function () { return '<div class="t-actions"><button type="button" class="t-btn go" data-walk="fly-kids">&#9654; Drone view</button><button type="button" class="t-btn" data-walk="kids">&#9673; Stand by the pump track</button></div>' + clip('kids', 'Concept clip of young children riding a small dirt pump track and jumps'); },
+      cam: { fit: 'kids', pitch: 50, bearing: 200, maxZoom: 16.4 }, mk: ['kids', 'base'] },
     { title: 'Glamping', plan: 'glamp', ride: 'glamp', g: 'g-glamp',
       body: '<p>Off to the side of the bike park, on the open rise looking back at the range, sit 16 glamping sites: canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift base.</p>',
-      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-film="glamp">&#9654; Watch the walk-through</button><button type="button" class="t-btn" data-walk="camp">Walk it in 3D</button><button type="button" class="t-btn" data-walk="deck">&#9673; Stand on a deck</button><button type="button" class="t-btn" data-stand="glamping">Fly low over the camp</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
+      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-walk="camp">&#9654; Walk the camp</button><button type="button" class="t-btn" data-walk="fly-camp">Drone view</button><button type="button" class="t-btn" data-walk="deck">&#9673; Stand on a deck</button><button type="button" class="t-btn" data-film="glamp">Concept film</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
       cam: { fit: 'glamp', pitch: 52, bearing: 205 }, mk: ['glamp', 'base'] },
     { title: 'Today, and what it could be', plan: 'future', orbit: 40,
       body: '<p>An artist’s concept of the finished park, laid over the real terrain: revegetated ground, runs down the slope, a kids’ park at the bottom, the lift back to the top and the glamping camp beside it. Slide between today and the concept.</p>',
@@ -929,7 +929,7 @@
       var cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, E = cx * cb + cy * sb, N = -cx * sb + cy * cb;
       var X = mx + E, Y = my0 - N;
       o.center = [X * 360 - 180, Math.atan(Math.sinh(Math.PI * (1 - 2 * Y))) * 180 / Math.PI];
-      o.zoom = Math.min(z, c.maxZoom || 17.2);
+      o.zoom = Math.min(z, c.maxZoom || 16.4);
     } else {
       o.center = c.center; o.zoom = c.zoom - (window.innerWidth <= 760 ? 0.8 : 0);
     }
@@ -954,10 +954,10 @@
     map.addLayer({ id: 'lift-cable', type: 'line', source: 'lift', layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-opacity': ['interpolate', ['linear'], ['zoom'], 16.5, 0.9, 17.6, 0], 'line-width': ['interpolate', ['linear'], ['zoom'], 14, 1, 17, 2] } });
     map.addLayer({ id: 'lift-towers', type: 'circle', source: 'liftpts', layout: { visibility: 'none' }, paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 3, 17, 7], 'circle-color': '#FCC830', 'circle-stroke-color': '#0F1416', 'circle-stroke-width': 1.5, 'circle-pitch-alignment': 'map' } });
     map.addSource('objs', { type: 'geojson', data: objsFC() });
-    map.addLayer({ id: 'objs', type: 'fill-extrusion', source: 'objs', layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': '#EFE6D2', 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': ['get', 'b'], 'fill-extrusion-opacity': 1, 'fill-extrusion-vertical-gradient': true } });
+    map.addLayer({ id: 'objs', type: 'fill-extrusion', source: 'objs', maxzoom: 16.3, layout: { visibility: 'none' }, paint: { 'fill-extrusion-color': '#EFE6D2', 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': ['get', 'b'], 'fill-extrusion-opacity': 1, 'fill-extrusion-vertical-gradient': true } });
     map.addSource('lights', { type: 'geojson', data: lightsFC() });
-    map.addLayer({ id: 'light-glow', type: 'circle', source: 'lights', layout: { visibility: 'none' }, paint: { 'circle-pitch-alignment': 'map', 'circle-blur': 1, 'circle-color': '#FFB65C', 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, ['*', ['get', 's'], 3], 16, ['*', ['get', 's'], 10], 18, ['*', ['get', 's'], 26], 21, ['*', ['get', 's'], 90]], 'circle-opacity': 0 } });
-    map.addLayer({ id: 'light-core', type: 'circle', source: 'lights', layout: { visibility: 'none' }, paint: { 'circle-pitch-alignment': 'map', 'circle-blur': 0.4, 'circle-color': '#FFE6B3', 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, ['*', ['get', 's'], 1], 16, ['*', ['get', 's'], 2.5], 18, ['*', ['get', 's'], 6], 21, ['*', ['get', 's'], 18]], 'circle-opacity': 0 } });
+    map.addLayer({ id: 'light-glow', type: 'circle', source: 'lights', maxzoom: 16.3, layout: { visibility: 'none' }, paint: { 'circle-pitch-alignment': 'map', 'circle-blur': 1, 'circle-color': '#FFB65C', 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, ['*', ['get', 's'], 3], 16, ['*', ['get', 's'], 10], 18, ['*', ['get', 's'], 26], 21, ['*', ['get', 's'], 90]], 'circle-opacity': 0 } });
+    map.addLayer({ id: 'light-core', type: 'circle', source: 'lights', maxzoom: 16.3, layout: { visibility: 'none' }, paint: { 'circle-pitch-alignment': 'map', 'circle-blur': 0.4, 'circle-color': '#FFE6B3', 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, ['*', ['get', 's'], 1], 16, ['*', ['get', 's'], 2.5], 18, ['*', ['get', 's'], 6], 21, ['*', ['get', 's'], 18]], 'circle-opacity': 0 } });
     // riders flowing down the runs and up the lift, so the park feels used
     map.addSource('riders', { type: 'geojson', data: fc([]) });
     map.addLayer({ id: 'rider-halo', type: 'circle', source: 'riders', paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 13, 4, 17, 11], 'circle-color': ['get', 'c'], 'circle-opacity': ['*', ['get', 'o'], 0.28], 'circle-blur': 0.6 } });
@@ -1244,7 +1244,7 @@
       if (playing) {
         timer = setTimeout(function () {
           if (!playing) return;
-          if (s.ride) { ride(s.ride); return; }
+          if (s.ride) { openGame(s.ride === 'base' ? 'carpark' : s.ride === 'glamp' ? 'camp' : 'ride-' + s.ride, true); return; }
           next();
         }, s.orbit ? 14500 : (s.ride ? 2500 : 5500));
       }
@@ -1634,7 +1634,7 @@
     $('film-path').style.strokeWidth = (w / 60).toFixed(1); $('film-dot').setAttribute('r', (w / 45).toFixed(1));
     filmPathLen = $('film-path').getTotalLength();
     var nx = FILM_ORDER[(FILM_ORDER.indexOf(k) + 1) % FILM_ORDER.length];
-    $('film-actions').innerHTML = '<button type="button" class="t-btn" data-frep="1">&#8634; Watch again</button><button type="button" class="t-btn go" data-film="' + nx + '">Next: ' + (nx === 'lift' ? 'the lift' : GRADE[nx][1].toLowerCase() + ' run') + ' &rarr;</button><button type="button" class="t-btn" ' + (WALK[k] ? 'data-walk="' + (k === 'base' ? 'carpark' : 'camp') + '"' : 'data-ffly="' + k + '"') + '>' + (WALK[k] ? 'Walk it in 3D' : 'Follow it in 3D') + '</button>';
+    $('film-actions').innerHTML = '<button type="button" class="t-btn" data-frep="1">&#8634; Watch again</button><button type="button" class="t-btn go" data-film="' + nx + '">Next: ' + (nx === 'lift' ? 'the lift' : GRADE[nx][1].toLowerCase() + ' run') + ' &rarr;</button><button type="button" class="t-btn" data-walk="' + (WALK[k] ? (k === 'base' ? 'carpark' : 'camp') : 'ride-' + k) + '">' + (WALK[k] ? 'Walk it in 3D' : 'Ride it in 3D') + '</button>';
     film.classList.remove('ended'); film.hidden = false; requestAnimationFrame(function () { film.classList.add('on'); });
     fv.poster = 'assets/' + FILM[k] + '.webp'; fv.src = 'assets/' + FILM[k] + '.mp4';
     fv.muted = filmMuted; setMuteLabel();
@@ -1675,15 +1675,16 @@
   });
 
   /* ---------- walk the park: the built 3D scene ---------- */
-  function openGame(k) {
-    stopPlay(); if (riding) stopRide(); if (map) map.stop(); seq++; clearTimeout(timer); clearTimeout(timer2);
+  function openGame(k, keepPlaying) {
+    if (!keepPlaying) stopPlay(); else { clearTimeout(timer); clearTimeout(timer2); }
+    if (riding) stopRide(); if (map) map.stop(); seq++;
     mpCardEl.querySelectorAll('video').forEach(function (v) { v.pause(); });
     var G = window.LGGame; if (!G) { setTimeout(function () { openGame(k); }, 300); return; }
     G.onSun = function (t) { if (!sunSyncing) { sunSyncing = true; setSun(t); if (mode === 'park') { if (t > 0.4 && mpView !== 'dusk') setView('dusk'); else if (t <= 0.4 && mpView === 'dusk') setView('concept'); } sunSyncing = false; } };
-    G.onClose = function () { if (soundOn) { var pa = amb.play(); if (pa && pa.catch) pa.catch(function () {}); fadeAmb(ambLevel()); } if (mode === 'park') { mpCardEl.querySelectorAll('video').forEach(function (v) { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); }); mpGo(mpSel, 0); } else if (map && ready) go(i); };
+    G.onClose = function () { if (soundOn) { var pa = amb.play(); if (pa && pa.catch) pa.catch(function () {}); fadeAmb(ambLevel()); } if (keepPlaying && playing) { next(); return; } if (mode === 'park') { mpCardEl.querySelectorAll('video').forEach(function (v) { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); }); mpGo(mpSel, 0); } else if (map && ready) go(i); };
     G.onSound = function (on) { soundOn = on; $('mp-snd').setAttribute('aria-pressed', on ? 'true' : 'false'); $('fly-snd').setAttribute('aria-pressed', on ? 'true' : 'false'); };
     G.sound = soundOn; if (soundOn) fadeAmb(0, function () { amb.pause(); });
-    G.open(k, sunT);
+    G.open(k, sunT, !!keepPlaying);
     try { history.replaceState(null, '', '#walk-' + k); } catch (e) {}
   }
 
