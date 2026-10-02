@@ -51,6 +51,13 @@
 .tour-show{position:absolute;left:24px;bottom:24px;z-index:5;font:600 .9rem/1 "Public Sans",system-ui,sans-serif;border-radius:999px;padding:13px 18px;border:0;background:var(--yellow);color:var(--ink);cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 .tour-hint{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:4;background:rgba(15,20,22,.75);color:#fff;font-size:.82rem;padding:8px 14px;border-radius:999px;white-space:nowrap;pointer-events:none;transition:opacity .6s}
 .tour-hint.gone{opacity:0}
+.tour-hint{top:auto;bottom:24px;left:calc(50% + 200px)}
+.tour[data-mode="park"] .tour-hint,.tour[data-mode="park"] .tour-resume{display:none}
+.tour-resume{position:absolute;left:50%;top:70px;transform:translateX(-50%);z-index:6;font:600 .88rem/1 "Public Sans",system-ui,sans-serif;border:0;border-radius:999px;padding:12px 18px;background:var(--yellow);color:var(--ink);cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.tour-resume:hover{background:#fff}
+.tour-resume[hidden]{display:none}
+.tour #tour-map canvas{cursor:grab}
+.tour #tour-map canvas:active{cursor:grabbing}
 .tour-marker{display:flex;align-items:center;gap:7px;background:rgba(15,20,22,.82);color:#fff;font:600 .74rem/1.1 "Public Sans",system-ui,sans-serif;padding:6px 10px 6px 7px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);cursor:pointer}
 .tour-marker i{width:10px;height:10px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 3px rgba(252,200,48,.3);flex:none}
 .tour-marker small{display:block;font-weight:500;color:rgba(255,255,255,.65);font-size:.7rem}
@@ -132,7 +139,14 @@
 .mp-tf button{font:600 .82rem/1 "Public Sans",system-ui,sans-serif;border:0;border-radius:999px;padding:10px 14px;background:transparent;color:rgba(255,255,255,.78);cursor:pointer}
 .mp-tf button[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}
 .mp-hint{position:absolute;right:24px;bottom:24px;z-index:2;margin:0;font-size:.82rem;color:rgba(255,255,255,.7);background:rgba(15,20,22,.6);padding:8px 14px;border-radius:999px;transition:opacity .4s}
-.mp.sel .mp-hint{opacity:0}
+.mp.moved .mp-hint{opacity:0;pointer-events:none}
+.mp-stage{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.mp-stage.grabbing{cursor:grabbing}
+.hint-touch{display:none}
+@media (pointer:coarse){.hint-desk{display:none}.hint-touch{display:inline}}
+.mp-ctl{position:absolute;right:24px;bottom:68px;z-index:2;display:flex;flex-direction:column;gap:2px;padding:4px;border-radius:14px;background:rgba(15,20,22,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mp-ctl button{width:38px;height:38px;border:0;border-radius:10px;background:transparent;color:#fff;font:600 1.15rem/1 "Public Sans",system-ui,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mp-ctl button:hover{background:rgba(255,255,255,.12)}
 .mp-card{position:absolute;left:24px;bottom:24px;z-index:3;width:min(400px,calc(100% - 48px));overflow:auto;background:rgba(15,20,22,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;border-radius:18px;padding:22px 22px 18px;box-shadow:0 18px 50px rgba(0,0,0,.35);max-height:calc(100% - 96px)}
 .mp-card h2{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:clamp(1.3rem,2vw,1.6rem);line-height:1.15;margin:0 0 8px;color:#fff;display:flex;align-items:center;gap:10px}
 .mp-card h2 .g{width:18px;height:18px}
@@ -154,7 +168,9 @@
   .mode-switch button{padding:10px 13px;font-size:.8rem}
   .mp-tf{top:62px;right:12px}
   .mp-tf button{padding:8px 12px;font-size:.76rem}
-  .mp-hint{display:none}
+  .mp-hint{right:auto;left:50%;transform:translateX(-50%);bottom:calc(54% + 22px);font-size:.74rem;white-space:nowrap}
+  .mp-ctl{right:12px;bottom:auto;top:108px}
+  .mp-ctl button{width:34px;height:34px}
   .mp-card{left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:54%;padding:14px 16px 12px;border-radius:14px}
   .mp-card h2{font-size:1.2rem}
   .mp-card p{font-size:.88rem;margin-bottom:8px}
@@ -268,7 +284,8 @@
   .stats b{font-size:1.05rem}
   .profile{height:48px}
   .tour-show{left:12px;bottom:12px}
-  .tour-hint{top:10px;font-size:.75rem}
+  .tour-hint{top:108px;bottom:auto;left:50%;font-size:.72rem}
+  .tour-resume{top:60px}
   .tour-about .wrap{grid-template-columns:1fr;gap:24px}
   .tour-panel figure.clip video{aspect-ratio:16/6}
   .tour-intro::after{background:linear-gradient(0deg,rgba(15,20,22,.95) 0%,rgba(15,20,22,.75) 45%,rgba(15,20,22,.1) 80%)}
@@ -303,6 +320,9 @@
     <button type="button" role="tab" data-mode-btn="fly" aria-selected="false">3D fly-through</button>
   </div>
 
+  <button type="button" class="tour-resume" id="tour-resume" hidden>&#8634; Back to the tour</button>
+  <p class="tour-hint gone" id="fly-hint"><span class="hint-desk">Drag to move · scroll to zoom · right-drag to turn and tilt</span><span class="hint-touch">Drag to move · pinch to zoom · two fingers to turn</span></p>
+
   <div class="mp" id="mp">
     <div class="mp-stage" id="mp-stage">
       <div class="mp-plane" id="mp-plane">
@@ -320,7 +340,13 @@
       <button type="button" data-mptf="dusk" aria-pressed="false">Dusk</button>
       <button type="button" class="mp-snd" id="mp-snd" aria-pressed="false" aria-label="Bush sounds"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 9h4l5-4v14l-5-4H4z"/><path class="on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="off" d="M16.5 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     </div>
-    <p class="mp-hint" id="mp-hint">Pick a marker to take a closer look</p>
+    <p class="mp-hint" id="mp-hint"><span class="hint-desk">Drag to move · scroll to zoom · right-drag to turn</span><span class="hint-touch">Drag to move · pinch to zoom · twist to turn</span></p>
+    <div class="mp-ctl" id="mp-ctl" role="group" aria-label="View controls">
+      <button type="button" data-mpc="in" aria-label="Zoom in">+</button>
+      <button type="button" data-mpc="out" aria-label="Zoom out">&minus;</button>
+      <button type="button" data-mpc="turn" aria-label="Turn the view"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button type="button" data-mpc="reset" aria-label="Reset the view"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
     <aside class="mp-card" id="mp-card" aria-live="polite"></aside>
   </div>
 
@@ -621,8 +647,8 @@
       map = new maplibregl.Map({
         container: 'tour-map',
         attributionControl: { compact: true },
-        interactive: false,
-        maxPitch: 70, maxZoom: 18,
+        // free to look around, but kept to the Langi Ghiran area and sensible zooms
+        maxBounds: [[142.86, -37.40], [143.24, -37.18]], minZoom: 10, maxZoom: 17.8, maxPitch: 65,
         center: [143.060, -37.31], zoom: 10.6, pitch: 45, bearing: 60,
         style: {
           version: 8,
@@ -648,7 +674,21 @@
     } catch (e) { return fail(); }
 
     map.on('error', function (e) { if (e && e.error && /webgl/i.test(String(e.error.message))) fail(); });
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
     map.addControl(new maplibregl.FullscreenControl({ container: tour }), 'top-right');
+    // any hand on the map pauses the tour; "Back to the tour" picks it up again
+    map.on('movestart', function (e) { if (e.originalEvent) enterFree(); });
+    map.on('moveend', function () { if (!camRaf && !orbitRaf && !rideRaf) setTimeout(syncElevation, 30); });
+    map.on('click', function (e) {
+      if (!ready) return;
+      var f = map.queryRenderedFeatures([[e.point.x - 10, e.point.y - 10], [e.point.x + 10, e.point.y + 10]], { layers: ['run-line'] });
+      if (f.length && IDX[f[0].properties.run] != null) { stopAll(); go(IDX[f[0].properties.run]); }
+    });
+    map.on('mousemove', function (e) {
+      if (!ready) return;
+      var f = map.queryRenderedFeatures([[e.point.x - 10, e.point.y - 10], [e.point.x + 10, e.point.y + 10]], { layers: ['run-line'] });
+      map.getCanvas().style.cursor = f.length ? 'pointer' : '';
+    });
     map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
 
     MARKERS.forEach(function (m) {
@@ -792,6 +832,7 @@
   var RIDE_Z = 16.8, RIDE_PITCH = 55;
   function ride(k) {
     if (!ready) { pendingRide = k; return; }
+    leaveFree();
     stopRide(true);
     riding = k;
     var path = PATH[k], col = k === 'lift' ? '#FFFFFF' : COL[k];
@@ -867,6 +908,7 @@
 
   /* ---------- navigation ---------- */
   function go(n) {
+    leaveFree();
     stopRide(true);
     i = (n + STOPS.length) % STOPS.length;
     render();
@@ -906,13 +948,34 @@
   }
   // the camera's height is taken from the terrain under it; if the terrain wasn't loaded when a move began,
   // the camera can end up inside the hill. A no-op jumpTo makes MapLibre re-read the ground height.
-  function syncElevation() { if (!map || camRaf || rideRaf || orbitRaf) return; map._elevationFreeze = false; map.jumpTo({ center: map.getCenter() }); }
+  var syncing = false;
+  function syncElevation() {
+    if (!map || syncing || camRaf || rideRaf || orbitRaf || map.isMoving()) return;
+    syncing = true; map._elevationFreeze = false; map.jumpTo({ center: map.getCenter() }); syncing = false;
+  }
+  var freeLook = false;
+  function enterFree() {
+    flyHint(false);
+    if (freeLook) return;
+    freeLook = true; stopPlay(); if (riding) { stopRide(); render(); }
+    seq++; clearTimeout(timer); clearTimeout(timer2);
+    cancelAnimationFrame(camRaf); camRaf = null; cancelAnimationFrame(orbitRaf); orbitRaf = null;
+    $('tour-resume').hidden = false; tour.classList.add('free');
+  }
+  function leaveFree() { if (!freeLook) return; freeLook = false; $('tour-resume').hidden = true; tour.classList.remove('free'); }
+  var flyHintT = null, flyHintShown = false;
+  function flyHint(on) {
+    var h = $('fly-hint'); clearTimeout(flyHintT);
+    if (on && !flyHintShown) { flyHintShown = true; h.classList.remove('gone'); flyHintT = setTimeout(function () { h.classList.add('gone'); }, 7000); }
+    else if (!on) h.classList.add('gone');
+  }
   function next() { if (i === STOPS.length - 1) { stopPlay(); return; } go(i + 1); }
 
   function startPlay() { playing = true; $('tour-play').textContent = 'Pause'; go(i === STOPS.length - 1 ? 0 : i); }
   function stopPlay() { playing = false; clearTimeout(timer); $('tour-play').textContent = 'Play tour'; }
   function stopAll() { stopPlay(); if (riding) stopRide(); }
 
+  $('tour-resume').addEventListener('click', function () { go(i); });
   $('tour-play').addEventListener('click', function () { if (playing) { stopPlay(); stopRide(); map.stop(); } else startPlay(); });
   $('tour-prev').addEventListener('click', function () { stopAll(); go(i - 1); });
   $('tour-next').addEventListener('click', function () { stopAll(); go(i + 1); });
@@ -937,7 +1000,7 @@
     return k === 'kids' ? 'Pump track and jump line' : '16 sites';
   }
   var mpEl = $('mp'), mpStage = $('mp-stage'), mpPlane = $('mp-plane'), mpCardEl = $('mp-card'), MPS = 2048;
-  var cam = { fx: 0.535, fy: 0.45, s: 0.6, t: 50 }, mpRaf = null, mpSel = -1, tilt = { x: 0, y: 0 }, tiltT = { x: 0, y: 0 }, tiltRaf = null, mode = 'park', pendingRide = null;
+  var cam = { fx: 0.535, fy: 0.45, s: 0.6, t: 50, r: 0 }, mpRaf = null, mpSel = -1, tilt = { x: 0, y: 0 }, tiltT = { x: 0, y: 0 }, tiltRaf = null, mode = 'park', pendingRide = null;
   $('mp-pins').innerHTML = MP.map(function (f) { return '<i class="mp-anchor" style="left:' + (f.at[0] * 100) + '%;top:' + (f.at[1] * 100) + '%"></i>'; }).join('');
   $('mp-pinlayer').innerHTML = MP.map(function (f, n) {
     return '<button type="button" class="mp-pin" data-mp="' + n + '" aria-label="' + f.name + '"><span class="mp-pill"><span class="g ' + f.g + '"></span><span class="mp-label">' + f.short + '</span></span><i class="mp-stem"></i></button>';
@@ -950,26 +1013,30 @@
   }
   function mpTarget(n) {
     var f = mpFocus(), fit = Math.min(f.w / (0.84 * MPS), f.h / (0.7 * MPS * Math.cos(32 * Math.PI / 180)));
-    if (n < 0) return { fx: 0.535, fy: 0.45, s: fit, t: 32 };
-    return { fx: MP[n].at[0], fy: MP[n].at[1] + 0.025, s: Math.min(fit * 2.1, 1.1), t: 46 };
+    // keep whatever rotation the visitor has chosen; only Reset straightens it
+    if (n < 0) return { fx: 0.535, fy: 0.45, s: fit, t: 32, r: cam.r };
+    return { fx: MP[n].at[0], fy: MP[n].at[1] + 0.025, s: Math.min(fit * 2.1, 1.1), t: 46, r: cam.r };
   }
   function mpApply() {
     var f = mpFocus(), t = cam.t + tilt.y;
     mpStage.style.perspectiveOrigin = f.x + 'px ' + f.y + 'px';
-    mpPlane.style.transform = 'translate3d(' + f.x + 'px,' + f.y + 'px,0) rotateX(' + t + 'deg) rotateZ(' + tilt.x + 'deg) scale(' + cam.s + ') translate3d(' + (-cam.fx * MPS) + 'px,' + (-cam.fy * MPS) + 'px,0)';
+    mpPlane.style.transform = 'translate3d(' + f.x + 'px,' + f.y + 'px,0) rotateX(' + t + 'deg) rotateZ(' + (cam.r + tilt.x) + 'deg) scale(' + cam.s + ') translate3d(' + (-cam.fx * MPS) + 'px,' + (-cam.fy * MPS) + 'px,0)';
     var o = mpEl.getBoundingClientRect();
     for (var n = 0; n < ANCH.length; n++) {
       var r = ANCH[n].getBoundingClientRect(), pin = PINS[n];
       pin.style.transform = 'translate(' + (r.left - o.left) + 'px,' + (r.top - o.top) + 'px) translate(-50%,-100%)';
     }
   }
-  function mpMove(n, dur) {
-    var to = mpTarget(n), from = { fx: cam.fx, fy: cam.fy, s: cam.s, t: cam.t }, t0 = performance.now(), d = reduce ? 0 : dur;
-    var hop = d && from.s > to.s * 0.7 && n >= 0 && Math.hypot(from.fx - to.fx, from.fy - to.fy) > 0.08;
+  function mpMove(n, dur, to) {
+    to = to || mpTarget(n);
+    var from = { fx: cam.fx, fy: cam.fy, s: cam.s, t: cam.t, r: cam.r }, t0 = performance.now(), d = reduce ? 0 : dur;
+    if (to.r == null) to.r = cam.r;
+    to.r = from.r + ((((to.r - from.r) % 360) + 540) % 360 - 180);
+    var hop = d && n != null && from.s > to.s * 0.7 && n >= 0 && Math.hypot(from.fx - to.fx, from.fy - to.fy) > 0.08;
     cancelAnimationFrame(mpRaf);
     (function step(now) {
       var u = d ? Math.max(0, Math.min(1, (now - t0) / d)) : 1, e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
-      ['fx', 'fy', 's', 't'].forEach(function (k) { cam[k] = from[k] + (to[k] - from[k]) * e; });
+      ['fx', 'fy', 's', 't', 'r'].forEach(function (k) { cam[k] = from[k] + (to[k] - from[k]) * e; });
       if (hop) cam.s *= 1 - 0.42 * Math.sin(Math.PI * u);   // pull back a little between two close-ups
       mpApply();
       if (u < 1) mpRaf = requestAnimationFrame(step); else mpRaf = null;
@@ -1011,8 +1078,82 @@
     var t = e.target.closest('.mp-list [data-mp]');
     document.querySelectorAll('.mp-pin').forEach(function (p, k) { p.classList.toggle('hl', !!t && k === +t.dataset.mp); });
   });
+  /* ---------- explorer gestures: drag to move, scroll or pinch to zoom, right-drag or twist to turn ---------- */
+  function mpLimits() { var fit = mpTarget(-1).s; return { smin: fit * 0.8, smax: 1.25 }; }
+  function clampCam() {
+    var L = mpLimits();
+    cam.s = Math.max(L.smin, Math.min(L.smax, cam.s));
+    cam.t = Math.max(10, Math.min(64, cam.t));
+    cam.fx = Math.max(0.04, Math.min(0.96, cam.fx)); cam.fy = Math.max(0.04, Math.min(0.96, cam.fy));
+  }
+  // screen offset -> plane offset (plane px at scale 1), ignoring perspective
+  function unproject(x, y) {
+    var r = cam.r * Math.PI / 180, ct = Math.max(0.35, Math.cos(cam.t * Math.PI / 180));
+    return [Math.cos(r) * x + Math.sin(r) * y / ct, -Math.sin(r) * x + Math.cos(r) * y / ct];
+  }
+  function mpPan(dx, dy) { var d = unproject(dx, dy); cam.fx -= d[0] / cam.s / MPS; cam.fy -= d[1] / cam.s / MPS; }
+  function mpZoomAt(k, cx, cy) {
+    var f = mpFocus(), sr = mpStage.getBoundingClientRect(), o = unproject(cx - sr.left - f.x, cy - sr.top - f.y);
+    var s0 = cam.s, L = mpLimits(), s1 = Math.max(L.smin, Math.min(L.smax, s0 * k));
+    cam.fx += o[0] * (1 / s0 - 1 / s1) / MPS; cam.fy += o[1] * (1 / s0 - 1 / s1) / MPS; cam.s = s1;
+  }
+  function touched() { cancelAnimationFrame(mpRaf); mpRaf = null; if (!mpEl.classList.contains('moved')) mpEl.classList.add('moved'); }
+  var ptrs = {}, gest = null;
+  mpStage.addEventListener('pointerdown', function (e) {
+    if (e.button > 2) return;
+    ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
+    try { mpStage.setPointerCapture(e.pointerId); } catch (er) {}
+    var ids = Object.keys(ptrs);
+    gest = ids.length > 1 ? 'pinch' : (e.button === 2 || e.shiftKey || e.ctrlKey ? 'turn' : 'pan');
+    mpStage.classList.add('grabbing');
+  });
+  mpStage.addEventListener('pointermove', function (e) {
+    var p0 = ptrs[e.pointerId]; if (!p0) return;
+    var ids = Object.keys(ptrs);
+    if (ids.length > 1) {
+      var a = ptrs[ids[0]], b = ptrs[ids[1]];
+      var d0 = Math.hypot(a.x - b.x, a.y - b.y), ang0 = Math.atan2(b.y - a.y, b.x - a.x), m0 = [(a.x + b.x) / 2, (a.y + b.y) / 2];
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; a = ptrs[ids[0]]; b = ptrs[ids[1]];
+      var d1 = Math.hypot(a.x - b.x, a.y - b.y), ang1 = Math.atan2(b.y - a.y, b.x - a.x), m1 = [(a.x + b.x) / 2, (a.y + b.y) / 2];
+      touched();
+      mpPan(m1[0] - m0[0], m1[1] - m0[1]);
+      if (d0 > 10) mpZoomAt(d1 / d0, m1[0], m1[1]);
+      cam.r += (ang1 - ang0) * 180 / Math.PI;
+    } else {
+      var dx = e.clientX - p0.x, dy = e.clientY - p0.y;
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
+      if (!dx && !dy) return;
+      touched();
+      if (gest === 'turn') { cam.r += dx * 0.3; cam.t -= dy * 0.2; } else mpPan(dx, dy);
+    }
+    clampCam(); mpApply();
+  });
+  function ptrEnd(e) { delete ptrs[e.pointerId]; if (!Object.keys(ptrs).length) { gest = null; mpStage.classList.remove('grabbing'); } }
+  mpStage.addEventListener('pointerup', ptrEnd); mpStage.addEventListener('pointercancel', ptrEnd);
+  mpStage.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  mpStage.addEventListener('wheel', function (e) {
+    e.preventDefault(); touched();
+    var dy = e.deltaY * (e.deltaMode === 1 ? 30 : 1);
+    mpZoomAt(Math.exp(-dy * 0.0016), e.clientX, e.clientY); clampCam(); mpApply();
+  }, { passive: false });
+  mpStage.addEventListener('dblclick', function (e) {
+    touched(); var to = { fx: cam.fx, fy: cam.fy, s: cam.s, t: cam.t, r: cam.r };
+    var keep = { fx: cam.fx, fy: cam.fy, s: cam.s }; mpZoomAt(1.8, e.clientX, e.clientY); clampCam();
+    to.fx = cam.fx; to.fy = cam.fy; to.s = cam.s; cam.fx = keep.fx; cam.fy = keep.fy; cam.s = keep.s; mpMove(null, 450, to);
+  });
+  $('mp-ctl').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-mpc]'); if (!b) return; touched();
+    var c = b.dataset.mpc, to = { fx: cam.fx, fy: cam.fy, s: cam.s, t: cam.t, r: cam.r }, L = mpLimits();
+    if (c === 'in') to.s = Math.min(L.smax, cam.s * 1.5);
+    if (c === 'out') to.s = Math.max(L.smin, cam.s / 1.5);
+    if (c === 'turn') to.r = cam.r - 45;
+    if (c === 'reset') { cam.r = ((cam.r % 360) + 360) % 360; to = mpTarget(mpSel); to.r = 0; to.t = mpSel < 0 ? 32 : 46; }
+    mpMove(null, 600, to);
+  });
+
   // a gentle parallax so the model feels alive under the pointer
   if (!reduce && !coarse) mpStage.addEventListener('mousemove', function (e) {
+    if (gest) return;
     var r = mpStage.getBoundingClientRect();
     tiltT = { x: ((e.clientX - r.left) / r.width - 0.5) * 2.2, y: ((e.clientY - r.top) / r.height - 0.5) * -2.2 };
     if (!tiltRaf) (function loop() {
@@ -1124,6 +1265,7 @@
     mpCardEl.querySelectorAll('video').forEach(function (v) { if (m === 'fly') v.pause(); else { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); } });
     if (m === 'fly') {
       if (soundOn) fadeAmb(0, function () { amb.pause(); });
+      setTimeout(function () { if (mode === 'fly' && !freeLook) flyHint(true); }, 1500);
       if (!map) {
         initMap(); if (!map) return;
         render(); showMarkers([]);
