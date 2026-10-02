@@ -291,6 +291,11 @@
 .game-sunwrap{position:static;display:flex}
 .game-joy{display:none;width:96px;height:96px;border-radius:50%;background:rgba(15,20,22,.45);border:1px solid rgba(255,255,255,.3);position:relative;touch-action:none}
 .game-joy i{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:rgba(255,255,255,.85)}
+.game-fade{position:absolute;inset:0;z-index:4;background:#000;opacity:0;pointer-events:none;transition:opacity .22s ease}
+.game-fade.on{opacity:1}
+.game.photo .game-top,.game.photo .game-spawns,.game.photo .game-hint,.game.photo .game-bottom>*:not(.game-ui){opacity:0;pointer-events:none}
+.game-snd,.game-ui{position:static;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(15,20,22,.6);color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.game-snd[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}
 .game-load,.game-fail{position:absolute;inset:0;z-index:3;display:none;align-items:center;justify-content:center;text-align:center;background:#0F1416}
 .game.loading .game-load,.game.failed .game-fail{display:flex}
 .game-load b,.game-fail b{display:block;font-family:Fraunces,Georgia,serif;font-weight:500;font-size:1.4rem;margin-bottom:6px}
@@ -464,8 +469,11 @@
       <div class="game-joy" id="game-joy" aria-hidden="true"><i></i></div>
       <span class="game-where" id="game-where"></span>
       <button type="button" class="t-btn game-auto" id="game-auto" aria-pressed="true">&#9654; Auto-walk</button>
+      <button type="button" class="mp-snd game-snd" id="game-snd" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path class="on" fill="currentColor" d="M16 8.5a4 4 0 010 7v-7zM16 5a7.5 7.5 0 010 14v-2a5.5 5.5 0 000-10V5z"/><path class="off" fill="currentColor" d="M18.6 8L17.2 9.4 19 11.2l-1.8 1.8 1.4 1.4 1.8-1.8 1.8 1.8 1.4-1.4-1.8-1.8 1.8-1.8-1.4-1.4-1.8 1.8z"/></svg></button>
+      <button type="button" class="mp-snd game-ui" id="game-ui" aria-label="Hide the controls (H)" title="Hide the controls (H)"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M9 3l-1.5 2H4a2 2 0 00-2 2v11a2 2 0 002 2h16a2 2 0 002-2V7a2 2 0 00-2-2h-3.5L15 3H9zm3 5a4.5 4.5 0 110 9 4.5 4.5 0 010-9zm0 2a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg></button>
       <div class="sun game-sunwrap"><span class="sun-ic" aria-hidden="true">&#9728;</span><input type="range" id="game-sun" min="0" max="100" value="0" aria-label="Time of day"><span class="sun-ic" aria-hidden="true">&#9790;</span></div>
     </div>
+    <div class="game-fade" id="game-fade"></div>
     <div class="game-load"><div><b>Building the park&hellip;</b><span>Terrain, tents, lift and trees</span></div></div>
     <div class="game-fail"><div><b>3D walk can’t run here</b><span>It needs WebGL. Try another browser or device.</span></div></div>
   </div>
@@ -1672,7 +1680,9 @@
     mpCardEl.querySelectorAll('video').forEach(function (v) { v.pause(); });
     var G = window.LGGame; if (!G) { setTimeout(function () { openGame(k); }, 300); return; }
     G.onSun = function (t) { if (!sunSyncing) { sunSyncing = true; setSun(t); if (mode === 'park') { if (t > 0.4 && mpView !== 'dusk') setView('dusk'); else if (t <= 0.4 && mpView === 'dusk') setView('concept'); } sunSyncing = false; } };
-    G.onClose = function () { if (mode === 'park') { mpCardEl.querySelectorAll('video').forEach(function (v) { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); }); mpGo(mpSel, 0); } else if (map && ready) go(i); };
+    G.onClose = function () { if (soundOn) { var pa = amb.play(); if (pa && pa.catch) pa.catch(function () {}); fadeAmb(ambLevel()); } if (mode === 'park') { mpCardEl.querySelectorAll('video').forEach(function (v) { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); }); mpGo(mpSel, 0); } else if (map && ready) go(i); };
+    G.onSound = function (on) { soundOn = on; $('mp-snd').setAttribute('aria-pressed', on ? 'true' : 'false'); $('fly-snd').setAttribute('aria-pressed', on ? 'true' : 'false'); };
+    G.sound = soundOn; if (soundOn) fadeAmb(0, function () { amb.pause(); });
     G.open(k, sunT);
     try { history.replaceState(null, '', '#walk-' + k); } catch (e) {}
   }
