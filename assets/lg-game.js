@@ -813,6 +813,59 @@ function audioTick(now, dt, moved, speedN) {
   if (P.stepAcc > stride) { P.stepAcc = 0; let surf = 'dirt'; if (surfaceAt(P.x, P.z) > groundAt(P.x, P.z) + 0.05) surf = 'deck'; else { const w = sampleRGB(S.splatImg, P.x, P.z); if (w && w[1] > 110) surf = 'gravel'; } footstep(surf, 0.5 + 0.5 * speedN); }
 }
 
+/* ---------- cinematic drone flights and first-person rides inside the built park ---------- */
+function flightFor(k) {
+  const sc = S.sc, V = (x, h, z) => ({ x, z, h }); const B = sc.B, T = sc.T, kc = sc.kids, cp = sc.carpark;
+  const tx = sc.tents.map(t => t[0]), tz = sc.tents.map(t => t[1]); const cc = [(Math.min(...tx) + Math.max(...tx)) / 2, (Math.min(...tz) + Math.max(...tz)) / 2];
+  const mid = [(B[0] + T[0]) / 2, (B[1] + T[1]) / 2];
+  const runsAll = [].concat(...Object.values(S.runPts)); const rc = [runsAll.reduce((a, p) => a + p[0], 0) / runsAll.length, runsAll.reduce((a, p) => a + p[1], 0) / runsAll.length];
+  if (k === 'park') return { pts: [V(B[0] - 160, 95, B[1] + 150), V(mid[0] - 150, 85, mid[1] + 40), V(T[0] - 110, 70, T[1] - 70), V(T[0] + 40, 55, T[1] - 90)], at: [rc], dur: 26, title: 'The bike park from the air', end: 'top' };
+  if (k === 'lift') { const d = [T[0] - B[0], T[1] - B[1]], l = Math.hypot(d[0], d[1]), n = [-d[1] / l, d[0] / l]; return { pts: [V(B[0] + n[0] * 26 - d[0] / l * 30, 16, B[1] + n[1] * 26 - d[1] / l * 30), V(mid[0] + n[0] * 24, 18, mid[1] + n[1] * 24), V(T[0] + n[0] * 22 + d[0] / l * 20, 20, T[1] + n[1] * 22 + d[1] / l * 20)], at: [B, mid, T], dur: 22, title: 'Along the lift', end: 'top' }; }
+  if (k === 'camp') { const pts = []; for (let a = 0; a <= 1.001; a += 0.125) { const ang = Math.PI * 0.2 + a * Math.PI * 1.3; pts.push(V(cc[0] + Math.cos(ang) * 95, 30 - a * 8, cc[1] + Math.sin(ang) * 95)); } return { pts, at: [cc], dur: 24, title: 'Over the glamping camp', end: 'deck' }; }
+  if (k === 'kids') { const pts = []; for (let a = 0; a <= 1.001; a += 0.2) { const ang = Math.PI * 1.1 + a * Math.PI * 1.1; pts.push(V(kc[0] + Math.cos(ang) * 60, 16 - a * 5, kc[1] + Math.sin(ang) * 60)); } return { pts, at: [kc], dur: 16, title: 'Over the kids’ park', end: 'kids' }; }
+  if (k === 'base') return { pts: [V(cp[0] - 60, 30, cp[1] + 70), V(cp[0], 24, cp[1] + 20), V((cp[0] + B[0]) / 2, 18, (cp[1] + B[1]) / 2 + 10), V(B[0] - 20, 12, B[1] + 30)], at: [cp, B], dur: 20, title: 'Arriving from the car park', end: 'base' };
+  return null;
+}
+function startFlight(k) {
+  const f = flightFor(k); if (!f) return false; const P = S.player;
+  const curve = new THREE.CatmullRomCurve3(f.pts.map(p => new THREE.Vector3(p.x, groundAt(p.x, p.z) + p.h, p.z)), false, 'centripetal', 0.5);
+  P.flight = { curve, at: f.at, t0: performance.now(), dur: f.dur * 1000 * (parseFloat(PARAMS.get('tscale')) || 1), end: f.end, offYaw: 0, offPitch: 0 }; P.path = null; P.auto = false;
+  document.getElementById('game-title').textContent = f.title; if (S.ui) { S.ui.auto.hidden = true; S.ui.hint.classList.add('gone'); }
+  return true;
+}
+function flightTick(now) {
+  const P = S.player, F = P.flight; if (!F) return false;
+  const u = Math.min(1, (now - F.t0) / F.dur), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; // ease in-out
+  const pos = F.curve.getPointAt(e); const fa = F.at; const ai = Math.min(fa.length - 1, Math.floor(e * fa.length)), au = e * fa.length - ai; const a0 = fa[ai], a1 = fa[Math.min(fa.length - 1, ai + 1)];
+  const atx = a0[0] + (a1[0] - a0[0]) * au, atz = a0[1] + (a1[1] - a0[1]) * au, aty = groundAt(atx, atz) + 6;
+  const dx = atx - pos.x, dz = atz - pos.z, dy = aty - pos.y; const yaw = Math.atan2(dx, -dz) + F.offYaw, pitch = Math.atan2(dy, Math.hypot(dx, dz)) + F.offPitch;
+  P.x = pos.x; P.z = pos.z; P.y = pos.y; P.yaw = yaw; P.pitch = pitch; P.syaw = yaw; P.spitch = pitch; P.px0 = P.x; P.pz0 = P.z;
+  const cam = S.camera; cam.position.set(pos.x, pos.y, pos.z); cam.rotation.set(0, 0, 0, 'YXZ'); cam.rotation.y = -yaw; cam.rotation.x = pitch; cam.updateMatrixWorld();
+  if (S.ui.where) S.ui.where.textContent = 'Drone view · ' + Math.round(pos.y - groundAt(pos.x, pos.z)) + ' m up';
+  if (u >= 1) { P.flight = null; if (window.LGGame.autoClose) { setTimeout(() => { if (running) window.LGGame.close(); }, 900); } else spawn(F.end, false); }
+  return true;
+}
+function startRide(k) {
+  const P = S.player;
+  if (k === 'lift') { P.ride = { lift: true, t: 0.02, sp: 0.03, title: 'Riding the lift' }; }
+  else { const pts = S.runPts[k]; if (!pts) return false; P.ride = { pts, s: 2, sp: { beginner: 6.0, intermediate: 7.2, expert: 8.0 }[k] || 6.5, len: pts.length * 1.5, k, title: 'Riding the ' + k + ' run', drop0: groundAt(pts[0][0], pts[0][1]) }; }
+  P.path = null; P.auto = false; P.flight = null; document.getElementById('game-title').textContent = P.ride.title; if (S.ui) { S.ui.auto.hidden = true; S.ui.hint.classList.add('gone'); }
+  return true;
+}
+function rideTick(dt, now) {
+  const P = S.player, R = P.ride; if (!R) return false; let x, z, yaw, lean = 0, done = false, hud = '';
+  if (R.lift) { R.t += R.sp * dt; if (R.t >= 0.985) { R.t = 0.985; done = true; } const p = S.cable.getPointAt(R.t), ahead = S.cable.getPointAt(Math.min(1, R.t + 0.03)); x = p.x; z = p.z; yaw = Math.atan2(ahead.x - p.x, -(ahead.z - p.z)); hud = 'Riding the lift · ' + Math.round(R.t * 437) + ' m of 437 m'; }
+  else { R.s += R.sp * dt; if (R.s >= R.len - 3) { R.s = R.len - 3; done = true; } const q = pathPose(R.pts, R.s, false), q2 = pathPose(R.pts, R.s + 9, false); x = q.x; z = q.z; yaw = Math.atan2(q2.x - q.x, -(q2.z - q.z)); lean = -Math.max(-0.35, Math.min(0.35, q.curv * 2.4));
+    hud = R.title + ' · ' + Math.round(R.s) + ' m of ' + Math.round(R.len) + ' m · ' + Math.round(R.drop0 - groundAt(x, z)) + ' m down'; }
+  const gy = groundAt(x, z); P.x = x; P.z = z; P.px0 = x; P.pz0 = z; P.yaw = yaw; P.pitch = -0.08;
+  const kk = 1 - Math.exp(-dt * 6); P.syaw = P.syaw == null ? yaw : P.syaw + (((yaw - P.syaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI) * kk; P.spitch = (P.spitch || 0) + (P.pitch - (P.spitch || 0)) * kk;
+  P.y += ((gy + 1.35) - P.y) * Math.min(1, dt * 10); R.bob = (R.bob || 0) + dt * (R.lift ? 2 : 11);
+  const cam = S.camera; cam.position.set(x, P.y + Math.sin(R.bob) * (R.lift ? 0.01 : 0.02), z); cam.rotation.set(0, 0, 0, 'YXZ'); cam.rotation.y = -P.syaw; cam.rotation.x = P.spitch; cam.rotation.z = lean * 0.5 + Math.sin(R.bob * 0.5) * 0.004; cam.updateMatrixWorld();
+  if (S.ui.where) S.ui.where.textContent = hud;
+  if (done) { P.ride = null; P.y = gy + EYE; if (window.LGGame.autoClose) { setTimeout(() => { if (running) window.LGGame.close(); }, 1200); } else { document.getElementById('game-title').textContent = R.lift ? 'The top station' : 'The bottom of the ' + R.k + ' run'; } }
+  return true;
+}
+
 /* ---------- sky: three HDRI skies (noon, sunset, night) cross-faded by the sun slider ---------- */
 const SKY = { day: { sunAz: 216.2, sunEl: 49.8, gain: 1.0 }, dusk: { sunAz: 216.0, sunEl: 6.0, gain: 1.05 }, night: { sunAz: 215.6, sunEl: 17.0, gain: 1.0 } };
 function skyDome() {
@@ -912,6 +965,16 @@ function tick(now) {
   if (!running) return; requestAnimationFrame(tick);
   const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016); lastT = now;
   const P = S.player;
+  if (P.flight || P.ride) {
+    if (P.flight) flightTick(now); else rideTick(dt, now);
+    if (S.csm) S.csm.update(); if (S.sun) { S.sun.position.copy(S.sunDir).multiplyScalar(220).add(S.camera.position); S.sun.target.position.copy(S.camera.position); S.sun.target.updateMatrixWorld(); }
+    S.skyMesh.position.copy(S.camera.position); grassUpdate(false); vegUpdate(false);
+    if (S.grass) { const u = S.grass.mat.userData.shader; if (u) u.uniforms.time.value = now / 1000; } if (S.veg) { const u = S.veg.leafM.userData.shader; if (u) u.uniforms.time.value = now / 1000; }
+    liftTick(dt); lifeTick(dt, now); audioTick(now, dt, P.ride && !P.ride.lift ? 0 : 0, 0); fireTick(now);
+    S.renderer.info.reset(); if (S.composer) S.composer.render(dt); else S.renderer.render(S.scene, S.camera);
+    frames++; if (now - fpsT > 500) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; if (S.ui.fps) S.ui.fps.textContent = fps + ' fps · ' + S.quality + ' · ' + S.renderer.info.render.calls + ' calls · ' + Math.round(S.renderer.info.render.triangles / 1000) + 'k tris'; }
+    return;
+  }
   if (P.path && P.auto) {
     const pts = P.path; let seg = P.seg; const a = pts[seg], b = pts[seg + 1];
     if (b) { const d = Math.hypot(b[0] - a[0], b[1] - a[1]); P.u += 1.35 * dt / d;
@@ -948,19 +1011,25 @@ function tick(now) {
   S.skyMesh.position.copy(cam.position);
   grassUpdate(false); if (S.grass) { const u = S.grass.mat.userData.shader; if (u) u.uniforms.time.value = now / 1000; }
   vegUpdate(false); if (S.veg) { const u = S.veg.leafM.userData.shader; if (u) u.uniforms.time.value = now / 1000; }
+  liftTick(dt); fireTick(now);
+  S.renderer.info.reset(); if (S.composer) S.composer.render(dt); else S.renderer.render(S.scene, S.camera);
+  frames++; if (now - fpsT > 500) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; if (S.ui.fps) S.ui.fps.textContent = fps + ' fps · ' + S.quality + ' · ' + S.renderer.info.render.calls + ' calls · ' + Math.round(S.renderer.info.render.triangles / 1000) + 'k tris'; }
+  if (S.ui.where && !P.flight && !P.ride) { S.ui.where.textContent = (P.auto ? 'Walking' : 'Standing') + ' · ' + Math.round(gy) + ' m above sea level'; }
+}
+function liftTick(dt) {
   if (S.cable) { let dirty = false;
     for (const h of S.hangers) { h.t = (h.t + dt * 0.011) % 1; const p = S.cable.getPointAt(h.t); h.m.position.copy(p); const gy = groundAt(p.x, p.z); const len = Math.max(1.2, p.y - gy - 1.2);
       h.rod.scale.y = len; h.rod.position.y = -len / 2; h.bar.position.y = -len; h.grip.position.y = -len + 0.25;
       if (h.rider >= 0) { setRider(h.rider, p.x, gy, p.z, S.liftYaw, 0, 1); dirty = true; } }
     for (const h of S.returnHangers) { h.t = (h.t + dt * 0.011) % 1; const p = S.returnCable.getPointAt(1 - h.t); h.m.position.copy(p); }
     if (dirty) ridersDirty(); }
+}
+function fireTick(now) {
+  const P = S.player;
   if (S.glow > 0) { const fl = 0.85 + 0.15 * Math.sin(now / 90) * Math.sin(now / 230); S.fireMats.forEach((m, k) => { m.emissiveIntensity = S.glow * 2.2 * (fl + 0.1 * Math.sin(now / 140 + k)); });
     const near = S.fires.map(f => ({ f, d: Math.hypot(f.x - P.x, f.z - P.z) })).sort((a, b) => a.d - b.d).slice(0, S.fireLights.length);
     S.fireLights.forEach((L, k) => { const n = near[k]; if (n && n.d < 60) { L.visible = true; L.position.set(n.f.x, groundAt(n.f.x, n.f.z) + 0.6, n.f.z); L.intensity = 26 * S.glow * (fl + 0.15 * Math.sin(now / 110 + k)); } else L.visible = false; });
   } else S.fireLights.forEach(L => { L.visible = false; });
-  S.renderer.info.reset(); if (S.composer) S.composer.render(dt); else S.renderer.render(S.scene, S.camera);
-  frames++; if (now - fpsT > 500) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; if (S.ui.fps) S.ui.fps.textContent = fps + ' fps · ' + S.quality + ' · ' + S.renderer.info.render.calls + ' calls · ' + Math.round(S.renderer.info.render.triangles / 1000) + 'k tris'; }
-  if (S.ui.where) { S.ui.where.textContent = (P.auto ? 'Walking' : 'Standing') + ' · ' + Math.round(gy) + ' m above sea level'; }
 }
 
 /* ---------- build ---------- */
@@ -1057,13 +1126,15 @@ function bindUI() {
   const el = $('game-canvas'); let drag = null;
   el.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; el.setPointerCapture(e.pointerId); S.player.lastLook = performance.now(); S.ui.hint.classList.add('gone'); });
   el.addEventListener('pointermove', (e) => { if (!drag || e.pointerId !== drag.id) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
+    if (S.player.flight) { S.player.flight.offYaw += dx * 0.0042; S.player.flight.offPitch -= dy * 0.0036; return; }
+    if (S.player.ride) { S.player.ride = null; S.player.y = groundAt(S.player.x, S.player.z) + EYE; document.getElementById('game-title').textContent = 'Walking'; }
     S.player.yaw += dx * 0.0042; S.player.pitch -= dy * 0.0036; S.player.lastLook = performance.now(); });
   const up = () => { drag = null; }; el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
   const keys = {};
   const onKey = (e, down) => { if (!running) return; const k = e.key.toLowerCase(); if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift'].indexOf(k) < 0) return;
     keys[k] = down; e.preventDefault(); const P = S.player;
     P.fwd = (keys.w || keys.arrowup ? 1 : 0) - (keys.s || keys.arrowdown ? 1 : 0); P.side = (keys.d || keys.arrowright ? 1 : 0) - (keys.a || keys.arrowleft ? 1 : 0); P.run = !!keys.shift;
-    if (down && (P.fwd || P.side)) { P.auto = false; S.ui.auto.setAttribute('aria-pressed', 'false'); } };
+    if (down && (P.fwd || P.side)) { P.auto = false; S.ui.auto.setAttribute('aria-pressed', 'false'); if (P.flight || P.ride) { P.flight = null; P.ride = null; P.y = surfaceAt(P.x, P.z) + EYE; document.getElementById('game-title').textContent = 'Walking'; } } };
   window.addEventListener('keydown', (e) => onKey(e, true)); window.addEventListener('keyup', (e) => onKey(e, false));
   const joy = $('game-joy'), knob = joy.querySelector('i'); let jd = null;
   joy.addEventListener('pointerdown', (e) => { jd = { id: e.pointerId }; joy.setPointerCapture(e.pointerId); S.player.auto = false; S.ui.auto.setAttribute('aria-pressed', 'false'); e.preventDefault(); });
@@ -1078,6 +1149,9 @@ function bindUI() {
 }
 function spawn(k, instant) {
   if (!instant && S.ui && S.ui.fade && !S.ui.fade.classList.contains('on')) { S.ui.fade.classList.add('on'); setTimeout(() => { spawn(k, true); setTimeout(() => S.ui.fade.classList.remove('on'), 60); }, 240); return; }
+  const P0 = S.player; P0.flight = null; P0.ride = null;
+  if (k && k.indexOf('fly-') === 0) { if (startFlight(k.slice(4))) { document.querySelectorAll('[data-spawn]').forEach(b => b.setAttribute('aria-pressed', 'false')); return; } k = 'deck'; }
+  if (k && k.indexOf('ride-') === 0) { const rk = k.slice(5); const sp0 = rk === 'lift' ? SPAWN.base(S.sc) : null; if (startRide(rk)) { document.querySelectorAll('[data-spawn]').forEach(b => b.setAttribute('aria-pressed', 'false')); const P = S.player; if (rk !== 'lift') { const q = pathPose(S.runPts[rk], 2, false); P.x = q.x; P.z = q.z; } else { const p = S.cable.getPointAt(0.02); P.x = p.x; P.z = p.z; } P.y = groundAt(P.x, P.z) + 1.35; P.syaw = null; return; } k = 'base'; }
   let sp; if (k && k.indexOf('at:') === 0) { const v = k.slice(3).split(',').map(Number); sp = { x: v[0], z: v[1], yaw: (v[2] || 0) * Math.PI / 180, path: null, pitch: (v[3] || 0) * Math.PI / 180 }; }
   else sp = (SPAWN[k] || SPAWN.deck)(S.sc);
   const P = S.player;
@@ -1092,7 +1166,8 @@ function spawn(k, instant) {
 }
 
 window.LGGame = {
-  async open(k, sunT) {
+  async open(k, sunT, autoClose) {
+    window.LGGame.autoClose = !!autoClose;
     const root = document.getElementById('game'); root.hidden = false; root.classList.add('loading');
     try { await boot(); } catch (e) { root.classList.remove('loading'); root.classList.add('failed'); console.error(e); return; }
     bindUI(); root.classList.remove('loading'); requestAnimationFrame(() => root.classList.add('on'));
