@@ -145,19 +145,35 @@ function splatMaterial(colourTex, fixedW) {
       .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvTPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
       varying vec3 vTPos; uniform sampler2D splatMap, d0, d1, d2, d3, n0, n1, n2, n3; uniform float detRep, detNear, detFar, useFixed; uniform vec4 fixedW;
-      vec4 lgW; vec2 lgUv; float lgF;`)
+      vec4 lgW; vec2 lgUv, lgGx, lgGy; float lgF;
+      #define LGT(t, k) textureGrad(t, lgUv * (k), lgGx * (k), lgGy * (k))`)
       .replace('#include <map_fragment>', `
         vec4 macro = texture2D(map, vMapUv);
         vec3 w3 = texture2D(splatMap, vMapUv).rgb; lgW = vec4(w3, max(0.0, 1.0 - w3.r - w3.g - w3.b)); lgW = mix(lgW, fixedW, useFixed); lgW /= max(1e-3, lgW.r + lgW.g + lgW.b + lgW.a);
-        lgUv = vec2(vTPos.x, -vTPos.z) * detRep;
+        lgUv = vec2(vTPos.x, -vTPos.z) * detRep; lgGx = dFdx(lgUv); lgGy = dFdy(lgUv);
         float lgDist = length(vTPos - cameraPosition); lgF = 1.0 - smoothstep(detNear, detFar, lgDist);
-        vec3 det = texture2D(d0, lgUv).rgb * lgW.r + texture2D(d1, lgUv * 1.31).rgb * lgW.g + texture2D(d2, lgUv * 0.79).rgb * lgW.b + texture2D(d3, lgUv * 1.13).rgb * lgW.a;
-        vec3 det2 = texture2D(d0, lgUv * 0.173).rgb * lgW.r + texture2D(d2, lgUv * 0.151).rgb * (lgW.b + lgW.a) + texture2D(d1, lgUv * 0.21).rgb * lgW.g;
-        vec3 dmix = det * (0.55 + 0.9 * det2);
+        // detail layers are only sampled where they show: near the camera and where their weight is real (explicit gradients keep mipmaps right inside the branches)
+        vec3 dmix = vec3(0.5);
+        if (lgF > 0.0) {
+          vec3 det = vec3(0.0); float ws = 0.0;
+          if (lgW.r > 0.03) { det += LGT(d0, 1.0).rgb * lgW.r; ws += lgW.r; }
+          if (lgW.g > 0.03) { det += LGT(d1, 1.31).rgb * lgW.g; ws += lgW.g; }
+          if (lgW.b > 0.03) { det += LGT(d2, 0.79).rgb * lgW.b; ws += lgW.b; }
+          if (lgW.a > 0.03) { det += LGT(d3, 1.13).rgb * lgW.a; ws += lgW.a; }
+          det /= max(ws, 1e-3);
+          vec3 det2 = (lgW.r + lgW.g) > 0.05 ? LGT(d0, 0.173).rgb : vec3(0.0); vec3 det3 = (lgW.b + lgW.a) > 0.05 ? LGT(d2, 0.151).rgb : vec3(0.0);
+          det2 = det2 * (lgW.r + lgW.g) + det3 * (lgW.b + lgW.a);
+          dmix = det * (0.55 + 0.9 * det2);
+        }
         diffuseColor.rgb *= macro.rgb * mix(vec3(1.0), dmix * 2.0, lgF);`)
       .replace('#include <normal_fragment_maps>', `
-        vec3 mapN = (texture2D(n0, lgUv).xyz * lgW.r + texture2D(n1, lgUv * 1.31).xyz * lgW.g + texture2D(n2, lgUv * 0.79).xyz * lgW.b + texture2D(n3, lgUv * 1.13).xyz * lgW.a) * 2.0 - 1.0;
-        mapN.xy *= normalScale * lgF;
+        vec3 mapN = vec3(0.0, 0.0, 1.0);
+        if (lgF > 0.0) { vec3 nn = vec3(0.0); float ws = 0.0;
+          if (lgW.r > 0.08) { nn += LGT(n0, 1.0).xyz * lgW.r; ws += lgW.r; }
+          if (lgW.g > 0.08) { nn += LGT(n1, 1.31).xyz * lgW.g; ws += lgW.g; }
+          if (lgW.b > 0.08) { nn += LGT(n2, 0.79).xyz * lgW.b; ws += lgW.b; }
+          if (lgW.a > 0.08) { nn += LGT(n3, 1.13).xyz * lgW.a; ws += lgW.a; }
+          mapN = ws > 0.0 ? nn / ws * 2.0 - 1.0 : vec3(0.0, 0.0, 1.0); mapN.xy *= normalScale * lgF; }
         normal = normalize( tbn * mapN );`);
   }, fixedW ? 'terrain-splat-fixed' : 'terrain-splat');
 }
@@ -1001,7 +1017,7 @@ function setSun(t) {
   S.moon.intensity = 0.7 * night; S.moonDir = sunVec(SKY.night.sunEl, SUNK[2].az); S.moon.position.copy(S.moonDir).multiplyScalar(400);
   S.hemi.intensity = L(a.hemi, b.hemi); S.hemi.color = mixC('#cfe0f0', '#6f86b8', night); S.hemi.groundColor = mixC('#a08a68', '#3a332c', night);
   S.scene.fog.color = mixC(a.fog, b.fog, u); S.scene.fog.near = L(a.fogN, b.fogN); S.scene.fog.far = L(a.fogF, b.fogF); S.renderer.setClearColor(S.scene.fog.color);
-  S.renderer.toneMappingExposure = L(a.exp, b.exp);
+  S.renderer.toneMappingExposure = L(a.exp, b.exp); if (S.grade) S.grade.uniforms.toneMappingExposure.value = S.renderer.toneMappingExposure;
   const glow = Math.max(0, Math.min(1, (t - 0.3) / 0.5));
   S.tentMats.forEach(m => { m.emissiveIntensity = glow * 0.9; }); S.lampMats.forEach(m => { m.emissiveIntensity = glow * 2.2; }); S.fireMats.forEach(m => { m.emissiveIntensity = glow * 2.6; });
   S.glow = glow; S.shForce = true;
@@ -1012,13 +1028,16 @@ function setSun(t) {
 
 /* ---------- post-processing ---------- */
 const GradeShader = {
-  uniforms: { tDiffuse: { value: null }, contrast: { value: 1.06 }, saturation: { value: 1.06 }, vignette: { value: 0.22 }, warmth: { value: 0 } },
+  uniforms: { tDiffuse: { value: null }, contrast: { value: 1.06 }, saturation: { value: 1.06 }, vignette: { value: 0.22 }, warmth: { value: 0 }, toneMappingExposure: { value: 1 } },
   vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-  fragmentShader: `uniform sampler2D tDiffuse; uniform float contrast, saturation, vignette, warmth; varying vec2 vUv;
-    void main(){ vec4 c = texture2D(tDiffuse, vUv); vec3 col = c.rgb;
+  // tone mapping, sRGB output and the grade in one full-screen pass (replaces the separate output pass), with a 1-bit dither against sky banding
+  fragmentShader: `#include <tonemapping_pars_fragment>
+    uniform sampler2D tDiffuse; uniform float contrast, saturation, vignette, warmth; varying vec2 vUv;
+    void main(){ vec4 c = texture2D(tDiffuse, vUv); vec3 col = sRGBTransferOETF(vec4(ACESFilmicToneMapping(c.rgb), 1.0)).rgb;
       col = (col - 0.5) * contrast + 0.5; float l = dot(col, vec3(0.299, 0.587, 0.114)); col = mix(vec3(l), col, saturation);
       col += vec3(warmth, warmth * 0.35, -warmth);
       float d = distance(vUv, vec2(0.5)); col *= 1.0 - vignette * smoothstep(0.42, 0.95, d);
+      col += (fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) - 0.5) / 255.0;
       gl_FragColor = vec4(clamp(col, 0.0, 1.0), c.a); }`
 };
 function setupPost(w, h) {
@@ -1028,9 +1047,8 @@ function setupPost(w, h) {
   S.composer = new EffectComposer(S.renderer, rt); S.composer.setPixelRatio(pr); S.composer.setSize(w, h);
   S.composer.addPass(new RenderPass(S.scene, S.camera));
   if (Q.bloom) { S.bloom = new UnrealBloomPass(new THREE.Vector2(w, h), 0.12, 0.5, 1.0); S.composer.addPass(S.bloom); }
-  S.composer.addPass(new OutputPass());
+  if (Q.grade) { S.grade = new ShaderPass(GradeShader); S.grade.material.toneMapped = false; S.composer.addPass(S.grade); } else S.composer.addPass(new OutputPass());
   if (Q.smaa) { S.smaa = new SMAAPass(Math.round(w * pr), Math.round(h * pr)); S.composer.addPass(S.smaa); }
-  if (Q.grade) { S.grade = new ShaderPass(GradeShader); S.composer.addPass(S.grade); }
 }
 
 /* ---------- player ---------- */
