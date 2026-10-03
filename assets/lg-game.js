@@ -1242,7 +1242,15 @@ async function boot() {
 }
 async function warm() {
   if (S.warmed) return; S.warmed = true;
+  { const P = S.player, cam = S.camera; if (P.flight) flightTick(performance.now()); else if (P.ride) rideTick(0, performance.now()); else { cam.position.set(P.x, P.y, P.z); cam.rotation.set(P.spitch || 0, -(P.syaw || 0), 0, 'YXZ'); cam.updateMatrixWorld(); } }
   try { if (S.renderer.compileAsync) await S.renderer.compileAsync(S.scene, S.camera); else S.renderer.compile(S.scene, S.camera); } catch (e) {}
+  // upload every texture now (three otherwise uploads each one the first time it comes into view, which stalls that frame)
+  const texs = new Set(); const addT = (v) => { if (v && v.isTexture && !v.isRenderTargetTexture) texs.add(v); };
+  S.scene.traverse(o => { const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : []; ms.forEach(m => { for (const k in m) addT(m[k]); const sh = m.userData && m.userData.shader; if (sh) for (const u of Object.values(sh.uniforms)) addT(u && u.value); }); });
+  [S.g, S.m].forEach(set => Object.values(set).forEach(p => { addT(p.d); addT(p.n); })); Object.values(S.sky).forEach(addT); addT(S.splat);
+  texs.forEach(t => { try { S.renderer.initTexture(t); } catch (e) {} });
+  // draw the scene once in each direction so every mesh's buffers are on the GPU before the first visible frame
+  const cam = S.camera, ry = cam.rotation.y; for (let k = 1; k <= 3; k++) { cam.rotation.y = ry + k * Math.PI / 2; cam.updateMatrixWorld(); S.renderer.render(S.scene, cam); } cam.rotation.y = ry; cam.updateMatrixWorld();
   const b = S.bloom; if (b) b.enabled = true; S.shForce = true; shadowTick(true); renderNow(0.016); if (b) setSun(S.sunT);
   await new Promise(r => setTimeout(r, 0));
 }
