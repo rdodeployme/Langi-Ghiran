@@ -11,6 +11,7 @@ import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { CSM } from 'three/addons/csm/CSM.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 const A = 'assets/';
@@ -91,6 +92,7 @@ function tally(p) { loadTotal++; return p.then(v => { loadDone++; setLoad('Loadi
 function loadImage(src) { return tally(new Promise((res, rej) => { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = src; })); }
 function loadTex(src, o) { return tally(new Promise((res, rej) => { new THREE.TextureLoader().load(src, (t) => { t.colorSpace = (o && o.linear) ? THREE.NoColorSpace : THREE.SRGBColorSpace; t.anisotropy = Q.aniso; if (o && o.nomip) { t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; } res(t); }, undefined, rej); })); }
 function loadHDR(src) { return tally(new Promise((res, rej) => { new RGBELoader().load(src, res, undefined, rej); })); }
+function loadGLB(name) { return tally(new GLTFLoader().loadAsync(A + 'lg-p-' + name + '.glb')).catch((e) => { console.warn('prop', name, e); return null; }); }
 function setLoad(txt) { const el = document.querySelector('.game-load span'); if (el) el.textContent = txt; }
 
 /* ---------- height fields ---------- */
@@ -466,9 +468,17 @@ function tents(sc) {
   g.add(mesh(merge(posts), timberM));
   // fire pits: stone ring, logs, embers
   const ring = [], logs = [], embers = [];
-  for (const [x, y, z] of pits) { const t = new THREE.TorusGeometry(0.6, 0.16, 8, 20); t.rotateX(Math.PI / 2); t.translate(x, y + 0.14, z); ring.push(t);
-    for (let k = 0; k < 3; k++) logs.push(cyl(0.06, 0.07, 0.8, 6, x, y + 0.2, z, 0.6 + k * 0.5, k * 2.1, 1.2)); const e = new THREE.CircleGeometry(0.45, 14); e.rotateX(-Math.PI / 2); e.translate(x, y + 0.1, z); embers.push(e); }
-  g.add(mesh(merge(ring), std({ map: S.g.dirt.d, color: '#8a8278', roughness: 1 })));
+  const PR = S.props || {};
+  for (const [x, y, z] of pits) { if (!PR.firepit) { const t = new THREE.TorusGeometry(0.6, 0.16, 8, 20); t.rotateX(Math.PI / 2); t.translate(x, y + 0.14, z); ring.push(t); }
+    for (let k = 0; k < 3; k++) logs.push(cyl(0.05, 0.06, 0.7, 6, x, y + 0.16, z, 0.6 + k * 0.5, k * 2.1, 1.2)); const e = new THREE.CircleGeometry(0.42, 14); e.rotateX(-Math.PI / 2); e.translate(x, y + 0.08, z); embers.push(e); addCollider(x, z, 0.8); }
+  if (PR.firepit) g.add(propInstances(PR.firepit[0].parts, pits.map(([x, y, z], k) => ({ x, z, y: y - 0.1, rot: k * 1.7, s: 0.9 })), false, 64));
+  else g.add(mesh(merge(ring), std({ map: S.g.dirt.d, color: '#8a8278', roughness: 1 })));
+  // a bistro table and chairs on the ground beside each deck, with a lantern on the table
+  if (PR.bistro) { const sets = [], lamps = []; let top = 0.72, tc = [0, 0];
+    const tb = PR.bistro.find(u => /table/i.test(u.name)); if (tb) { top = tb.box.max.y; const c = tb.box.getCenter(new THREE.Vector3()); tc = [c.x, c.z]; }
+    tf.forEach((f, k) => { const [x, z] = localToWorld(f.c[0], f.c[1], f.rot, 5.0, 1.0); const yaw = f.rot + 0.5 + (k % 3) * 0.3; const y = groundAt(x, z); sets.push({ x, z, y, rot: yaw, s: 1 }); addCollider(x, z, 1.0);
+      const lx = x + tc[0] * Math.cos(yaw) + tc[1] * Math.sin(yaw), lz = z - tc[0] * Math.sin(yaw) + tc[1] * Math.cos(yaw); lamps.push({ x: lx, z: lz, y: y + top - 0.01, rot: k, s: 1 }); });
+    g.add(propInstances(PR.bistro.flatMap(u => u.parts), sets, true, 64)); if (PR.lantern) g.add(propInstances(PR.lantern.flatMap(u => u.parts), lamps, false, 64)); }
   g.add(mesh(merge(logs), std({ color: '#3a2a1c', roughness: 1 })));
   const emberM = std({ color: '#2a1d14', emissive: new THREE.Color('#ff7a1a'), emissiveIntensity: 0 }); S.fireMats.push(emberM); g.add(mesh(merge(embers), emberM, false));
   return g;
@@ -590,8 +600,8 @@ function riders(count) {
   const K = riderKit(); const g = new THREE.Group();
   const mats = { black: std({ color: '#1f2224', roughness: 0.8 }), frame: std({ color: '#c0392b', roughness: 0.4, metalness: 0.3 }), body: std({ color: '#2d3f63', roughness: 0.9 }), skin: std({ color: '#c89a76', roughness: 0.8 }) };
   const ims = {}; for (const k of Object.keys(K)) { const im = new THREE.InstancedMesh(K[k], mats[k], count); im.castShadow = true; im.frustumCulled = false; ims[k] = im; g.add(im); }
-  const cols = ['#c0392b', '#2e86c1', '#1f1f1f', '#e67e22', '#7d3c98', '#27ae60'];
-  for (let i = 0; i < count; i++) { ims.frame.setColorAt(i, new THREE.Color(cols[i % cols.length])); ims.body.setColorAt(i, new THREE.Color(['#2d3f63', '#3b3b3b', '#7a1f1f', '#1f5a3a', '#5a4a2a'][i % 5])); }
+  const cols = ['#5a1e1a', '#2b3a45', '#1c1c1c', '#4a4d50', '#30402e', '#6e6a62']; // muted frame colours: real bikes, not toys
+  for (let i = 0; i < count; i++) { ims.frame.setColorAt(i, new THREE.Color(cols[i % cols.length])); ims.body.setColorAt(i, new THREE.Color(['#2a3340', '#333333', '#4a2a26', '#2c3a2f', '#4a4236'][i % 5])); }
   S.riderIM = ims; S.riderCount = count; return g;
 }
 const _re = new THREE.Euler(0, 0, 0, 'YXZ');
@@ -764,6 +774,68 @@ function lodShader(sh, far, wind) {
       { float f = smoothstep(${R} - ${B}, ${R}, vLodD); float n = lgIGN(gl_FragCoord.xy); ${far ? 'if (n >= f) discard;' : 'if (n < f) discard;'} }`);
 }
 function lodMat(m, far, wind, key) { return custom(m, (sh) => lodShader(sh, far, wind), key); }
+/* ---------- scanned props (Poly Haven, CC0): fire pits, bistro sets, lanterns, granite, fallen timber, understorey ---------- */
+const PROP_NAMES = ['firepit', 'bistro', 'lantern', 'boulder', 'boulders2', 'log', 'stump', 'branches', 'bush'];
+/* a loaded model as units (one per top-level node), each a list of parts with geometry baked into the unit's own frame */
+function propUnits(gltf, centre) {
+  if (!gltf) return null; gltf.scene.updateMatrixWorld(true); const units = [];
+  for (const node of gltf.scene.children) { const parts = []; const box = new THREE.Box3().setFromObject(node); const c = box.getCenter(new THREE.Vector3());
+    node.traverse(o => { if (!o.isMesh) return; const g = o.geometry.clone(); g.applyMatrix4(o.matrixWorld); if (centre) g.translate(-c.x, -box.min.y, -c.z); parts.push({ g, m: o.material }); });
+    units.push({ name: node.name, parts, box: new THREE.Box3().setFromObject(node) }); }
+  return units;
+}
+function propMats(units, fn) { if (!units) return; const seen = new Set(); units.forEach(u => u.parts.forEach(p => { if (seen.has(p.m)) return; seen.add(p.m); p.m.envMapIntensity = 0.6; if (p.m.map) p.m.map.anisotropy = Q.aniso; if (!(fn && fn(p.m))) reg(p.m); })); }
+/* granite: the scans are warm sandstone, so pull them toward the grey, lichen-flecked granite of the range */
+function graniteMat(m) { return !!custom(m, (sh) => { sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', '#include <map_fragment>\n { float l = dot(diffuseColor.rgb, vec3(0.3, 0.59, 0.11)); diffuseColor.rgb = mix(vec3(l), diffuseColor.rgb, 0.3) * vec3(1.06, 1.04, 1.0); }'); }, 'granite'); }
+const _pe = new THREE.Euler();
+function propInstances(parts, list, cast, chunk) {
+  const g = new THREE.Group(); if (!parts || !list.length) return g;
+  // scattered props are split into ground chunks so the camera and each shadow cascade can skip the ones out of view, and far chunks are hidden
+  if (chunk) { const cells = new Map(); for (const t of list) { const k = Math.floor(t.x / chunk) * 4096 + Math.floor(t.z / chunk); if (!cells.has(k)) cells.set(k, []); cells.get(k).push(t); }
+    S.chunks = S.chunks || []; for (const l of cells.values()) { const sub = propInstances(parts, l, cast); const cx = l.reduce((a, t) => a + t.x, 0) / l.length, cz = l.reduce((a, t) => a + t.z, 0) / l.length; S.chunks.push({ o: sub, x: cx, z: cz, far: chunk * 1.6 + 60 }); g.add(sub); }
+    return g; }
+  for (const p of parts) { const im = new THREE.InstancedMesh(p.g, p.m, list.length); im.castShadow = cast !== false; im.receiveShadow = true;
+    list.forEach((t, i) => { _pe.set(t.rx || 0, t.rot || 0, t.rz || 0, 'YXZ'); _q.setFromEuler(_pe); _v.set(t.x, t.y, t.z); _s.set(t.s, t.sy || t.s, t.s); _m4.compose(_v, _q, _s); im.setMatrixAt(i, _m4); });
+    im.computeBoundingSphere(); g.add(im); }
+  return g;
+}
+/* where the visitor goes: the camp, the lift base and top, the kids' park, the car park */
+function nearVisit(sc, x, z, r) { const c = sc.tents.reduce((a, t) => [a[0] + t[0] / sc.tents.length, a[1] + t[1] / sc.tents.length], [0, 0]); for (const p of [c, sc.B, sc.T, sc.kids, sc.carpark]) if (Math.hypot(x - p[0], z - p[1]) < r) return true; return false; }
+function clearSpot(sc, x, z, r) {
+  for (let dx = -r; dx <= r; dx += 2) for (let dz = -r; dz <= r; dz += 2) if (noGrassAt(x + dx, z + dz)) return false;
+  for (const t of sc.tents) if (Math.hypot(x - t[0], z - t[1]) < 9) return false;
+  if (Math.abs(x - sc.carpark[0]) < 30 && Math.abs(z - sc.carpark[1]) < 20) return false;
+  for (const p of [sc.B, sc.T, sc.amen]) if (Math.hypot(x - p[0], z - p[1]) < 12) return false;
+  if (S.liftPts) for (const q of S.liftPts) if (Math.hypot(x - q[0], z - q[1]) < 5) return false;
+  if (S.colGrid) { const l = S.colGrid.get(Math.floor(x / 8) * 4096 + Math.floor(z / 8)); if (l) for (const c of l) if (Math.hypot(x - c.x, z - c.z) < c.r + r) return false; }
+  return Math.abs(x) < S.nearM / 2 - 20 && Math.abs(z) < S.nearM / 2 - 20;
+}
+function scatterProps(sc) {
+  const g = new THREE.Group(), P = S.props; if (!P) return g; const r = rnd(9127);
+  // fallen logs, stumps and branch litter under the trees near where people walk
+  const logs = [], stumps = [], twigs = [], bushes = [[], [], [], []];
+  for (const t of sc.trees) { const x0 = t[0], z0 = t[1]; if (!nearVisit(sc, x0, z0, 300)) continue;
+    const pick = r(), a = r() * Math.PI * 2, d = 2.5 + r() * 5, x = x0 + Math.cos(a) * d, z = z0 + Math.sin(a) * d;
+    if (pick < 0.11 && logs.length < 48 && P.log) { const yaw = r() * Math.PI * 2, s = 0.8 + r() * 0.6, L = 1.5 * s; const ex = Math.cos(yaw) * L, ez = -Math.sin(yaw) * L;
+      if (!clearSpot(sc, x, z, 3) || !clearSpot(sc, x + ex, z + ez, 1) || !clearSpot(sc, x - ex, z - ez, 1)) continue;
+      const h1 = groundAt(x - ex, z - ez), h2 = groundAt(x + ex, z + ez); logs.push({ x, z, y: (h1 + h2) / 2 - 0.05, rot: yaw, rz: Math.atan2(h2 - h1, 2 * L), s });
+      addCollider(x, z, 0.35); addCollider(x + ex * 0.7, z + ez * 0.7, 0.3); addCollider(x - ex * 0.7, z - ez * 0.7, 0.3); }
+    else if (pick < 0.17 && stumps.length < 26 && P.stump) { if (!clearSpot(sc, x, z, 2)) continue; const s = 0.45 + r() * 0.35; stumps.push({ x, z, y: groundAt(x, z) - 0.08, rot: r() * 6.28, s }); addCollider(x, z, 0.5 * s + 0.1); }
+    else if (pick < 0.33 && twigs.length < 80 && P.branches) { if (!clearSpot(sc, x, z, 1)) continue; twigs.push({ x, z, y: groundAt(x, z) + 0.01, rot: r() * 6.28, s: 0.9 + r() * 0.5 }); }
+    else if (pick < 0.58 && P.bush) { const v = Math.floor(r() * 3) + 1; if (!clearSpot(sc, x, z, 1) || bushes[v].length > 44) continue; const s = 1.5 + r() * 1.1; bushes[v].push({ x, z, y: groundAt(x, z) - 0.05, rot: r() * 6.28, s, sy: s * (0.85 + r() * 0.4) }); }
+  }
+  if (P.log) g.add(propInstances(P.log[0].parts, logs, true, 64));
+  if (P.stump) g.add(propInstances(P.stump[0].parts, stumps, true, 64));
+  if (P.branches) g.add(propInstances(P.branches.flatMap(u => u.parts), twigs, false, 48));
+  if (P.bush) P.bush.forEach((u, i) => { if (bushes[i] && bushes[i].length) g.add(propInstances(u.parts, bushes[i], false, 64)); });
+  // granite outcrops around the top station
+  if (P.boulder) { const rocks = []; const T = sc.T;
+    for (let k = 0; k < 40 && rocks.length < 14; k++) { const a = r() * Math.PI * 2, d = 18 + r() * 55, x = T[0] + Math.cos(a) * d, z = T[1] + Math.sin(a) * d, s = 0.7 + r() * 1.5;
+      if (!clearSpot(sc, x, z, 2 + s)) continue; rocks.push({ x, z, y: groundAt(x, z) - 0.2 * s, rot: r() * 6.28, rx: (r() - 0.5) * 0.2, rz: (r() - 0.5) * 0.2, s }); addCollider(x, z, 0.8 * s); }
+    g.add(propInstances(P.boulder[0].parts, rocks, true, 64)); }
+  S.scatter = { logs: logs.length, stumps: stumps.length, twigs: twigs.length, bushes: bushes.reduce((a, b) => a + b.length, 0) };
+  return g;
+}
 function vegetation(sc) {
   const g = new THREE.Group(); const atlas = leafAtlas();
   const leafM = lodMat(new THREE.MeshStandardMaterial({ map: atlas, alphaTest: 0.42, side: THREE.DoubleSide, roughness: 0.9, color: '#c9cdb8', alphaToCoverage: Q.msaa > 0 }), false, true, 'leaves');
@@ -786,11 +858,13 @@ function vegetation(sc) {
     const idx = [0, 0, 0]; far.forEach((t, i) => { const v = i % 3; _q.setFromAxisAngle(_up, (i * 0.37) % 6.28); _v.set(t[0], groundAt(t[0], t[1]) - 0.2, t[1]); _s.set(t[2], t[2] * 0.95, t[2]); _m4.compose(_v, _q, _s); fb[v].setMatrixAt(idx[v]++, _m4); });
     fb.forEach(b => { b.frustumCulled = false; g.add(b); }); }
   // granite boulders on the summit
-  { const rockM = texMat('bark2', { color: '#9a9a94', roughness: 0.9 }); const rocks = []; const r = rnd(77);
+  { const rockM = texMat('bark2', { color: '#9a9a94', roughness: 0.9 }); const rocks = [], scan = []; const r = rnd(77);
     for (let k = 0; k < 18; k++) { const a = r() * Math.PI * 2, d = 6 + r() * 40; const x = sm[0] + Math.cos(a) * d, z = sm[1] + Math.sin(a) * d; const sz = 0.8 + r() * 2.6;
       const geo = new THREE.IcosahedronGeometry(sz, 1); const pos = geo.attributes.position; for (let i = 0; i < pos.count; i++) { const f = 0.78 + r() * 0.4; pos.setXYZ(i, pos.getX(i) * f * 1.2, pos.getY(i) * f * 0.7, pos.getZ(i) * f); } geo.computeVertexNormals(); worldUV(geo, 2.2);
-      xf(geo, x, groundAt(x, z) + sz * 0.15, z, r() * 0.5, r() * 6.28, r() * 0.5); rocks.push(geo); }
-    const rm = mesh(merge(rocks), rockM); g.add(rm); S.rocks = rocks.length; }
+      xf(geo, x, groundAt(x, z) + sz * 0.15, z, r() * 0.5, r() * 6.28, r() * 0.5); rocks.push(geo); scan.push({ x, z, y: groundAt(x, z) - 0.22 * sz, rot: r() * 6.28, rx: (r() - 0.5) * 0.25, rz: (r() - 0.5) * 0.25, s: sz * 0.95, k: k % 3 }); addCollider(x, z, sz * 0.75); }
+    const PR = S.props || {};
+    if (PR.boulder) { g.add(propInstances(PR.boulder[0].parts, scan.filter(t => t.k !== 2), true, 96)); if (PR.boulders2) PR.boulders2.forEach((u, j) => g.add(propInstances(u.parts, scan.filter((t, i) => t.k === 2 && (i >> 1) % 2 === j % 2).map(t => Object.assign({}, t, { s: t.s * 1.6 })), true, 96))); rocks.forEach(x => x.dispose()); }
+    else g.add(mesh(merge(rocks), rockM)); S.rocks = rocks.length; }
   // trunk collision grid
   S.treeGrid = new Map(); trees.forEach(t => { const key = ((t.x / 8) | 0) + ':' + ((t.z / 8) | 0); if (!S.treeGrid.has(key)) S.treeGrid.set(key, []); S.treeGrid.get(key).push(t); });
   S.veg = { trees, full, bb, cx: 1e9, cz: 1e9, mats: [leafM, barkA, barkB], R: Q.treeR, H: kits.map(k => k.H) };
@@ -799,6 +873,7 @@ function vegetation(sc) {
 function vegUpdate(force) {
   // lists carry a 14 m margin either side of the fade band, so refreshing every 12 m never shows a pop; the shader does the fade
   const V = S.veg; if (!V) return; const P = S.player; if (!force && Math.hypot(P.x - V.cx, P.z - V.cz) < 12) return; V.cx = P.x; V.cz = P.z;
+  if (S.chunks) for (const c of S.chunks) c.o.visible = Math.hypot(c.x - P.x, c.z - P.z) < c.far;
   const nf = [0, 0, 0], nb = [0, 0, 0], fullMax = V.R + 14, bbMin = V.R - Q.treeBand - 14;
   for (const t of V.trees) { const d = Math.hypot(t.x - P.x, t.z - P.z); if (!t.m) { _q.setFromAxisAngle(_up, t.rot); _v.set(t.x, t.y, t.z); _s.set(t.s, t.s, t.s); t.m = new THREE.Matrix4().compose(_v, _q, _s); }
     if (d < fullMax) { V.full[t.v].wood.setMatrixAt(nf[t.v], t.m); V.full[t.v].leaves.setMatrixAt(nf[t.v], t.m); nf[t.v]++; }
@@ -826,6 +901,8 @@ function peopleKit() {
   return kits;
 }
 function people(sc) {
+  // pass 2: the hand-built walking and standing figures read as toys at close range, so they are left out until realistic scanned people are sourced (?people=1 shows them)
+  if (!PARAMS.has('people')) { S.walkers = null; S.standers = null; return new THREE.Group(); }
   const kits = peopleKit(), g = new THREE.Group(); const cols = ['#3b5f8a', '#7a3b3b', '#2f5a3a', '#5a4a7a', '#8a6a2a', '#3a3a3a'];
   const mk = (kit, n, tag) => { const ims = { cloth: new THREE.InstancedMesh(kit.cloth, std({ color: '#ffffff', roughness: 0.9 }), n), skin: new THREE.InstancedMesh(kit.skin, std({ color: '#c89a76', roughness: 0.8 }), n), dark: new THREE.InstancedMesh(kit.dark, std({ color: '#222', roughness: 0.8 }), n), pants: new THREE.InstancedMesh(kit.pants, std({ color: '#3a3f4a', roughness: 0.9 }), n) };
     for (const k in ims) { ims[k].castShadow = true; ims[k].frustumCulled = false; g.add(ims[k]); } for (let i = 0; i < n; i++) ims.cloth.setColorAt(i, new THREE.Color(cols[(i + (tag === 'w' ? 0 : 3)) % cols.length])); return ims; };
@@ -1175,11 +1252,11 @@ async function boot() {
       loadTex(A + 'lg-sky-day.jpg', { nomip: true }), loadTex(A + 'lg-sky-dusk.jpg', { nomip: true }), loadTex(A + 'lg-sky-night.jpg', { nomip: true }),
       loadHDR(A + 'lg-env-day.hdr'), loadHDR(A + 'lg-env-dusk.hdr'), loadHDR(A + 'lg-env-night.hdr'),
       ...gsets.flatMap(k => [loadTex(A + 'lg-g-' + k + '-d.jpg'), loadTex(A + 'lg-g-' + k + '-n.jpg', { linear: true })]),
-      ...msets.flatMap(k => [loadTex(A + 'lg-m-' + k + '-d.jpg'), loadTex(A + 'lg-m-' + k + '-n.jpg', { linear: true })]), loadImage(A + 'lg-logo.png').catch(() => null)]);
+      ...msets.flatMap(k => [loadTex(A + 'lg-m-' + k + '-d.jpg'), loadTex(A + 'lg-m-' + k + '-n.jpg', { linear: true })]), loadImage(A + 'lg-logo.png').catch(() => null), ...PROP_NAMES.map(loadGLB)]);
     setLoad('Building the park'); await new Promise(r => setTimeout(r, 30));
     S.sc = sc; S.nearM = sc.near_m; S.farM = sc.far_m; S.hn = decodeHeights(hnI); S.hf = decodeHeights(hfI);
     S.g = {}; gsets.forEach((k, i) => { const d = gtex[i * 2], n = gtex[i * 2 + 1]; d.wrapS = d.wrapT = n.wrapS = n.wrapT = THREE.RepeatWrapping; S.g[k] = { d, n }; });
-    S.m = {}; msets.forEach((k, i) => { const d = gtex[gsets.length * 2 + i * 2], n = gtex[gsets.length * 2 + i * 2 + 1]; d.wrapS = d.wrapT = n.wrapS = n.wrapT = THREE.RepeatWrapping; S.m[k] = { d, n }; }); S.logo = gtex[gsets.length * 2 + msets.length * 2];
+    S.m = {}; msets.forEach((k, i) => { const d = gtex[gsets.length * 2 + i * 2], n = gtex[gsets.length * 2 + i * 2 + 1]; d.wrapS = d.wrapT = n.wrapS = n.wrapT = THREE.RepeatWrapping; S.m[k] = { d, n }; }); S.logo = gtex[gsets.length * 2 + msets.length * 2]; S.propGltf = gtex.slice(gsets.length * 2 + msets.length * 2 + 1);
     S.splat = new THREE.Texture(splatI); S.splat.colorSpace = THREE.NoColorSpace; S.splat.needsUpdate = true;
     S.splatImg = imageData(splatI, 1024); S.nearImg = imageData(nearI, 1024);
     S.tex = { ground: TEX.ground() };
@@ -1208,6 +1285,11 @@ async function boot() {
     S.moon = new THREE.DirectionalLight('#8fa6d8', 0); S.moon.position.set(-300, 400, 200); S.scene.add(S.moon);
     S.hemi = new THREE.HemisphereLight('#cfe0f0', '#8d7a5c', 0.18); S.scene.add(S.hemi);
     S.fireLights = []; for (let k = 0; k < 4; k++) { const L = new THREE.PointLight('#ff9a3c', 0, 40, 1.6); L.position.set(0, -500, 0); S.scene.add(L); S.fireLights.push(L); }
+    // scanned props
+    S.props = {}; PROP_NAMES.forEach((k, i) => { const u = propUnits(S.propGltf[i], k === 'bush' || k === 'boulder' || k === 'boulders2' || k === 'log' || k === 'stump' || k === 'firepit'); if (u && u.length) S.props[k] = u; });
+    propMats(S.props.boulder, graniteMat); propMats(S.props.boulders2, graniteMat); ['firepit', 'bistro', 'log', 'stump', 'branches'].forEach(k => propMats(S.props[k]));
+    propMats(S.props.bush, (m) => { m.side = THREE.DoubleSide; if (m.alphaTest > 0 || m.transparent) { m.transparent = false; m.alphaTest = Math.max(0.4, m.alphaTest); m.alphaToCoverage = Q.msaa > 0; } return false; });
+    propMats(S.props.lantern, (m) => { if (/glass/i.test(m.name)) { m.transparent = false; m.opacity = 1; m.color.set('#3a2a14'); m.emissive = new THREE.Color('#ffc46b'); m.emissiveIntensity = 0; m.roughness = 0.3; S.lampMats.push(m); } return false; });
     // terrain
     const nearTex = new THREE.Texture(nearI); nearTex.colorSpace = THREE.SRGBColorSpace; nearTex.anisotropy = Q.aniso; nearTex.needsUpdate = true;
     const farTex = new THREE.Texture(farI); farTex.colorSpace = THREE.SRGBColorSpace; farTex.anisotropy = Math.min(4, Q.aniso); farTex.needsUpdate = true;
@@ -1231,7 +1313,7 @@ async function boot() {
         if (!bad) for (let dx = -2; dx <= 2 && !bad; dx += 2) for (let dz = -2; dz <= 2; dz += 2) if (S.noGrass.has((((x + dx) / 2) | 0) + ':' + (((z + dz) / 2) | 0))) { bad = true; break; }
         if (!bad) for (const q of liftPts) if (Math.hypot(x - q[0], z - q[1]) < 3.5) { bad = true; break; }
         if (!bad) keep.push(t); }
-      sc.trees = keep; S.scene.add(vegetation(sc)); }
+      sc.trees = keep; S.scene.add(vegetation(sc)); S.scene.add(scatterProps(sc)); }
     S.player = { x: 0, z: 0, y: 400, yaw: 0, pitch: 0, fwd: 0, side: 0, run: false, path: null, auto: false, seg: 0, u: 0, lastLook: 0 };
     S.sunT = 0; S.glow = 0;
     setupPost(el.clientWidth || 1280, el.clientHeight || 720);
