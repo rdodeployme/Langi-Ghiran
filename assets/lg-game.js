@@ -784,7 +784,7 @@ function propUnits(gltf, centre) {
     units.push({ name: node.name, parts, box: new THREE.Box3().setFromObject(node) }); }
   return units;
 }
-function propMats(units, fn) { if (!units) return; const seen = new Set(); units.forEach(u => u.parts.forEach(p => { if (seen.has(p.m)) return; seen.add(p.m); p.m.envMapIntensity = 0.6; if (p.m.transmission) p.m.transmission = 0; // glass transmission would add a second full scene render every frame if (p.m.map) p.m.map.anisotropy = Q.aniso; if (!(fn && fn(p.m))) reg(p.m); })); }
+function propMats(units, fn) { if (!units) return; const seen = new Set(); units.forEach(u => u.parts.forEach(p => { if (seen.has(p.m)) return; seen.add(p.m); p.m.envMapIntensity = 0.6; if (p.m.transmission) p.m.transmission = 0; /* glass transmission would add a second full scene render every frame */ if (p.m.map) p.m.map.anisotropy = Q.aniso; if (!(fn && fn(p.m))) reg(p.m); })); }
 /* granite: the scans are warm sandstone, so pull them toward the grey, lichen-flecked granite of the range */
 function graniteMat(m) { return !!custom(m, (sh) => { sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', '#include <map_fragment>\n { float l = dot(diffuseColor.rgb, vec3(0.3, 0.59, 0.11)); diffuseColor.rgb = mix(vec3(l), diffuseColor.rgb, 0.3) * vec3(1.06, 1.04, 1.0); }'); }, 'granite'); }
 const _pe = new THREE.Euler();
