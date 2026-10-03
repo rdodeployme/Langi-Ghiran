@@ -589,3 +589,20 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ink);bac
 @media (max-width:760px){.rules.three{grid-template-columns:1fr}}
 .js .wiz .form-section[data-review]{}
 @media print{.wiz .form-section[data-review]{display:none!important}}
+
+/* Coming 2027 (home) */
+.hero-meta li.hm-coming{padding:0;border-color:var(--yellow);background:rgba(252,200,48,.16)}
+.hero-meta li.hm-coming a{display:block;padding:7px 14px;color:#fff;text-decoration:none}
+.hero-meta li.hm-coming a:hover b{text-decoration:underline;text-underline-offset:3px}
+.support-line{margin:22px 0 0;color:#EDF0EB;font-size:1.02rem;max-width:44em;padding-left:16px;border-left:3px solid var(--yellow)}
+
+/* Line breaking (copy pass, 3 Oct 2026): no stranded or orphaned words in headings.
+   Headings balance their lines; each sentence in a multi-sentence heading (.sen)
+   moves to a new line as a whole rather than leaving its first word behind;
+   running text avoids a single word on its last line. */
+h1,h2,h3,h4,.big-quote,.kicker,.stack-lines p,.foot-tag,.eyebrow,.support-line,.tl b,.fact b,.measures b,.chapter .label,.hero-meta li,.chips li,.btn{text-wrap:balance}
+p,li,dd,figcaption,.lede,.section-head p,.note{text-wrap:pretty}
+.sen{display:inline-block;text-wrap:balance}
+.fact b{font-size:clamp(1.4rem,2.3vw,2.1rem)}
+.measures{grid-template-columns:repeat(auto-fit,minmax(min(100%,max(15rem,calc((100% - 2px) / 3))),1fr))}
+.nw,a[href^="tel:"]{white-space:nowrap}
