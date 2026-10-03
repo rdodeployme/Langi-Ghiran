@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/styles.css?v=c1">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="">
@@ -42,7 +42,7 @@
   <div class="hero-media"><img src="assets/lg-ppe.webp" alt="A high-vis vest, hard hat and UHF radio on the bonnet of a work ute, with safety boots beside the wheel" fetchpriority="high"></div>
   <div class="wrap hero-body">
     <p class="crumbs"><a href="index.html">Home</a> / Site safety</p>
-    <h1>An active heavy-vehicle site. <span class="hl">Please read before you arrive.</span></h1>
+    <h1><span class="sen">An active <span class="nw">heavy-vehicle</span> site.</span> <span class="sen"><span class="hl">Please read before you arrive.</span></span></h1>
     <p class="lede">These rules apply to every driver and visitor, every time. Anyone who doesn't follow them may be asked to leave the site.</p>
     <div class="actions">
       <button type="button" class="btn btn-primary btn-lg" data-print-driver>Print driver briefing card</button>
@@ -66,7 +66,7 @@
       <div class="rule reveal d2"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#171E21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l-4 3v14h6v-6h4v6h6V6l-4-3-2 3h-4z"/><path d="M4 11h6M14 11h6"/></svg></span><h3>High-vis at all times</h3><p>High-visibility clothing must be worn everywhere on site.</p></div>
       <div class="rule reveal d3"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#171E21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h5v9l7 3a2 2 0 0 1 1 2v2H4V5a2 2 0 0 1 2-2z"/><path d="M4 16h16M12 8h-3"/></svg></span><h3>Enclosed safety boots</h3><p>Enclosed safety boots must be worn on site.</p></div>
       <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#171E21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18M5 17a7 7 0 0 1 14 0"/><path d="M10 10V6.5a2 2 0 0 1 4 0V10"/></svg></span><h3>Hard hat</h3><p>Required in active operational areas.</p></div>
-      <div class="rule reveal d1"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#171E21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M10 7V2M10 11h4M10 14h4"/></svg></span><h3>UHF radio, channel 61</h3><p>A UHF two-way radio in every vehicle, tuned to channel 61.</p></div>
+      <div class="rule reveal d1"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#171E21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M10 7V2M10 11h4M10 14h4"/></svg></span><h3>UHF radio, channel 17</h3><p>A UHF two-way radio in every vehicle, tuned to channel 17.</p></div>
       <div class="rule reveal d2"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#171E21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span><h3>Follow directions</h3><p>Follow directions from site staff at all times.</p></div>
       <div class="rule reveal d3"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#171E21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><h3>Loads inspected</h3><p>Every load is inspected before tipping.</p></div>
     </div>
@@ -84,12 +84,12 @@
       <p class="eyebrow">On the day</p>
       <h2 id="arrive-title">What happens when you arrive.</h2>
       <div class="radio-callout" style="margin-top:32px">
-        <div class="ch"><small>UHF</small>61</div>
-        <p><strong>Radio on channel 61</strong> in every vehicle, for the whole visit.</p>
+        <div class="ch"><small>UHF</small>17</div>
+        <p><strong>Radio on channel 17</strong> in every vehicle, for the whole visit.</p>
       </div>
     </div>
     <ol class="arrival reveal d1">
-      <li><div><b>Arrive during opening hours</b><span>Monday to Friday, 7am – 3pm, with your declaration approved.</span></div></li>
+      <li><div><b>Arrive during opening hours</b><span>Monday to Friday, <span class="nw">7:30am – 4pm</span>, with your declaration approved.</span></div></li>
       <li><div><b>Check in</b><span>At <span class="tbc">check-in point TBC</span>, before entering any operational area.</span></div></li>
       <li><div><b>Follow directions</b><span>Follow directions from site staff at all times, with your PPE on.</span></div></li>
       <li><div><b>Inspection</b><span>Each load is inspected before tipping. Loads that don't match the declaration may be rejected.</span></div></li>
@@ -110,8 +110,8 @@
       <div class="info-list reveal">
         <div class="info-block"><h3>Address</h3><p><span class="tbc">Street address TBC</span><br>Western boundary of Langi Ghiran State Park, near Warrak and Ararat in the Grampians region, VIC</p></div>
         <div class="info-block"><h3>Directions</h3><p><span class="tbc">Truck access route and gate TBC</span></p></div>
-        <div class="info-block"><h3>Opening hours</h3><p>Monday to Friday, 7am – 3pm</p></div>
-        <div class="info-block"><h3>Contact</h3><p><span class="tbc">Site contact name and phone TBC</span></p></div>
+        <div class="info-block"><h3>Opening hours</h3><p>Monday to Friday, <span class="nw">7:30am – 4pm</span></p></div>
+        <div class="info-block"><h3>Contacts</h3><p>Richard (owner) <a href="tel:+61433225511">0433 225 511</a><br>Shaun (owner) <a href="tel:+61418524602">0418 524 602</a><br><a href="mailto:richard@recycle.au">richard@recycle.au</a></p></div>
       </div>
       <div class="map-wrap reveal d1"><iframe title="Map of the Langi Ghiran area" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Langi+Ghiran+State+Park,+Victoria&z=11&output=embed"></iframe></div>
     </div>
@@ -124,10 +124,10 @@
     <h2>Site rules: read before you arrive</h2>
     <div class="dc-grid">
       <div>
-        <h3>Hours</h3><p class="big">Mon–Fri 7am–3pm</p>
-        <h3>Radio</h3><p class="big">UHF channel 61</p>
+        <h3>Hours</h3><p class="big">Mon–Fri <span class="nw">7:30am–4pm</span></p>
+        <h3>Radio</h3><p class="big">UHF channel 17</p>
         <h3>Location</h3><p>Western boundary of Langi Ghiran State Park, near Warrak &amp; Ararat, VIC. Street address: TBC</p>
-        <h3>Site contact</h3><p>TBC</p>
+        <h3>Site contacts</h3><p>Richard <span class="nw">0433 225 511</span><br>Shaun <span class="nw">0418 524 602</span></p>
       </div>
       <div>
         <h3>Must have</h3>
@@ -159,7 +159,7 @@
     <div class="foot-top">
       <div class="foot-brand">
         <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></span></a>
-        <p class="foot-tag">Recycling soil. Restoring land. Rebuilding a landscape.</p>
+        <p class="foot-tag"><span class="sen">Recycling soil.</span> <span class="sen">Restoring land.</span> <span class="sen">Rebuilding a landscape.</span></p>
         <p>A soil-recycling and land-rehabilitation operation beside Langi Ghiran State Park in Victoria's Grampians region. Part of Recycle Group.</p>
       </div>
       <div>
@@ -168,15 +168,16 @@
           <li><span class="tbc">Site address TBC</span></li>
           <li>Near Warrak &amp; Ararat, VIC</li>
           <li>Grampians region</li>
-          <li>Monday to Friday, 7am – 3pm</li>
-          <li>UHF channel 61 on site</li>
+          <li>Monday to Friday, <span class="nw">7:30am – 4pm</span></li>
+          <li>UHF channel 17 on site</li>
         </ul>
       </div>
       <div>
         <h4>Contact</h4>
         <ul>
-          <li><span class="tbc">Phone TBC</span></li>
-          <li><span class="tbc">Email TBC</span></li>
+          <li>Richard (owner) <a href="tel:+61433225511">0433 225 511</a></li>
+          <li><a href="mailto:richard@recycle.au">richard@recycle.au</a></li>
+          <li>Shaun (owner) <a href="tel:+61418524602">0418 524 602</a></li>
           <li><a href="index.html#enquire">Send an enquiry</a></li>
         </ul>
       </div>
@@ -190,7 +191,7 @@
         </ul>
       </div>
     </div>
-    <p class="foot-ack">LG Recycling acknowledges the Traditional Owners of Lar-ne-jeering (Langi Ghiran) and the surrounding Country, and their enduring cultural and spiritual connection to this landscape. We pay our respects to Elders past and present.</p>
+    <p class="foot-ack">LG Recycling acknowledges the Traditional Owners of <span class="nw">Lar-ne-jeering</span> (Langi Ghiran) and the surrounding Country, and their enduring cultural and spiritual connection to this landscape. We pay our respects to Elders past and present.</p>
     <div class="foot-base">
       <span>&copy; <span id="year">2026</span> LG Recycling. EPA registration R000315306.</span>
       <span>We can't accept asbestos, reportable priority waste or waste acid sulfate soil.</span>
