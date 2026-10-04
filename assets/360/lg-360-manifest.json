@@ -1,0 +1,3732 @@
+{
+ "note": "centre_compass_deg = compass bearing at the horizontal centre of each equirectangular image; bearings increase to the right.",
+ "images": "assets/360/lg-360-<stop>-<light>.jpg (4096x2048) and -m.jpg (2048x1024); walking points assets/360/hops/<id>.jpg",
+ "stops": {
+  "arrival": {
+   "title": "Arrival",
+   "lon": 143.0897625,
+   "lat": -37.2735271,
+   "eye_m_AHD": 409.8,
+   "centre_compass_deg": 123.3,
+   "lights": [
+    "day"
+   ]
+  },
+  "lift_base": {
+   "title": "Lift base",
+   "lon": 143.0908976,
+   "lat": -37.2741563,
+   "eye_m_AHD": 419.6,
+   "centre_compass_deg": 157.4,
+   "lights": [
+    "day"
+   ]
+  },
+  "lift_ride": {
+   "title": "On the pulley lift",
+   "lon": 143.0921536,
+   "lat": -37.2762142,
+   "eye_m_AHD": 429.6,
+   "centre_compass_deg": 159.1,
+   "lights": [
+    "day"
+   ]
+  },
+  "top_station": {
+   "title": "Top station",
+   "lon": 143.0930542,
+   "lat": -37.2779357,
+   "eye_m_AHD": 459.6,
+   "centre_compass_deg": 337.1,
+   "lights": [
+    "day"
+   ]
+  },
+  "expert": {
+   "title": "Expert run",
+   "lon": 143.092262,
+   "lat": -37.2762602,
+   "eye_m_AHD": 430.9,
+   "centre_compass_deg": 342.6,
+   "lights": [
+    "day"
+   ]
+  },
+  "intermediate": {
+   "title": "Intermediate run",
+   "lon": 143.091008,
+   "lat": -37.2757234,
+   "eye_m_AHD": 423.2,
+   "centre_compass_deg": 339.7,
+   "lights": [
+    "day"
+   ]
+  },
+  "beginner": {
+   "title": "Beginner run",
+   "lon": 143.0903896,
+   "lat": -37.2773708,
+   "eye_m_AHD": 421.5,
+   "centre_compass_deg": 53.4,
+   "lights": [
+    "day"
+   ]
+  },
+  "kids_park": {
+   "title": "Kids' park",
+   "lon": 143.0902601,
+   "lat": -37.2741369,
+   "eye_m_AHD": 414.1,
+   "centre_compass_deg": 106.9,
+   "lights": [
+    "day"
+   ]
+  },
+  "glamping": {
+   "title": "Glamping deck",
+   "lon": 143.0938179,
+   "lat": -37.2743193,
+   "eye_m_AHD": 438.0,
+   "centre_compass_deg": 315.0,
+   "lights": [
+    "day"
+   ]
+  },
+  "picnic": {
+   "title": "Picnic ground",
+   "lon": 143.092,
+   "lat": -37.2902,
+   "eye_m_AHD": 411.0,
+   "centre_compass_deg": 105.0,
+   "lights": [
+    "day"
+   ]
+  },
+  "reservoir": {
+   "title": "Reservoir",
+   "lon": 143.0997,
+   "lat": -37.2824,
+   "eye_m_AHD": 498.8,
+   "centre_compass_deg": 45.0,
+   "lights": [
+    "day"
+   ]
+  },
+  "larnejeering": {
+   "title": "Granite slopes",
+   "lon": 143.108,
+   "lat": -37.2975,
+   "eye_m_AHD": 903.4,
+   "centre_compass_deg": 200.0,
+   "lights": []
+  },
+  "summit": {
+   "title": "Summit",
+   "lon": 143.10705,
+   "lat": -37.30205,
+   "eye_m_AHD": 899.9,
+   "centre_compass_deg": 300.0,
+   "lights": [
+    "day"
+   ]
+  },
+  "plains": {
+   "title": "From the plains",
+   "lon": 143.11502,
+   "lat": -37.27398,
+   "eye_m_AHD": 367.3,
+   "centre_compass_deg": 190.0,
+   "lights": []
+  }
+ },
+ "hops": {
+  "glamp_walk_00": {
+   "route": "glamp_walk",
+   "x": -238.45,
+   "y": -16.78,
+   "lon": 143.091061,
+   "lat": -37.2741781,
+   "centre_compass_deg": 79.0,
+   "links": [
+    "arrival_walk_06",
+    "arrival_walk_07",
+    "arrival_walk_08",
+    "arrival_walk_09",
+    "glamp_walk_01",
+    "intermediate_14",
+    "kids_loop_01",
+    "kids_loop_02",
+    "kids_loop_03",
+    "kids_loop_08",
+    "kids_loop_09",
+    "kids_loop_10",
+    "lift_00"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_06",
+     "compass_deg": 354.0,
+     "dist_m": 38.1
+    },
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 27.4,
+     "dist_m": 32.8
+    },
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 50.9,
+     "dist_m": 25.9
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 8.2,
+     "dist_m": 5.8
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 79.0,
+     "dist_m": 21.5
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 194.6,
+     "dist_m": 14.1
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 113.4,
+     "dist_m": 31.0
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 166.9,
+     "dist_m": 19.3
+    },
+    {
+     "to": "kids_loop_03",
+     "compass_deg": 226.6,
+     "dist_m": 28.3
+    },
+    {
+     "to": "kids_loop_08",
+     "compass_deg": 328.0,
+     "dist_m": 39.3
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 7.3,
+     "dist_m": 32.1
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 48.5,
+     "dist_m": 37.3
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 175.5,
+     "dist_m": 26.8
+    }
+   ]
+  },
+  "glamp_walk_01": {
+   "route": "glamp_walk",
+   "x": -217.34,
+   "y": -12.69,
+   "lon": 143.0912979,
+   "lat": -37.274137,
+   "centre_compass_deg": 79.0,
+   "links": [
+    "arrival_walk_07",
+    "arrival_walk_08",
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "glamp_walk_02",
+    "intermediate_14",
+    "kids_loop_00",
+    "kids_loop_01",
+    "kids_loop_02",
+    "kids_loop_09",
+    "kids_loop_10",
+    "kids_loop_11",
+    "lift_00"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 346.4,
+     "dist_m": 25.7
+    },
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 355.3,
+     "dist_m": 12.3
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 274.7,
+     "dist_m": 20.3
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 259.0,
+     "dist_m": 21.5
+    },
+    {
+     "to": "glamp_walk_02",
+     "compass_deg": 79.0,
+     "dist_m": 21.5
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 234.2,
+     "dist_m": 30.4
+    },
+    {
+     "to": "kids_loop_00",
+     "compass_deg": 88.9,
+     "dist_m": 23.6
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 156.0,
+     "dist_m": 18.0
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 216.2,
+     "dist_m": 28.3
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 328.4,
+     "dist_m": 32.6
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 18.3,
+     "dist_m": 21.8
+    },
+    {
+     "to": "kids_loop_11",
+     "compass_deg": 81.8,
+     "dist_m": 23.7
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 211.7,
+     "dist_m": 36.2
+    }
+   ]
+  },
+  "glamp_walk_02": {
+   "route": "glamp_walk",
+   "x": -196.24,
+   "y": -8.6,
+   "lon": 143.0915348,
+   "lat": -37.274096,
+   "centre_compass_deg": 79.0,
+   "links": [
+    "arrival_walk_07",
+    "arrival_walk_08",
+    "glamp_walk_01",
+    "glamp_walk_03",
+    "kids_loop_00",
+    "kids_loop_01",
+    "kids_loop_10",
+    "kids_loop_11"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 307.6,
+     "dist_m": 34.3
+    },
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 290.3,
+     "dist_m": 23.6
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 259.0,
+     "dist_m": 21.5
+    },
+    {
+     "to": "glamp_walk_03",
+     "compass_deg": 79.0,
+     "dist_m": 22.0
+    },
+    {
+     "to": "kids_loop_00",
+     "compass_deg": 145.9,
+     "dist_m": 4.4
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 213.9,
+     "dist_m": 24.7
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 319.3,
+     "dist_m": 21.9
+    },
+    {
+     "to": "kids_loop_11",
+     "compass_deg": 106.9,
+     "dist_m": 2.5
+    }
+   ]
+  },
+  "glamp_walk_03": {
+   "route": "glamp_walk",
+   "x": -174.64,
+   "y": -4.41,
+   "lon": 143.0917773,
+   "lat": -37.2740539,
+   "centre_compass_deg": 79.0,
+   "links": [
+    "glamp_walk_02",
+    "glamp_walk_04",
+    "kids_loop_00",
+    "kids_loop_10",
+    "kids_loop_11"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_02",
+     "compass_deg": 259.0,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_04",
+     "compass_deg": 70.5,
+     "dist_m": 22.5
+    },
+    {
+     "to": "kids_loop_00",
+     "compass_deg": 247.7,
+     "dist_m": 20.7
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 289.1,
+     "dist_m": 37.9
+    },
+    {
+     "to": "kids_loop_11",
+     "compass_deg": 255.7,
+     "dist_m": 19.8
+    }
+   ]
+  },
+  "glamp_walk_04": {
+   "route": "glamp_walk",
+   "x": -153.45,
+   "y": 3.09,
+   "lon": 143.0920142,
+   "lat": -37.2739822,
+   "centre_compass_deg": 69.7,
+   "links": [
+    "glamp_walk_03",
+    "glamp_walk_05"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_03",
+     "compass_deg": 250.5,
+     "dist_m": 22.5
+    },
+    {
+     "to": "glamp_walk_05",
+     "compass_deg": 69.7,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_05": {
+   "route": "glamp_walk",
+   "x": -132.82,
+   "y": 10.74,
+   "lon": 143.0922448,
+   "lat": -37.2739092,
+   "centre_compass_deg": 69.7,
+   "links": [
+    "expert_11",
+    "glamp_walk_04",
+    "glamp_walk_06"
+   ],
+   "arrows": [
+    {
+     "to": "expert_11",
+     "compass_deg": 96.9,
+     "dist_m": 26.5
+    },
+    {
+     "to": "glamp_walk_04",
+     "compass_deg": 249.7,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_06",
+     "compass_deg": 70.6,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_06": {
+   "route": "glamp_walk",
+   "x": -112.09,
+   "y": 18.06,
+   "lon": 143.0924768,
+   "lat": -37.2738391,
+   "centre_compass_deg": 72.4,
+   "links": [
+    "expert_11",
+    "glamp_walk_05",
+    "glamp_walk_07"
+   ],
+   "arrows": [
+    {
+     "to": "expert_11",
+     "compass_deg": 152.2,
+     "dist_m": 11.9
+    },
+    {
+     "to": "glamp_walk_05",
+     "compass_deg": 250.6,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_07",
+     "compass_deg": 80.7,
+     "dist_m": 21.6
+    }
+   ]
+  },
+  "glamp_walk_07": {
+   "route": "glamp_walk",
+   "x": -90.73,
+   "y": 21.55,
+   "lon": 143.0927166,
+   "lat": -37.2738033,
+   "centre_compass_deg": 93.8,
+   "links": [
+    "expert_11",
+    "glamp_walk_06",
+    "glamp_walk_08"
+   ],
+   "arrows": [
+    {
+     "to": "expert_11",
+     "compass_deg": 228.5,
+     "dist_m": 21.1
+    },
+    {
+     "to": "glamp_walk_06",
+     "compass_deg": 260.7,
+     "dist_m": 21.6
+    },
+    {
+     "to": "glamp_walk_08",
+     "compass_deg": 92.7,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_08": {
+   "route": "glamp_walk",
+   "x": -68.77,
+   "y": 20.52,
+   "lon": 143.0929644,
+   "lat": -37.2738083,
+   "centre_compass_deg": 89.5,
+   "links": [
+    "expert_11",
+    "glamp_walk_07",
+    "glamp_walk_09"
+   ],
+   "arrows": [
+    {
+     "to": "expert_11",
+     "compass_deg": 251.1,
+     "dist_m": 39.9
+    },
+    {
+     "to": "glamp_walk_07",
+     "compass_deg": 272.7,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_09",
+     "compass_deg": 89.5,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_09": {
+   "route": "glamp_walk",
+   "x": -46.77,
+   "y": 20.72,
+   "lon": 143.0932123,
+   "lat": -37.2738021,
+   "centre_compass_deg": 89.5,
+   "links": [
+    "glamp_walk_08",
+    "glamp_walk_10"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_08",
+     "compass_deg": 269.5,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_10",
+     "compass_deg": 96.3,
+     "dist_m": 21.9
+    }
+   ]
+  },
+  "glamp_walk_10": {
+   "route": "glamp_walk",
+   "x": -24.99,
+   "y": 18.3,
+   "lon": 143.0934584,
+   "lat": -37.2738196,
+   "centre_compass_deg": 100.2,
+   "links": [
+    "glamp_walk_09",
+    "glamp_walk_11"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_09",
+     "compass_deg": 276.3,
+     "dist_m": 21.9
+    },
+    {
+     "to": "glamp_walk_11",
+     "compass_deg": 100.2,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_11": {
+   "route": "glamp_walk",
+   "x": -3.34,
+   "y": 14.4,
+   "lon": 143.0937034,
+   "lat": -37.2738504,
+   "centre_compass_deg": 103.4,
+   "links": [
+    "glamp_walk_10",
+    "glamp_walk_12"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_10",
+     "compass_deg": 280.2,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_12",
+     "compass_deg": 105.3,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_12": {
+   "route": "glamp_walk",
+   "x": 17.88,
+   "y": 8.59,
+   "lon": 143.0939441,
+   "lat": -37.2738985,
+   "centre_compass_deg": 105.3,
+   "links": [
+    "glamp_walk_11",
+    "glamp_walk_13"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_11",
+     "compass_deg": 285.3,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_13",
+     "compass_deg": 107.9,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_13": {
+   "route": "glamp_walk",
+   "x": 38.77,
+   "y": 1.84,
+   "lon": 143.0941813,
+   "lat": -37.2739551,
+   "centre_compass_deg": 112.7,
+   "links": [
+    "glamp_walk_12",
+    "glamp_walk_14"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_12",
+     "compass_deg": 287.9,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_14",
+     "compass_deg": 112.7,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_14": {
+   "route": "glamp_walk",
+   "x": 59.06,
+   "y": -6.66,
+   "lon": 143.0944121,
+   "lat": -37.2740276,
+   "centre_compass_deg": 112.7,
+   "links": [
+    "glamp_walk_13",
+    "glamp_walk_15"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_13",
+     "compass_deg": 292.7,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_15",
+     "compass_deg": 125.1,
+     "dist_m": 21.9
+    }
+   ]
+  },
+  "glamp_walk_15": {
+   "route": "glamp_walk",
+   "x": 76.97,
+   "y": -19.27,
+   "lon": 143.0946171,
+   "lat": -37.2741376,
+   "centre_compass_deg": 151.3,
+   "links": [
+    "glamp_walk_14",
+    "glamp_walk_16"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_14",
+     "compass_deg": 305.1,
+     "dist_m": 21.9
+    },
+    {
+     "to": "glamp_walk_16",
+     "compass_deg": 236.8,
+     "dist_m": 20.0
+    }
+   ]
+  },
+  "glamp_walk_16": {
+   "route": "glamp_walk",
+   "x": 60.2,
+   "y": -30.24,
+   "lon": 143.0944308,
+   "lat": -37.2742398,
+   "centre_compass_deg": 271.3,
+   "links": [
+    "glamp_walk_15",
+    "glamp_walk_17"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_15",
+     "compass_deg": 56.8,
+     "dist_m": 20.0
+    },
+    {
+     "to": "glamp_walk_17",
+     "compass_deg": 272.1,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_17": {
+   "route": "glamp_walk",
+   "x": 38.24,
+   "y": -29.43,
+   "lon": 143.0941831,
+   "lat": -37.2742369,
+   "centre_compass_deg": 283.0,
+   "links": [
+    "glamp_walk_16",
+    "glamp_walk_18"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_16",
+     "compass_deg": 92.1,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_18",
+     "compass_deg": 283.0,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_18": {
+   "route": "glamp_walk",
+   "x": 16.81,
+   "y": -24.47,
+   "lon": 143.0939403,
+   "lat": -37.2741964,
+   "centre_compass_deg": 283.0,
+   "links": [
+    "glamp_walk_17",
+    "glamp_walk_19"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_17",
+     "compass_deg": 103.0,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_19",
+     "compass_deg": 285.0,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "glamp_walk_19": {
+   "route": "glamp_walk",
+   "x": -4.44,
+   "y": -18.79,
+   "lon": 143.0936993,
+   "lat": -37.2741496,
+   "centre_compass_deg": 285.3,
+   "links": [
+    "glamp_walk_18",
+    "glamp_walk_20"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_18",
+     "compass_deg": 105.0,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_20",
+     "compass_deg": 290.4,
+     "dist_m": 21.9
+    }
+   ]
+  },
+  "glamp_walk_20": {
+   "route": "glamp_walk",
+   "x": -25.01,
+   "y": -11.15,
+   "lon": 143.0934656,
+   "lat": -37.2740849,
+   "centre_compass_deg": 293.9,
+   "links": [
+    "glamp_walk_19"
+   ],
+   "arrows": [
+    {
+     "to": "glamp_walk_19",
+     "compass_deg": 110.4,
+     "dist_m": 21.9
+    }
+   ]
+  },
+  "arrival_walk_00": {
+   "route": "arrival_walk",
+   "x": -365.03,
+   "y": 61.84,
+   "lon": 143.0896147,
+   "lat": -37.2734951,
+   "centre_compass_deg": 120.3,
+   "links": [
+    "arrival_walk_01"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_01",
+     "compass_deg": 120.3,
+     "dist_m": 21.5
+    }
+   ]
+  },
+  "arrival_walk_01": {
+   "route": "arrival_walk",
+   "x": -346.47,
+   "y": 50.98,
+   "lon": 143.0898266,
+   "lat": -37.2735892,
+   "centre_compass_deg": 120.3,
+   "links": [
+    "arrival_walk_00",
+    "arrival_walk_02"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_00",
+     "compass_deg": 300.3,
+     "dist_m": 21.5
+    },
+    {
+     "to": "arrival_walk_02",
+     "compass_deg": 120.3,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "arrival_walk_02": {
+   "route": "arrival_walk",
+   "x": -327.48,
+   "y": 39.88,
+   "lon": 143.0900434,
+   "lat": -37.2736855,
+   "centre_compass_deg": 120.3,
+   "links": [
+    "arrival_walk_01",
+    "arrival_walk_03"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_01",
+     "compass_deg": 300.3,
+     "dist_m": 22.0
+    },
+    {
+     "to": "arrival_walk_03",
+     "compass_deg": 111.0,
+     "dist_m": 21.9
+    }
+   ]
+  },
+  "arrival_walk_03": {
+   "route": "arrival_walk",
+   "x": -307.01,
+   "y": 32.03,
+   "lon": 143.0902761,
+   "lat": -37.273752,
+   "centre_compass_deg": 108.4,
+   "links": [
+    "arrival_walk_02",
+    "arrival_walk_04",
+    "kids_loop_06",
+    "kids_loop_07"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_02",
+     "compass_deg": 291.0,
+     "dist_m": 21.9
+    },
+    {
+     "to": "arrival_walk_04",
+     "compass_deg": 108.4,
+     "dist_m": 22.0
+    },
+    {
+     "to": "kids_loop_06",
+     "compass_deg": 178.1,
+     "dist_m": 30.3
+    },
+    {
+     "to": "kids_loop_07",
+     "compass_deg": 129.7,
+     "dist_m": 29.9
+    }
+   ]
+  },
+  "arrival_walk_04": {
+   "route": "arrival_walk",
+   "x": -286.13,
+   "y": 25.09,
+   "lon": 143.0905131,
+   "lat": -37.2738104,
+   "centre_compass_deg": 108.4,
+   "links": [
+    "arrival_walk_03",
+    "arrival_walk_05",
+    "kids_loop_06",
+    "kids_loop_07",
+    "kids_loop_08"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_03",
+     "compass_deg": 288.4,
+     "dist_m": 22.0
+    },
+    {
+     "to": "arrival_walk_05",
+     "compass_deg": 96.8,
+     "dist_m": 21.9
+    },
+    {
+     "to": "kids_loop_06",
+     "compass_deg": 220.4,
+     "dist_m": 30.7
+    },
+    {
+     "to": "kids_loop_07",
+     "compass_deg": 170.0,
+     "dist_m": 12.3
+    },
+    {
+     "to": "kids_loop_08",
+     "compass_deg": 107.7,
+     "dist_m": 28.2
+    }
+   ]
+  },
+  "arrival_walk_05": {
+   "route": "arrival_walk",
+   "x": -264.41,
+   "y": 22.49,
+   "lon": 143.0907586,
+   "lat": -37.2738295,
+   "centre_compass_deg": 93.6,
+   "links": [
+    "arrival_walk_04",
+    "arrival_walk_06",
+    "kids_loop_07",
+    "kids_loop_08",
+    "kids_loop_09"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_04",
+     "compass_deg": 276.8,
+     "dist_m": 21.9
+    },
+    {
+     "to": "arrival_walk_06",
+     "compass_deg": 93.6,
+     "dist_m": 22.0
+    },
+    {
+     "to": "kids_loop_07",
+     "compass_deg": 244.0,
+     "dist_m": 21.8
+    },
+    {
+     "to": "kids_loop_08",
+     "compass_deg": 139.4,
+     "dist_m": 7.9
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 103.9,
+     "dist_m": 30.9
+    }
+   ]
+  },
+  "arrival_walk_06": {
+   "route": "arrival_walk",
+   "x": -242.46,
+   "y": 21.1,
+   "lon": 143.0910065,
+   "lat": -37.2738377,
+   "centre_compass_deg": 93.6,
+   "links": [
+    "arrival_walk_05",
+    "arrival_walk_07",
+    "glamp_walk_00",
+    "kids_loop_08",
+    "kids_loop_09",
+    "kids_loop_10"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_05",
+     "compass_deg": 273.6,
+     "dist_m": 22.0
+    },
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 114.7,
+     "dist_m": 21.0
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 174.0,
+     "dist_m": 38.1
+    },
+    {
+     "to": "kids_loop_08",
+     "compass_deg": 254.8,
+     "dist_m": 17.4
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 126.8,
+     "dist_m": 10.1
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 112.3,
+     "dist_m": 34.5
+    }
+   ]
+  },
+  "arrival_walk_07": {
+   "route": "arrival_walk",
+   "x": -223.37,
+   "y": 12.31,
+   "lon": 143.0912238,
+   "lat": -37.273913,
+   "centre_compass_deg": 128.8,
+   "links": [
+    "arrival_walk_06",
+    "arrival_walk_08",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "glamp_walk_02",
+    "kids_loop_00",
+    "kids_loop_08",
+    "kids_loop_09",
+    "kids_loop_10",
+    "kids_loop_11"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_06",
+     "compass_deg": 294.7,
+     "dist_m": 21.0
+    },
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 158.5,
+     "dist_m": 13.7
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 207.4,
+     "dist_m": 32.8
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 166.4,
+     "dist_m": 25.7
+    },
+    {
+     "to": "glamp_walk_02",
+     "compass_deg": 127.6,
+     "dist_m": 34.3
+    },
+    {
+     "to": "kids_loop_00",
+     "compass_deg": 129.7,
+     "dist_m": 38.5
+    },
+    {
+     "to": "kids_loop_08",
+     "compass_deg": 276.7,
+     "dist_m": 36.2
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 284.0,
+     "dist_m": 11.4
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 108.6,
+     "dist_m": 13.6
+    },
+    {
+     "to": "kids_loop_11",
+     "compass_deg": 126.2,
+     "dist_m": 36.6
+    }
+   ]
+  },
+  "arrival_walk_08": {
+   "route": "arrival_walk",
+   "x": -218.35,
+   "y": -0.42,
+   "lon": 143.0912836,
+   "lat": -37.2740267,
+   "centre_compass_deg": 241.2,
+   "links": [
+    "arrival_walk_07",
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "glamp_walk_02",
+    "intermediate_14",
+    "kids_loop_00",
+    "kids_loop_01",
+    "kids_loop_02",
+    "kids_loop_09",
+    "kids_loop_10",
+    "kids_loop_11"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 338.5,
+     "dist_m": 13.7
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 241.2,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 230.9,
+     "dist_m": 25.9
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 175.3,
+     "dist_m": 12.3
+    },
+    {
+     "to": "glamp_walk_02",
+     "compass_deg": 110.3,
+     "dist_m": 23.6
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 218.2,
+     "dist_m": 38.2
+    },
+    {
+     "to": "kids_loop_00",
+     "compass_deg": 115.7,
+     "dist_m": 27.3
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 163.8,
+     "dist_m": 29.9
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 204.1,
+     "dist_m": 38.5
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 314.0,
+     "dist_m": 22.3
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 43.1,
+     "dist_m": 11.5
+    },
+    {
+     "to": "kids_loop_11",
+     "compass_deg": 110.0,
+     "dist_m": 26.0
+    }
+   ]
+  },
+  "arrival_walk_09": {
+   "route": "arrival_walk",
+   "x": -237.62,
+   "y": -11.02,
+   "lon": 143.0910689,
+   "lat": -37.274126,
+   "centre_compass_deg": 241.2,
+   "links": [
+    "arrival_walk_08",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "intermediate_14",
+    "kids_loop_01",
+    "kids_loop_02",
+    "kids_loop_03",
+    "kids_loop_08",
+    "kids_loop_09",
+    "kids_loop_10",
+    "lift_00"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 61.2,
+     "dist_m": 22.0
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 188.2,
+     "dist_m": 5.8
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 94.7,
+     "dist_m": 20.3
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 192.7,
+     "dist_m": 19.9
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 123.2,
+     "dist_m": 33.0
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 171.8,
+     "dist_m": 24.8
+    },
+    {
+     "to": "kids_loop_03",
+     "compass_deg": 220.3,
+     "dist_m": 33.1
+    },
+    {
+     "to": "kids_loop_08",
+     "compass_deg": 321.8,
+     "dist_m": 35.1
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 7.1,
+     "dist_m": 26.3
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 55.0,
+     "dist_m": 33.1
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 177.8,
+     "dist_m": 32.5
+    }
+   ]
+  },
+  "lift_00": {
+   "route": "lift",
+   "x": -236.37,
+   "y": -43.45,
+   "lon": 143.0910911,
+   "lat": -37.2744179,
+   "centre_compass_deg": 153.5,
+   "links": [
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "intermediate_13",
+    "intermediate_14",
+    "kids_loop_01",
+    "kids_loop_02",
+    "kids_loop_03",
+    "lift_01"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 357.8,
+     "dist_m": 32.5
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 355.5,
+     "dist_m": 26.8
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 31.7,
+     "dist_m": 36.2
+    },
+    {
+     "to": "intermediate_13",
+     "compass_deg": 212.0,
+     "dist_m": 27.1
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 336.5,
+     "dist_m": 14.2
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 61.4,
+     "dist_m": 30.0
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 16.2,
+     "dist_m": 8.2
+    },
+    {
+     "to": "kids_loop_03",
+     "compass_deg": 287.6,
+     "dist_m": 23.8
+    },
+    {
+     "to": "lift_01",
+     "compass_deg": 153.5,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_01": {
+   "route": "lift",
+   "x": -216.32,
+   "y": -83.73,
+   "lon": 143.0913272,
+   "lat": -37.2747768,
+   "centre_compass_deg": 153.5,
+   "links": [
+    "intermediate_13",
+    "lift_00",
+    "lift_02"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_13",
+     "compass_deg": 296.6,
+     "dist_m": 38.5
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 333.5,
+     "dist_m": 45.0
+    },
+    {
+     "to": "lift_02",
+     "compass_deg": 155.3,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_02": {
+   "route": "lift",
+   "x": -197.51,
+   "y": -124.56,
+   "lon": 143.0915494,
+   "lat": -37.2751408,
+   "centre_compass_deg": 157.2,
+   "links": [
+    "intermediate_10",
+    "lift_01",
+    "lift_03"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_10",
+     "compass_deg": 226.4,
+     "dist_m": 36.6
+    },
+    {
+     "to": "lift_01",
+     "compass_deg": 335.3,
+     "dist_m": 45.0
+    },
+    {
+     "to": "lift_03",
+     "compass_deg": 157.2,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_03": {
+   "route": "lift",
+   "x": -180.1,
+   "y": -166.06,
+   "lon": 143.091756,
+   "lat": -37.2755111,
+   "centre_compass_deg": 157.2,
+   "links": [
+    "lift_02",
+    "lift_04"
+   ],
+   "arrows": [
+    {
+     "to": "lift_02",
+     "compass_deg": 337.2,
+     "dist_m": 45.0
+    },
+    {
+     "to": "lift_04",
+     "compass_deg": 157.6,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_04": {
+   "route": "lift",
+   "x": -162.98,
+   "y": -207.66,
+   "lon": 143.0919594,
+   "lat": -37.2758825,
+   "centre_compass_deg": 159.1,
+   "links": [
+    "expert_05",
+    "lift_03",
+    "lift_05"
+   ],
+   "arrows": [
+    {
+     "to": "expert_05",
+     "compass_deg": 118.3,
+     "dist_m": 32.0
+    },
+    {
+     "to": "lift_03",
+     "compass_deg": 337.6,
+     "dist_m": 45.0
+    },
+    {
+     "to": "lift_05",
+     "compass_deg": 159.1,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_05": {
+   "route": "lift",
+   "x": -146.91,
+   "y": -249.69,
+   "lon": 143.0921509,
+   "lat": -37.2762579,
+   "centre_compass_deg": 159.1,
+   "links": [
+    "expert_04",
+    "expert_05",
+    "lift_04",
+    "lift_06"
+   ],
+   "arrows": [
+    {
+     "to": "expert_04",
+     "compass_deg": 127.4,
+     "dist_m": 20.7
+    },
+    {
+     "to": "expert_05",
+     "compass_deg": 24.2,
+     "dist_m": 29.5
+    },
+    {
+     "to": "lift_04",
+     "compass_deg": 339.1,
+     "dist_m": 45.0
+    },
+    {
+     "to": "lift_06",
+     "compass_deg": 159.2,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_06": {
+   "route": "lift",
+   "x": -130.92,
+   "y": -291.75,
+   "lon": 143.0923417,
+   "lat": -37.2766336,
+   "centre_compass_deg": 159.6,
+   "links": [
+    "expert_03",
+    "expert_04",
+    "lift_05",
+    "lift_07"
+   ],
+   "arrows": [
+    {
+     "to": "expert_03",
+     "compass_deg": 109.6,
+     "dist_m": 24.0
+    },
+    {
+     "to": "expert_04",
+     "compass_deg": 0.9,
+     "dist_m": 29.5
+    },
+    {
+     "to": "lift_05",
+     "compass_deg": 339.2,
+     "dist_m": 45.0
+    },
+    {
+     "to": "lift_07",
+     "compass_deg": 159.6,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_07": {
+   "route": "lift",
+   "x": -115.23,
+   "y": -333.92,
+   "lon": 143.0925291,
+   "lat": -37.2770104,
+   "centre_compass_deg": 159.6,
+   "links": [
+    "expert_02",
+    "expert_03",
+    "lift_06",
+    "lift_08"
+   ],
+   "arrows": [
+    {
+     "to": "expert_02",
+     "compass_deg": 98.1,
+     "dist_m": 27.5
+    },
+    {
+     "to": "expert_03",
+     "compass_deg": 11.4,
+     "dist_m": 34.8
+    },
+    {
+     "to": "lift_06",
+     "compass_deg": 339.6,
+     "dist_m": 45.0
+    },
+    {
+     "to": "lift_08",
+     "compass_deg": 159.6,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_08": {
+   "route": "lift",
+   "x": -99.58,
+   "y": -376.11,
+   "lon": 143.0927161,
+   "lat": -37.2773873,
+   "centre_compass_deg": 159.9,
+   "links": [
+    "expert_01",
+    "lift_07",
+    "lift_09"
+   ],
+   "arrows": [
+    {
+     "to": "expert_01",
+     "compass_deg": 81.1,
+     "dist_m": 12.3
+    },
+    {
+     "to": "lift_07",
+     "compass_deg": 339.6,
+     "dist_m": 45.0
+    },
+    {
+     "to": "lift_09",
+     "compass_deg": 160.0,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "lift_09": {
+   "route": "lift",
+   "x": -84.15,
+   "y": -418.39,
+   "lon": 143.0929005,
+   "lat": -37.277765,
+   "centre_compass_deg": 159.9,
+   "links": [
+    "expert_00",
+    "lift_08"
+   ],
+   "arrows": [
+    {
+     "to": "expert_00",
+     "compass_deg": 317.1,
+     "dist_m": 1.5
+    },
+    {
+     "to": "lift_08",
+     "compass_deg": 340.0,
+     "dist_m": 45.0
+    }
+   ]
+  },
+  "expert_00": {
+   "route": "expert",
+   "x": -85.2,
+   "y": -417.26,
+   "lon": 143.0928884,
+   "lat": -37.2777551,
+   "centre_compass_deg": 13.3,
+   "links": [
+    "expert_01",
+    "lift_09"
+   ],
+   "arrows": [
+    {
+     "to": "expert_01",
+     "compass_deg": 357.0,
+     "dist_m": 43.1
+    },
+    {
+     "to": "lift_09",
+     "compass_deg": 137.1,
+     "dist_m": 1.5
+    }
+   ]
+  },
+  "expert_01": {
+   "route": "expert",
+   "x": -87.46,
+   "y": -374.21,
+   "lon": 143.0928522,
+   "lat": -37.2773677,
+   "centre_compass_deg": 318.3,
+   "links": [
+    "expert_00",
+    "expert_02",
+    "lift_08"
+   ],
+   "arrows": [
+    {
+     "to": "expert_00",
+     "compass_deg": 177.0,
+     "dist_m": 43.1
+    },
+    {
+     "to": "expert_02",
+     "compass_deg": 359.1,
+     "dist_m": 36.4
+    },
+    {
+     "to": "lift_08",
+     "compass_deg": 261.1,
+     "dist_m": 12.3
+    }
+   ]
+  },
+  "expert_02": {
+   "route": "expert",
+   "x": -88.05,
+   "y": -337.77,
+   "lon": 143.0928364,
+   "lat": -37.2770396,
+   "centre_compass_deg": 303.0,
+   "links": [
+    "expert_01",
+    "expert_03",
+    "lift_07"
+   ],
+   "arrows": [
+    {
+     "to": "expert_01",
+     "compass_deg": 179.1,
+     "dist_m": 36.4
+    },
+    {
+     "to": "expert_03",
+     "compass_deg": 331.9,
+     "dist_m": 43.1
+    },
+    {
+     "to": "lift_07",
+     "compass_deg": 278.1,
+     "dist_m": 27.5
+    }
+   ]
+  },
+  "expert_03": {
+   "route": "expert",
+   "x": -108.34,
+   "y": -299.78,
+   "lon": 143.0925982,
+   "lat": -37.2767014,
+   "centre_compass_deg": 355.8,
+   "links": [
+    "expert_02",
+    "expert_04",
+    "lift_06",
+    "lift_07"
+   ],
+   "arrows": [
+    {
+     "to": "expert_02",
+     "compass_deg": 151.9,
+     "dist_m": 43.1
+    },
+    {
+     "to": "expert_04",
+     "compass_deg": 329.5,
+     "dist_m": 43.6
+    },
+    {
+     "to": "lift_06",
+     "compass_deg": 289.6,
+     "dist_m": 24.0
+    },
+    {
+     "to": "lift_07",
+     "compass_deg": 191.4,
+     "dist_m": 34.8
+    }
+   ]
+  },
+  "expert_04": {
+   "route": "expert",
+   "x": -130.47,
+   "y": -262.25,
+   "lon": 143.0923395,
+   "lat": -37.2763678,
+   "centre_compass_deg": 322.4,
+   "links": [
+    "expert_03",
+    "expert_05",
+    "lift_05",
+    "lift_06"
+   ],
+   "arrows": [
+    {
+     "to": "expert_03",
+     "compass_deg": 149.5,
+     "dist_m": 43.6
+    },
+    {
+     "to": "expert_05",
+     "compass_deg": 353.7,
+     "dist_m": 39.7
+    },
+    {
+     "to": "lift_05",
+     "compass_deg": 307.4,
+     "dist_m": 20.7
+    },
+    {
+     "to": "lift_06",
+     "compass_deg": 180.9,
+     "dist_m": 29.5
+    }
+   ]
+  },
+  "expert_05": {
+   "route": "expert",
+   "x": -134.84,
+   "y": -222.82,
+   "lon": 143.0922803,
+   "lat": -37.2760135,
+   "centre_compass_deg": 356.2,
+   "links": [
+    "expert_04",
+    "expert_06",
+    "lift_04",
+    "lift_05"
+   ],
+   "arrows": [
+    {
+     "to": "expert_04",
+     "compass_deg": 173.7,
+     "dist_m": 39.7
+    },
+    {
+     "to": "expert_06",
+     "compass_deg": 1.5,
+     "dist_m": 43.5
+    },
+    {
+     "to": "lift_04",
+     "compass_deg": 298.3,
+     "dist_m": 32.0
+    },
+    {
+     "to": "lift_05",
+     "compass_deg": 204.2,
+     "dist_m": 29.5
+    }
+   ]
+  },
+  "expert_06": {
+   "route": "expert",
+   "x": -133.67,
+   "y": -179.37,
+   "lon": 143.0922827,
+   "lat": -37.2756218,
+   "centre_compass_deg": 359.1,
+   "links": [
+    "expert_05",
+    "expert_07"
+   ],
+   "arrows": [
+    {
+     "to": "expert_05",
+     "compass_deg": 181.5,
+     "dist_m": 43.5
+    },
+    {
+     "to": "expert_07",
+     "compass_deg": 346.4,
+     "dist_m": 39.5
+    }
+   ]
+  },
+  "expert_07": {
+   "route": "expert",
+   "x": -142.93,
+   "y": -140.96,
+   "lon": 143.0921688,
+   "lat": -37.2752777,
+   "centre_compass_deg": 311.6,
+   "links": [
+    "expert_06",
+    "expert_08"
+   ],
+   "arrows": [
+    {
+     "to": "expert_06",
+     "compass_deg": 166.4,
+     "dist_m": 39.5
+    },
+    {
+     "to": "expert_08",
+     "compass_deg": 23.8,
+     "dist_m": 42.6
+    }
+   ]
+  },
+  "expert_08": {
+   "route": "expert",
+   "x": -125.75,
+   "y": -101.97,
+   "lon": 143.0923527,
+   "lat": -37.274923,
+   "centre_compass_deg": 5.2,
+   "links": [
+    "expert_07",
+    "expert_09"
+   ],
+   "arrows": [
+    {
+     "to": "expert_07",
+     "compass_deg": 203.8,
+     "dist_m": 42.6
+    },
+    {
+     "to": "expert_09",
+     "compass_deg": 32.9,
+     "dist_m": 43.9
+    }
+   ]
+  },
+  "expert_09": {
+   "route": "expert",
+   "x": -101.9,
+   "y": -65.1,
+   "lon": 143.0926123,
+   "lat": -37.2745861,
+   "centre_compass_deg": 15.5,
+   "links": [
+    "expert_08",
+    "expert_10"
+   ],
+   "arrows": [
+    {
+     "to": "expert_08",
+     "compass_deg": 212.9,
+     "dist_m": 43.9
+    },
+    {
+     "to": "expert_10",
+     "compass_deg": 355.9,
+     "dist_m": 43.4
+    }
+   ]
+  },
+  "expert_10": {
+   "route": "expert",
+   "x": -105.03,
+   "y": -21.85,
+   "lon": 143.0925663,
+   "lat": -37.2741972,
+   "centre_compass_deg": 332.4,
+   "links": [
+    "expert_09",
+    "expert_11"
+   ],
+   "arrows": [
+    {
+     "to": "expert_09",
+     "compass_deg": 175.9,
+     "dist_m": 43.4
+    },
+    {
+     "to": "expert_11",
+     "compass_deg": 357.0,
+     "dist_m": 29.4
+    }
+   ]
+  },
+  "expert_11": {
+   "route": "expert",
+   "x": -106.55,
+   "y": 7.55,
+   "lon": 143.0925418,
+   "lat": -37.2739326,
+   "centre_compass_deg": 180.7,
+   "links": [
+    "expert_10",
+    "glamp_walk_05",
+    "glamp_walk_06",
+    "glamp_walk_07",
+    "glamp_walk_08"
+   ],
+   "arrows": [
+    {
+     "to": "expert_10",
+     "compass_deg": 177.0,
+     "dist_m": 29.4
+    },
+    {
+     "to": "glamp_walk_05",
+     "compass_deg": 276.9,
+     "dist_m": 26.5
+    },
+    {
+     "to": "glamp_walk_06",
+     "compass_deg": 332.2,
+     "dist_m": 11.9
+    },
+    {
+     "to": "glamp_walk_07",
+     "compass_deg": 48.5,
+     "dist_m": 21.1
+    },
+    {
+     "to": "glamp_walk_08",
+     "compass_deg": 71.1,
+     "dist_m": 39.9
+    }
+   ]
+  },
+  "intermediate_00": {
+   "route": "intermediate",
+   "x": -121.15,
+   "y": -443.19,
+   "lon": 143.0924897,
+   "lat": -37.2779958,
+   "centre_compass_deg": 306.0,
+   "links": [
+    "beginner_00",
+    "intermediate_01"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_00",
+     "compass_deg": 150.5,
+     "dist_m": 24.5
+    },
+    {
+     "to": "intermediate_01",
+     "compass_deg": 283.2,
+     "dist_m": 44.0
+    }
+   ]
+  },
+  "intermediate_01": {
+   "route": "intermediate",
+   "x": -163.95,
+   "y": -433.13,
+   "lon": 143.0920047,
+   "lat": -37.2779137,
+   "centre_compass_deg": 316.7,
+   "links": [
+    "intermediate_00",
+    "intermediate_02"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_00",
+     "compass_deg": 103.2,
+     "dist_m": 44.0
+    },
+    {
+     "to": "intermediate_02",
+     "compass_deg": 2.9,
+     "dist_m": 43.1
+    }
+   ]
+  },
+  "intermediate_02": {
+   "route": "intermediate",
+   "x": -161.74,
+   "y": -390.08,
+   "lon": 143.0920189,
+   "lat": -37.2775255,
+   "centre_compass_deg": 7.2,
+   "links": [
+    "intermediate_01",
+    "intermediate_03"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_01",
+     "compass_deg": 182.9,
+     "dist_m": 43.1
+    },
+    {
+     "to": "intermediate_03",
+     "compass_deg": 306.3,
+     "dist_m": 38.2
+    }
+   ]
+  },
+  "intermediate_03": {
+   "route": "intermediate",
+   "x": -192.54,
+   "y": -367.47,
+   "lon": 143.091666,
+   "lat": -37.2773279,
+   "centre_compass_deg": 285.9,
+   "links": [
+    "intermediate_02",
+    "intermediate_04"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_02",
+     "compass_deg": 126.3,
+     "dist_m": 38.2
+    },
+    {
+     "to": "intermediate_04",
+     "compass_deg": 324.5,
+     "dist_m": 37.4
+    }
+   ]
+  },
+  "intermediate_04": {
+   "route": "intermediate",
+   "x": -214.28,
+   "y": -337.04,
+   "lon": 143.0914133,
+   "lat": -37.2770582,
+   "centre_compass_deg": 15.6,
+   "links": [
+    "intermediate_03",
+    "intermediate_05"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_03",
+     "compass_deg": 144.5,
+     "dist_m": 37.4
+    },
+    {
+     "to": "intermediate_05",
+     "compass_deg": 18.6,
+     "dist_m": 36.7
+    }
+   ]
+  },
+  "intermediate_05": {
+   "route": "intermediate",
+   "x": -202.53,
+   "y": -302.22,
+   "lon": 143.0915371,
+   "lat": -37.2767422,
+   "centre_compass_deg": 306.8,
+   "links": [
+    "intermediate_04",
+    "intermediate_06"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_04",
+     "compass_deg": 198.6,
+     "dist_m": 36.7
+    },
+    {
+     "to": "intermediate_06",
+     "compass_deg": 313.1,
+     "dist_m": 44.2
+    }
+   ]
+  },
+  "intermediate_06": {
+   "route": "intermediate",
+   "x": -234.77,
+   "y": -272.01,
+   "lon": 143.0911661,
+   "lat": -37.2764765,
+   "centre_compass_deg": 289.9,
+   "links": [
+    "intermediate_05",
+    "intermediate_07"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_05",
+     "compass_deg": 133.1,
+     "dist_m": 44.2
+    },
+    {
+     "to": "intermediate_07",
+     "compass_deg": 5.5,
+     "dist_m": 30.1
+    }
+   ]
+  },
+  "intermediate_07": {
+   "route": "intermediate",
+   "x": -231.9,
+   "y": -242.06,
+   "lon": 143.091191,
+   "lat": -37.2762061,
+   "centre_compass_deg": 95.3,
+   "links": [
+    "intermediate_06",
+    "intermediate_08"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_06",
+     "compass_deg": 185.5,
+     "dist_m": 30.1
+    },
+    {
+     "to": "intermediate_08",
+     "compass_deg": 27.6,
+     "dist_m": 34.6
+    }
+   ]
+  },
+  "intermediate_08": {
+   "route": "intermediate",
+   "x": -215.88,
+   "y": -211.42,
+   "lon": 143.091364,
+   "lat": -37.2759269,
+   "centre_compass_deg": 303.2,
+   "links": [
+    "intermediate_07",
+    "intermediate_09"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_07",
+     "compass_deg": 207.6,
+     "dist_m": 34.6
+    },
+    {
+     "to": "intermediate_09",
+     "compass_deg": 313.0,
+     "dist_m": 40.5
+    }
+   ]
+  },
+  "intermediate_09": {
+   "route": "intermediate",
+   "x": -245.54,
+   "y": -183.8,
+   "lon": 143.0910228,
+   "lat": -37.2756841,
+   "centre_compass_deg": 72.2,
+   "links": [
+    "intermediate_08",
+    "intermediate_10"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_08",
+     "compass_deg": 133.0,
+     "dist_m": 40.5
+    },
+    {
+     "to": "intermediate_10",
+     "compass_deg": 32.3,
+     "dist_m": 40.2
+    }
+   ]
+  },
+  "intermediate_10": {
+   "route": "intermediate",
+   "x": -224.03,
+   "y": -149.82,
+   "lon": 143.0912568,
+   "lat": -37.2753737,
+   "centre_compass_deg": 298.6,
+   "links": [
+    "intermediate_09",
+    "intermediate_11",
+    "lift_02"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_09",
+     "compass_deg": 212.3,
+     "dist_m": 40.2
+    },
+    {
+     "to": "intermediate_11",
+     "compass_deg": 290.2,
+     "dist_m": 44.4
+    },
+    {
+     "to": "lift_02",
+     "compass_deg": 46.4,
+     "dist_m": 36.6
+    }
+   ]
+  },
+  "intermediate_11": {
+   "route": "intermediate",
+   "x": -265.68,
+   "y": -134.48,
+   "lon": 143.0907835,
+   "lat": -37.2752437,
+   "centre_compass_deg": 312.0,
+   "links": [
+    "intermediate_10",
+    "intermediate_12"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_10",
+     "compass_deg": 110.2,
+     "dist_m": 44.4
+    },
+    {
+     "to": "intermediate_12",
+     "compass_deg": 14.9,
+     "dist_m": 39.1
+    }
+   ]
+  },
+  "intermediate_12": {
+   "route": "intermediate",
+   "x": -255.6,
+   "y": -96.65,
+   "lon": 143.0908876,
+   "lat": -37.2749009,
+   "centre_compass_deg": 10.0,
+   "links": [
+    "intermediate_11",
+    "intermediate_13"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_11",
+     "compass_deg": 194.9,
+     "dist_m": 39.1
+    },
+    {
+     "to": "intermediate_13",
+     "compass_deg": 9.1,
+     "dist_m": 30.6
+    }
+   ]
+  },
+  "intermediate_13": {
+   "route": "intermediate",
+   "x": -250.77,
+   "y": -66.46,
+   "lon": 143.0909346,
+   "lat": -37.2746281,
+   "centre_compass_deg": 8.7,
+   "links": [
+    "intermediate_12",
+    "intermediate_14",
+    "kids_loop_02",
+    "kids_loop_03",
+    "lift_00",
+    "lift_01"
+   ],
+   "arrows": [
+    {
+     "to": "intermediate_12",
+     "compass_deg": 189.1,
+     "dist_m": 30.6
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 13.7,
+     "dist_m": 37.1
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 28.4,
+     "dist_m": 35.1
+    },
+    {
+     "to": "kids_loop_03",
+     "compass_deg": 344.7,
+     "dist_m": 31.3
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 32.0,
+     "dist_m": 27.1
+    },
+    {
+     "to": "lift_01",
+     "compass_deg": 116.6,
+     "dist_m": 38.5
+    }
+   ]
+  },
+  "intermediate_14": {
+   "route": "intermediate",
+   "x": -242.01,
+   "y": -30.45,
+   "lon": 143.0910244,
+   "lat": -37.2743019,
+   "centre_compass_deg": 359.0,
+   "links": [
+    "arrival_walk_08",
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "intermediate_13",
+    "kids_loop_01",
+    "kids_loop_02",
+    "kids_loop_03",
+    "lift_00"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 38.2,
+     "dist_m": 38.2
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 12.7,
+     "dist_m": 19.9
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 14.6,
+     "dist_m": 14.1
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 54.2,
+     "dist_m": 30.4
+    },
+    {
+     "to": "intermediate_13",
+     "compass_deg": 193.7,
+     "dist_m": 37.1
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 87.6,
+     "dist_m": 32.0
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 122.7,
+     "dist_m": 9.4
+    },
+    {
+     "to": "kids_loop_03",
+     "compass_deg": 251.2,
+     "dist_m": 18.0
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 156.5,
+     "dist_m": 14.2
+    }
+   ]
+  },
+  "beginner_00": {
+   "route": "beginner",
+   "x": -109.08,
+   "y": -464.5,
+   "lon": 143.0926311,
+   "lat": -37.2781853,
+   "centre_compass_deg": 255.9,
+   "links": [
+    "beginner_01",
+    "intermediate_00"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_01",
+     "compass_deg": 250.3,
+     "dist_m": 53.1
+    },
+    {
+     "to": "intermediate_00",
+     "compass_deg": 330.5,
+     "dist_m": 24.5
+    }
+   ]
+  },
+  "beginner_01": {
+   "route": "beginner",
+   "x": -159.06,
+   "y": -482.4,
+   "lon": 143.092072,
+   "lat": -37.2783565,
+   "centre_compass_deg": 262.0,
+   "links": [
+    "beginner_00",
+    "beginner_02"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_00",
+     "compass_deg": 70.3,
+     "dist_m": 53.1
+    },
+    {
+     "to": "beginner_02",
+     "compass_deg": 275.4,
+     "dist_m": 53.8
+    }
+   ]
+  },
+  "beginner_02": {
+   "route": "beginner",
+   "x": -212.65,
+   "y": -477.38,
+   "lon": 143.0914667,
+   "lat": -37.278322,
+   "centre_compass_deg": 315.1,
+   "links": [
+    "beginner_01",
+    "beginner_03"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_01",
+     "compass_deg": 95.4,
+     "dist_m": 53.8
+    },
+    {
+     "to": "beginner_03",
+     "compass_deg": 326.2,
+     "dist_m": 48.6
+    }
+   ]
+  },
+  "beginner_03": {
+   "route": "beginner",
+   "x": -239.64,
+   "y": -437.02,
+   "lon": 143.0911524,
+   "lat": -37.2779639,
+   "centre_compass_deg": 291.2,
+   "links": [
+    "beginner_02",
+    "beginner_04"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_02",
+     "compass_deg": 146.2,
+     "dist_m": 48.6
+    },
+    {
+     "to": "beginner_04",
+     "compass_deg": 277.1,
+     "dist_m": 54.4
+    }
+   ]
+  },
+  "beginner_04": {
+   "route": "beginner",
+   "x": -293.64,
+   "y": -430.26,
+   "lon": 143.090542,
+   "lat": -37.2779137,
+   "centre_compass_deg": 276.7,
+   "links": [
+    "beginner_03",
+    "beginner_05"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_03",
+     "compass_deg": 97.1,
+     "dist_m": 54.4
+    },
+    {
+     "to": "beginner_05",
+     "compass_deg": 283.5,
+     "dist_m": 54.0
+    }
+   ]
+  },
+  "beginner_05": {
+   "route": "beginner",
+   "x": -346.12,
+   "y": -417.68,
+   "lon": 143.0899473,
+   "lat": -37.2778108,
+   "centre_compass_deg": 293.4,
+   "links": [
+    "beginner_04",
+    "beginner_06"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_04",
+     "compass_deg": 103.5,
+     "dist_m": 54.0
+    },
+    {
+     "to": "beginner_06",
+     "compass_deg": 278.5,
+     "dist_m": 54.3
+    }
+   ]
+  },
+  "beginner_06": {
+   "route": "beginner",
+   "x": -399.84,
+   "y": -409.63,
+   "lon": 143.0893398,
+   "lat": -37.277749,
+   "centre_compass_deg": 279.0,
+   "links": [
+    "beginner_05",
+    "beginner_07"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_05",
+     "compass_deg": 98.5,
+     "dist_m": 54.3
+    },
+    {
+     "to": "beginner_07",
+     "compass_deg": 26.9,
+     "dist_m": 26.8
+    }
+   ]
+  },
+  "beginner_07": {
+   "route": "beginner",
+   "x": -387.69,
+   "y": -385.71,
+   "lon": 143.0894707,
+   "lat": -37.2775312,
+   "centre_compass_deg": 90.0,
+   "links": [
+    "beginner_06",
+    "beginner_08"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_06",
+     "compass_deg": 206.9,
+     "dist_m": 26.8
+    },
+    {
+     "to": "beginner_08",
+     "compass_deg": 81.8,
+     "dist_m": 54.6
+    }
+   ]
+  },
+  "beginner_08": {
+   "route": "beginner",
+   "x": -333.67,
+   "y": -377.89,
+   "lon": 143.0900777,
+   "lat": -37.2774499,
+   "centre_compass_deg": 76.7,
+   "links": [
+    "beginner_07",
+    "beginner_09"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_07",
+     "compass_deg": 261.8,
+     "dist_m": 54.6
+    },
+    {
+     "to": "beginner_09",
+     "compass_deg": 61.9,
+     "dist_m": 52.2
+    }
+   ]
+  },
+  "beginner_09": {
+   "route": "beginner",
+   "x": -287.59,
+   "y": -353.33,
+   "lon": 143.090591,
+   "lat": -37.2772195,
+   "centre_compass_deg": 88.7,
+   "links": [
+    "beginner_08",
+    "beginner_10"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_08",
+     "compass_deg": 241.9,
+     "dist_m": 52.2
+    },
+    {
+     "to": "beginner_10",
+     "compass_deg": 300.4,
+     "dist_m": 36.9
+    }
+   ]
+  },
+  "beginner_10": {
+   "route": "beginner",
+   "x": -319.42,
+   "y": -334.63,
+   "lon": 143.0902276,
+   "lat": -37.2770574,
+   "centre_compass_deg": 297.4,
+   "links": [
+    "beginner_09",
+    "beginner_11"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_09",
+     "compass_deg": 120.4,
+     "dist_m": 36.9
+    },
+    {
+     "to": "beginner_11",
+     "compass_deg": 283.3,
+     "dist_m": 54.6
+    }
+   ]
+  },
+  "beginner_11": {
+   "route": "beginner",
+   "x": -372.5,
+   "y": -322.05,
+   "lon": 143.0896261,
+   "lat": -37.2769547,
+   "centre_compass_deg": 287.8,
+   "links": [
+    "beginner_10",
+    "beginner_12"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_10",
+     "compass_deg": 103.3,
+     "dist_m": 54.6
+    },
+    {
+     "to": "beginner_12",
+     "compass_deg": 288.5,
+     "dist_m": 53.7
+    }
+   ]
+  },
+  "beginner_12": {
+   "route": "beginner",
+   "x": -423.47,
+   "y": -305.02,
+   "lon": 143.0890472,
+   "lat": -37.2768114,
+   "centre_compass_deg": 315.7,
+   "links": [
+    "beginner_11",
+    "beginner_13"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_11",
+     "compass_deg": 108.5,
+     "dist_m": 53.7
+    },
+    {
+     "to": "beginner_13",
+     "compass_deg": 61.5,
+     "dist_m": 46.7
+    }
+   ]
+  },
+  "beginner_13": {
+   "route": "beginner",
+   "x": -382.4,
+   "y": -282.7,
+   "lon": 143.0895047,
+   "lat": -37.2766022,
+   "centre_compass_deg": 71.8,
+   "links": [
+    "beginner_12",
+    "beginner_14"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_12",
+     "compass_deg": 241.5,
+     "dist_m": 46.7
+    },
+    {
+     "to": "beginner_14",
+     "compass_deg": 82.1,
+     "dist_m": 53.3
+    }
+   ]
+  },
+  "beginner_14": {
+   "route": "beginner",
+   "x": -329.65,
+   "y": -275.34,
+   "lon": 143.0900975,
+   "lat": -37.2765253,
+   "centre_compass_deg": 89.2,
+   "links": [
+    "beginner_13",
+    "beginner_15"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_13",
+     "compass_deg": 262.1,
+     "dist_m": 53.3
+    },
+    {
+     "to": "beginner_15",
+     "compass_deg": 58.1,
+     "dist_m": 46.6
+    }
+   ]
+  },
+  "beginner_15": {
+   "route": "beginner",
+   "x": -290.13,
+   "y": -250.71,
+   "lon": 143.0905368,
+   "lat": -37.2762956,
+   "centre_compass_deg": 326.0,
+   "links": [
+    "beginner_14",
+    "beginner_16"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_14",
+     "compass_deg": 238.1,
+     "dist_m": 46.6
+    },
+    {
+     "to": "beginner_16",
+     "compass_deg": 284.0,
+     "dist_m": 54.3
+    }
+   ]
+  },
+  "beginner_16": {
+   "route": "beginner",
+   "x": -342.78,
+   "y": -237.56,
+   "lon": 143.08994,
+   "lat": -37.2761876,
+   "centre_compass_deg": 279.7,
+   "links": [
+    "beginner_15",
+    "beginner_17"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_15",
+     "compass_deg": 104.0,
+     "dist_m": 54.3
+    },
+    {
+     "to": "beginner_17",
+     "compass_deg": 282.1,
+     "dist_m": 54.4
+    }
+   ]
+  },
+  "beginner_17": {
+   "route": "beginner",
+   "x": -395.94,
+   "y": -226.12,
+   "lon": 143.089338,
+   "lat": -37.2760951,
+   "centre_compass_deg": 276.3,
+   "links": [
+    "beginner_16",
+    "beginner_18"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_16",
+     "compass_deg": 102.1,
+     "dist_m": 54.4
+    },
+    {
+     "to": "beginner_18",
+     "compass_deg": 337.4,
+     "dist_m": 21.9
+    }
+   ]
+  },
+  "beginner_18": {
+   "route": "beginner",
+   "x": -404.36,
+   "y": -205.85,
+   "lon": 143.089238,
+   "lat": -37.2759143,
+   "centre_compass_deg": 64.2,
+   "links": [
+    "beginner_17",
+    "beginner_19"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_17",
+     "compass_deg": 157.4,
+     "dist_m": 21.9
+    },
+    {
+     "to": "beginner_19",
+     "compass_deg": 74.9,
+     "dist_m": 53.8
+    }
+   ]
+  },
+  "beginner_19": {
+   "route": "beginner",
+   "x": -352.38,
+   "y": -191.83,
+   "lon": 143.0898205,
+   "lat": -37.2757776,
+   "centre_compass_deg": 89.6,
+   "links": [
+    "beginner_18",
+    "beginner_20"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_18",
+     "compass_deg": 254.9,
+     "dist_m": 53.8
+    },
+    {
+     "to": "beginner_20",
+     "compass_deg": 77.8,
+     "dist_m": 52.9
+    }
+   ]
+  },
+  "beginner_20": {
+   "route": "beginner",
+   "x": -300.64,
+   "y": -180.62,
+   "lon": 143.0904009,
+   "lat": -37.2756664,
+   "centre_compass_deg": 315.0,
+   "links": [
+    "beginner_19",
+    "beginner_21"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_19",
+     "compass_deg": 257.8,
+     "dist_m": 52.9
+    },
+    {
+     "to": "beginner_21",
+     "compass_deg": 303.4,
+     "dist_m": 46.0
+    }
+   ]
+  },
+  "beginner_21": {
+   "route": "beginner",
+   "x": -339.03,
+   "y": -155.32,
+   "lon": 143.0899619,
+   "lat": -37.275446,
+   "centre_compass_deg": 293.8,
+   "links": [
+    "beginner_20",
+    "beginner_22"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_20",
+     "compass_deg": 123.4,
+     "dist_m": 46.0
+    },
+    {
+     "to": "beginner_22",
+     "compass_deg": 292.1,
+     "dist_m": 54.7
+    }
+   ]
+  },
+  "beginner_22": {
+   "route": "beginner",
+   "x": -389.66,
+   "y": -134.73,
+   "lon": 143.0893859,
+   "lat": -37.2752707,
+   "centre_compass_deg": 284.3,
+   "links": [
+    "beginner_21",
+    "beginner_23"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_21",
+     "compass_deg": 112.1,
+     "dist_m": 54.7
+    },
+    {
+     "to": "beginner_23",
+     "compass_deg": 45.2,
+     "dist_m": 28.6
+    }
+   ]
+  },
+  "beginner_23": {
+   "route": "beginner",
+   "x": -369.38,
+   "y": -114.56,
+   "lon": 143.0896096,
+   "lat": -37.275085,
+   "centre_compass_deg": 80.1,
+   "links": [
+    "beginner_22",
+    "beginner_24"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_22",
+     "compass_deg": 225.2,
+     "dist_m": 28.6
+    },
+    {
+     "to": "beginner_24",
+     "compass_deg": 76.5,
+     "dist_m": 54.1
+    }
+   ]
+  },
+  "beginner_24": {
+   "route": "beginner",
+   "x": -316.79,
+   "y": -101.95,
+   "lon": 143.0901992,
+   "lat": -37.2749609,
+   "centre_compass_deg": 60.8,
+   "links": [
+    "beginner_23",
+    "beginner_25"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_23",
+     "compass_deg": 256.5,
+     "dist_m": 54.1
+    },
+    {
+     "to": "beginner_25",
+     "compass_deg": 330.8,
+     "dist_m": 41.6
+    }
+   ]
+  },
+  "beginner_25": {
+   "route": "beginner",
+   "x": -337.11,
+   "y": -65.61,
+   "lon": 143.0899611,
+   "lat": -37.2746376,
+   "centre_compass_deg": 318.5,
+   "links": [
+    "beginner_24",
+    "beginner_26"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_24",
+     "compass_deg": 150.8,
+     "dist_m": 41.6
+    },
+    {
+     "to": "beginner_26",
+     "compass_deg": 35.4,
+     "dist_m": 38.9
+    }
+   ]
+  },
+  "beginner_26": {
+   "route": "beginner",
+   "x": -314.63,
+   "y": -33.92,
+   "lon": 143.0902066,
+   "lat": -37.2743477,
+   "centre_compass_deg": 64.6,
+   "links": [
+    "beginner_25",
+    "kids_loop_04",
+    "kids_loop_05",
+    "kids_loop_06"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_25",
+     "compass_deg": 215.4,
+     "dist_m": 38.9
+    },
+    {
+     "to": "kids_loop_04",
+     "compass_deg": 86.3,
+     "dist_m": 31.1
+    },
+    {
+     "to": "kids_loop_05",
+     "compass_deg": 34.1,
+     "dist_m": 16.5
+    },
+    {
+     "to": "kids_loop_06",
+     "compass_deg": 13.6,
+     "dist_m": 36.7
+    }
+   ]
+  },
+  "kids_loop_00": {
+   "route": "kids_loop",
+   "x": -193.77,
+   "y": -12.25,
+   "lon": 143.0915636,
+   "lat": -37.2741283,
+   "centre_compass_deg": 191.3,
+   "links": [
+    "arrival_walk_07",
+    "arrival_walk_08",
+    "glamp_walk_01",
+    "glamp_walk_02",
+    "glamp_walk_03",
+    "kids_loop_01"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 309.7,
+     "dist_m": 38.5
+    },
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 295.7,
+     "dist_m": 27.3
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 268.9,
+     "dist_m": 23.6
+    },
+    {
+     "to": "glamp_walk_02",
+     "compass_deg": 325.9,
+     "dist_m": 4.4
+    },
+    {
+     "to": "glamp_walk_03",
+     "compass_deg": 67.7,
+     "dist_m": 20.7
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 223.9,
+     "dist_m": 23.4
+    }
+   ]
+  },
+  "kids_loop_01": {
+   "route": "kids_loop",
+   "x": -210.02,
+   "y": -29.11,
+   "lon": 143.0913846,
+   "lat": -37.2742835,
+   "centre_compass_deg": 244.1,
+   "links": [
+    "arrival_walk_08",
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "glamp_walk_02",
+    "intermediate_14",
+    "kids_loop_00",
+    "kids_loop_02",
+    "lift_00"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 343.8,
+     "dist_m": 29.9
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 303.2,
+     "dist_m": 33.0
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 293.4,
+     "dist_m": 31.0
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 336.0,
+     "dist_m": 18.0
+    },
+    {
+     "to": "glamp_walk_02",
+     "compass_deg": 33.9,
+     "dist_m": 24.7
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 267.6,
+     "dist_m": 32.0
+    },
+    {
+     "to": "kids_loop_00",
+     "compass_deg": 43.9,
+     "dist_m": 23.4
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 255.0,
+     "dist_m": 24.9
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 241.4,
+     "dist_m": 30.0
+    }
+   ]
+  },
+  "kids_loop_02": {
+   "route": "kids_loop",
+   "x": -234.07,
+   "y": -35.55,
+   "lon": 143.0911152,
+   "lat": -37.2743463,
+   "centre_compass_deg": 261.5,
+   "links": [
+    "arrival_walk_08",
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "intermediate_13",
+    "intermediate_14",
+    "kids_loop_01",
+    "kids_loop_03",
+    "lift_00"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 24.1,
+     "dist_m": 38.5
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 351.8,
+     "dist_m": 24.8
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 346.9,
+     "dist_m": 19.3
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 36.2,
+     "dist_m": 28.3
+    },
+    {
+     "to": "intermediate_13",
+     "compass_deg": 208.4,
+     "dist_m": 35.1
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 302.7,
+     "dist_m": 9.4
+    },
+    {
+     "to": "kids_loop_01",
+     "compass_deg": 75.0,
+     "dist_m": 24.9
+    },
+    {
+     "to": "kids_loop_03",
+     "compass_deg": 268.4,
+     "dist_m": 24.9
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 196.2,
+     "dist_m": 8.2
+    }
+   ]
+  },
+  "kids_loop_03": {
+   "route": "kids_loop",
+   "x": -259.01,
+   "y": -36.25,
+   "lon": 143.0908342,
+   "lat": -37.2743576,
+   "centre_compass_deg": 274.4,
+   "links": [
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "intermediate_13",
+    "intermediate_14",
+    "kids_loop_02",
+    "kids_loop_04",
+    "lift_00"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 40.3,
+     "dist_m": 33.1
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 46.6,
+     "dist_m": 28.3
+    },
+    {
+     "to": "intermediate_13",
+     "compass_deg": 164.7,
+     "dist_m": 31.3
+    },
+    {
+     "to": "intermediate_14",
+     "compass_deg": 71.2,
+     "dist_m": 18.0
+    },
+    {
+     "to": "kids_loop_02",
+     "compass_deg": 88.4,
+     "dist_m": 24.9
+    },
+    {
+     "to": "kids_loop_04",
+     "compass_deg": 280.0,
+     "dist_m": 24.9
+    },
+    {
+     "to": "lift_00",
+     "compass_deg": 107.6,
+     "dist_m": 23.8
+    }
+   ]
+  },
+  "kids_loop_04": {
+   "route": "kids_loop",
+   "x": -283.57,
+   "y": -31.93,
+   "lon": 143.0905563,
+   "lat": -37.2743235,
+   "centre_compass_deg": 288.7,
+   "links": [
+    "beginner_26",
+    "kids_loop_03",
+    "kids_loop_05"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_26",
+     "compass_deg": 266.3,
+     "dist_m": 31.1
+    },
+    {
+     "to": "kids_loop_03",
+     "compass_deg": 100.0,
+     "dist_m": 24.9
+    },
+    {
+     "to": "kids_loop_05",
+     "compass_deg": 298.1,
+     "dist_m": 24.7
+    }
+   ]
+  },
+  "kids_loop_05": {
+   "route": "kids_loop",
+   "x": -305.4,
+   "y": -20.27,
+   "lon": 143.0903072,
+   "lat": -37.2742228,
+   "centre_compass_deg": 312.1,
+   "links": [
+    "beginner_26",
+    "kids_loop_04",
+    "kids_loop_06"
+   ],
+   "arrows": [
+    {
+     "to": "beginner_26",
+     "compass_deg": 214.1,
+     "dist_m": 16.5
+    },
+    {
+     "to": "kids_loop_04",
+     "compass_deg": 118.1,
+     "dist_m": 24.7
+    },
+    {
+     "to": "kids_loop_06",
+     "compass_deg": 358.4,
+     "dist_m": 22.0
+    }
+   ]
+  },
+  "kids_loop_06": {
+   "route": "kids_loop",
+   "x": -306.02,
+   "y": 1.71,
+   "lon": 143.0902948,
+   "lat": -37.274025,
+   "centre_compass_deg": 44.6,
+   "links": [
+    "arrival_walk_03",
+    "arrival_walk_04",
+    "beginner_26",
+    "kids_loop_05",
+    "kids_loop_07"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_03",
+     "compass_deg": 358.1,
+     "dist_m": 30.3
+    },
+    {
+     "to": "arrival_walk_04",
+     "compass_deg": 40.4,
+     "dist_m": 30.7
+    },
+    {
+     "to": "beginner_26",
+     "compass_deg": 193.6,
+     "dist_m": 36.7
+    },
+    {
+     "to": "kids_loop_05",
+     "compass_deg": 178.4,
+     "dist_m": 22.0
+    },
+    {
+     "to": "kids_loop_07",
+     "compass_deg": 63.0,
+     "dist_m": 24.7
+    }
+   ]
+  },
+  "kids_loop_07": {
+   "route": "kids_loop",
+   "x": -283.98,
+   "y": 12.93,
+   "lon": 143.0905405,
+   "lat": -37.2739195,
+   "centre_compass_deg": 73.9,
+   "links": [
+    "arrival_walk_03",
+    "arrival_walk_04",
+    "arrival_walk_05",
+    "kids_loop_06",
+    "kids_loop_08"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_03",
+     "compass_deg": 309.7,
+     "dist_m": 29.9
+    },
+    {
+     "to": "arrival_walk_04",
+     "compass_deg": 350.0,
+     "dist_m": 12.3
+    },
+    {
+     "to": "arrival_walk_05",
+     "compass_deg": 64.0,
+     "dist_m": 21.8
+    },
+    {
+     "to": "kids_loop_06",
+     "compass_deg": 243.0,
+     "dist_m": 24.7
+    },
+    {
+     "to": "kids_loop_08",
+     "compass_deg": 81.7,
+     "dist_m": 24.9
+    }
+   ]
+  },
+  "kids_loop_08": {
+   "route": "kids_loop",
+   "x": -259.3,
+   "y": 16.53,
+   "lon": 143.0908177,
+   "lat": -37.2738822,
+   "centre_compass_deg": 88.2,
+   "links": [
+    "arrival_walk_04",
+    "arrival_walk_05",
+    "arrival_walk_06",
+    "arrival_walk_07",
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "kids_loop_07",
+    "kids_loop_09"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_04",
+     "compass_deg": 287.7,
+     "dist_m": 28.2
+    },
+    {
+     "to": "arrival_walk_05",
+     "compass_deg": 319.4,
+     "dist_m": 7.9
+    },
+    {
+     "to": "arrival_walk_06",
+     "compass_deg": 74.8,
+     "dist_m": 17.4
+    },
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 96.7,
+     "dist_m": 36.2
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 141.8,
+     "dist_m": 35.1
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 148.0,
+     "dist_m": 39.3
+    },
+    {
+     "to": "kids_loop_07",
+     "compass_deg": 261.7,
+     "dist_m": 24.9
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 93.4,
+     "dist_m": 25.0
+    }
+   ]
+  },
+  "kids_loop_09": {
+   "route": "kids_loop",
+   "x": -234.39,
+   "y": 15.06,
+   "lon": 143.0910988,
+   "lat": -37.2738904,
+   "centre_compass_deg": 100.8,
+   "links": [
+    "arrival_walk_05",
+    "arrival_walk_06",
+    "arrival_walk_07",
+    "arrival_walk_08",
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "kids_loop_08",
+    "kids_loop_10"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_05",
+     "compass_deg": 283.9,
+     "dist_m": 30.9
+    },
+    {
+     "to": "arrival_walk_06",
+     "compass_deg": 306.8,
+     "dist_m": 10.1
+    },
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 104.0,
+     "dist_m": 11.4
+    },
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 134.0,
+     "dist_m": 22.3
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 187.1,
+     "dist_m": 26.3
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 187.3,
+     "dist_m": 32.1
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 148.4,
+     "dist_m": 32.6
+    },
+    {
+     "to": "kids_loop_08",
+     "compass_deg": 273.4,
+     "dist_m": 25.0
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 106.5,
+     "dist_m": 24.9
+    }
+   ]
+  },
+  "kids_loop_10": {
+   "route": "kids_loop",
+   "x": -210.5,
+   "y": 7.98,
+   "lon": 143.0913699,
+   "lat": -37.2739495,
+   "centre_compass_deg": 117.7,
+   "links": [
+    "arrival_walk_06",
+    "arrival_walk_07",
+    "arrival_walk_08",
+    "arrival_walk_09",
+    "glamp_walk_00",
+    "glamp_walk_01",
+    "glamp_walk_02",
+    "glamp_walk_03",
+    "kids_loop_09",
+    "kids_loop_11"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_06",
+     "compass_deg": 292.3,
+     "dist_m": 34.5
+    },
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 288.6,
+     "dist_m": 13.6
+    },
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 223.1,
+     "dist_m": 11.5
+    },
+    {
+     "to": "arrival_walk_09",
+     "compass_deg": 235.0,
+     "dist_m": 33.1
+    },
+    {
+     "to": "glamp_walk_00",
+     "compass_deg": 228.5,
+     "dist_m": 37.3
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 198.3,
+     "dist_m": 21.8
+    },
+    {
+     "to": "glamp_walk_02",
+     "compass_deg": 139.3,
+     "dist_m": 21.9
+    },
+    {
+     "to": "glamp_walk_03",
+     "compass_deg": 109.1,
+     "dist_m": 37.9
+    },
+    {
+     "to": "kids_loop_09",
+     "compass_deg": 286.5,
+     "dist_m": 24.9
+    },
+    {
+     "to": "kids_loop_11",
+     "compass_deg": 136.1,
+     "dist_m": 24.0
+    }
+   ]
+  },
+  "kids_loop_11": {
+   "route": "kids_loop",
+   "x": -193.87,
+   "y": -9.32,
+   "lon": 143.0915617,
+   "lat": -37.274102,
+   "centre_compass_deg": 171.3,
+   "links": [
+    "arrival_walk_07",
+    "arrival_walk_08",
+    "glamp_walk_01",
+    "glamp_walk_02",
+    "glamp_walk_03",
+    "kids_loop_10"
+   ],
+   "arrows": [
+    {
+     "to": "arrival_walk_07",
+     "compass_deg": 306.2,
+     "dist_m": 36.6
+    },
+    {
+     "to": "arrival_walk_08",
+     "compass_deg": 290.0,
+     "dist_m": 26.0
+    },
+    {
+     "to": "glamp_walk_01",
+     "compass_deg": 261.8,
+     "dist_m": 23.7
+    },
+    {
+     "to": "glamp_walk_02",
+     "compass_deg": 286.9,
+     "dist_m": 2.5
+    },
+    {
+     "to": "glamp_walk_03",
+     "compass_deg": 75.7,
+     "dist_m": 19.8
+    },
+    {
+     "to": "kids_loop_10",
+     "compass_deg": 316.1,
+     "dist_m": 24.0
+    }
+   ]
+  }
+ }
+}

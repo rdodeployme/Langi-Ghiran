@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Langi Ghiran — photo-real views</title>
+<style>
+  :root{--ink:#171E21;--yellow:#FCC830;--paper:#f4efe4;--muted:#b9b3a6}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:var(--paper);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+  header{padding:28px 16px 8px;max-width:1200px;margin:0 auto}
+  h1{font-size:clamp(26px,4vw,40px);line-height:1.1;margin:0 0 6px}
+  header p{margin:0;color:var(--muted);max-width:60ch}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+  .bar button{font:600 14px/1 system-ui,sans-serif;padding:10px 14px;border-radius:999px;border:1px solid #3a4448;background:transparent;color:var(--paper);cursor:pointer}
+  .bar button[aria-pressed=true]{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+  main{max-width:1200px;margin:0 auto;padding:12px 16px 48px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .card{position:relative;border:0;padding:0;border-radius:12px;overflow:hidden;background:#222b2f;cursor:pointer;text-align:left;color:inherit;aspect-ratio:16/10}
+  .card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+  .card:hover img{transform:scale(1.04)}
+  .card span{position:absolute;left:0;right:0;bottom:0;padding:28px 12px 10px;background:linear-gradient(transparent,rgba(23,30,33,.9));font-weight:600}
+  .card:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+  .walks{max-width:1200px;margin:0 auto;padding:0 16px 48px}
+  .walks h2{font-size:20px;margin:0 0 10px}
+  .walks .bar{margin:0}
+  video{display:block;width:100%;max-width:1200px;margin:8px auto 0;border-radius:12px;background:#000}
+  .film{padding:0 16px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:0 16px 32px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Langi Ghiran — photo-real views</h1>
+  <p>Concept renders on the real terrain of the bike park, glamping camp and Mount Langi Ghiran. Not yet built. Tap a view to look around; pick the time of day.</p>
+  <div class="bar" role="group" aria-label="Time of day">
+    <button data-l="day" aria-pressed="true">Day</button><button data-l="golden" aria-pressed="false">Golden hour</button><button data-l="dusk" aria-pressed="false">Dusk</button>
+  </div>
+</header>
+<div class="film" id="film" hidden><video controls playsinline preload="none" poster="../film/lg-showcase-poster.jpg"><source src="../film/lg-showcase.mp4" type="video/mp4"></video></div>
+<main id="grid"></main>
+<section class="walks" id="walks" hidden><h2>Walk a route</h2><div class="bar" id="routes"></div></section>
+<footer>Langi Ghiran Recycling · concept visualisation</footer>
+<script type="module">
+import { open360 } from './lg-360.js';
+const M = await (await fetch('lg-360-manifest.json')).json();
+let light = 'day';
+const ORDER = ['arrival','lift_base','lift_ride','top_station','expert','intermediate','beginner','kids_park','glamping','picnic','reservoir','larnejeering','summit','plains'];
+const grid = document.getElementById('grid');
+const exists = url => fetch(url, { method: 'HEAD' }).then(r => r.ok).catch(() => false);
+async function draw() {
+  grid.innerHTML = '';
+  for (const id of ORDER) {
+    const s = M.stops[id]; if (!s) continue;
+    const l = (s.lights || ['day']).includes(light) ? light : 'day';
+    const src = `lg-360-${id}-${l}-m.jpg`;
+    const b = document.createElement('button'); b.className = 'card'; b.innerHTML = `<img alt="" loading="lazy" src="${src}"><span>${s.title}</span>`;
+    b.querySelector('img').onerror = () => b.remove();
+    b.onclick = () => open360({ stop: id, light, base: './', manifest: M });
+    grid.appendChild(b);
+  }
+}
+document.querySelectorAll('header .bar button').forEach(b => b.onclick = () => {
+  light = b.dataset.l; document.querySelectorAll('header .bar button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); draw(); });
+draw();
+const routes = {}; for (const [id, h] of Object.entries(M.hops)) (routes[h.route] = routes[h.route] || []).push(id);
+const NAMES = { glamp_walk: 'Glamping walk', arrival_walk: 'Arrival path', kids_loop: "Kids' loop", lift: 'Lift line', expert: 'Expert run', intermediate: 'Intermediate run', beginner: 'Beginner run' };
+if (await exists(`hops/${Object.keys(M.hops)[0]}-m.jpg`)) {
+  document.getElementById('walks').hidden = false;
+  for (const [r, ids] of Object.entries(routes)) { const b = document.createElement('button'); b.textContent = NAMES[r] || r.replace(/_/g, ' ');
+    b.onclick = () => open360({ hop: ids.sort()[0], base: './', manifest: M }); document.getElementById('routes').appendChild(b); }
+}
+if (await exists('../film/lg-showcase.mp4')) document.getElementById('film').hidden = false;
+</script>
+</body>
+</html>
