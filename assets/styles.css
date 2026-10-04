@@ -606,3 +606,6 @@ p,li,dd,figcaption,.lede,.section-head p,.note{text-wrap:pretty}
 .fact b{font-size:clamp(1.4rem,2.3vw,2.1rem)}
 .measures{grid-template-columns:repeat(auto-fit,minmax(min(100%,max(15rem,calc((100% - 2px) / 3))),1fr))}
 .nw,a[href^="tel:"]{white-space:nowrap}
+.sen-measure,.sen-fit{white-space:nowrap}
+.lede .sen{display:inline;text-wrap:inherit}
+.lede .sen.sen-fit,.lede .sen.sen-measure{display:inline-block}

@@ -39,6 +39,46 @@
   var y = $('#year');
   if (y) y.textContent = new Date().getFullYear();
 
+  /* ---------- Sentence line-breaking ----------
+     Multi-sentence headings wrap each sentence in .sen so a new sentence moves to the
+     next line whole. Where a sentence fits on one line it is locked to one line
+     (.sen-fit, white-space:nowrap); otherwise it wraps (balanced). Measured, not guessed,
+     so no browser can drop the last word of a sentence that fits by a fraction of a pixel. */
+  var sens = $$('.sen');
+  function blockParent(el) {
+    var p = el.parentElement;
+    while (p && /^inline/.test(window.getComputedStyle(p).display)) p = p.parentElement;
+    return p;
+  }
+  function fitSentences() {
+    if (!sens.length) return;
+    // 1. Room available, read with nothing locked (a locked line can widen a grid cell).
+    sens.forEach(function (s) { s.classList.remove('sen-fit'); });
+    var avail = sens.map(function (s) {
+      var p = blockParent(s); if (!p) return 0;
+      var cs = window.getComputedStyle(p);
+      return p.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    });
+    // 2. Each sentence's one-line width.
+    sens.forEach(function (s) { s.classList.add('sen-measure'); });
+    var need = sens.map(function (s) { return s.getBoundingClientRect().width; });
+    // 3. Lock only the ones that fit, with 2px to spare.
+    sens.forEach(function (s, i) { s.classList.remove('sen-measure'); if (need[i] + 2 <= avail[i]) s.classList.add('sen-fit'); });
+  }
+  if (sens.length) {
+    fitSentences();
+    var fitRaf = 0, lastW = window.innerWidth;
+    window.addEventListener('resize', function () {
+      if (window.innerWidth === lastW) return; lastW = window.innerWidth;
+      cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(fitSentences);
+    });
+    if (doc.fonts) {
+      if (doc.fonts.ready) doc.fonts.ready.then(fitSentences);
+      if (doc.fonts.addEventListener) doc.fonts.addEventListener('loadingdone', fitSentences);
+    }
+    window.addEventListener('load', fitSentences);
+  }
+
   /* ---------- Reveal on scroll ---------- */
   var reveals = $$('.reveal');
   if ('IntersectionObserver' in window && !reduceMotion) {
