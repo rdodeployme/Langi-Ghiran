@@ -39,7 +39,8 @@
    "eye_m_AHD": 459.6,
    "centre_compass_deg": 337.1,
    "lights": [
-    "day"
+    "day",
+    "golden"
    ]
   },
   "expert": {
@@ -89,7 +90,9 @@
    "eye_m_AHD": 438.0,
    "centre_compass_deg": 315.0,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "picnic": {
@@ -118,7 +121,9 @@
    "lat": -37.2975,
    "eye_m_AHD": 903.4,
    "centre_compass_deg": 200.0,
-   "lights": []
+   "lights": [
+    "day"
+   ]
   },
   "summit": {
    "title": "Summit",
@@ -127,7 +132,9 @@
    "eye_m_AHD": 899.9,
    "centre_compass_deg": 300.0,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "plains": {
@@ -136,7 +143,10 @@
    "lat": -37.27398,
    "eye_m_AHD": 367.3,
    "centre_compass_deg": 190.0,
-   "lights": []
+   "lights": [
+    "day",
+    "golden"
+   ]
   }
  },
  "hops": {
