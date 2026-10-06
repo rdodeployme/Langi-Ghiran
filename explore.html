@@ -48,6 +48,10 @@
 .tour-ctrl .play:hover,.t-btn.go:hover{background:#fff;border-color:#fff}
 .tour-ctrl .free{margin-left:auto;border:0;padding:11px 4px;color:rgba(255,255,255,.75);text-decoration:underline;text-underline-offset:3px}
 .t-actions{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+.pr-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.14)}
+.pr-row .pr-lbl{flex:0 0 100%;font:700 .72rem/1 "Public Sans",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow)}
+.pr-enter{position:absolute;left:50%;top:76px;transform:translateX(-50%);z-index:6;font:700 .95rem/1 "Public Sans",system-ui,sans-serif;border:0;border-radius:999px;padding:13px 20px;background:var(--yellow);color:var(--ink);cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.pr-enter:hover{background:#fff}.pr-enter kbd{font:700 .75rem/1.3 system-ui;background:rgba(23,30,33,.15);border-radius:5px;padding:1px 6px;margin-left:6px}
 .tour-show{position:absolute;left:24px;bottom:24px;z-index:5;font:600 .9rem/1 "Public Sans",system-ui,sans-serif;border-radius:999px;padding:13px 18px;border:0;background:var(--yellow);color:var(--ink);cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 .tour-hint{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:4;background:rgba(15,20,22,.75);color:#fff;font-size:.82rem;padding:8px 14px;border-radius:999px;white-space:nowrap;pointer-events:none;transition:opacity .6s}
 .tour-hint.gone{opacity:0}
@@ -485,7 +489,7 @@
       <h2 class="ti-title">From old quarry<br>to <em>bike park.</em></h2>
       <p class="ti-sub">Explore the planned bike park, watch each run in action, then fly over the real landscape in 3D.</p>
       <div class="ti-actions">
-        <button type="button" class="ti-go" id="ti-film">Watch the film <span class="ti-len">60s</span></button>
+        <button type="button" class="ti-go" id="ti-film">Watch the film <span class="ti-len">45s</span></button>
         <button type="button" id="ti-go">Explore the park</button>
         <button type="button" id="ti-fly">3D fly-through</button>
       </div>
@@ -897,11 +901,12 @@
     var s = STOPS[i];
     $('tour-count').textContent = (i + 1) + ' / ' + STOPS.length;
     $('tour-title').innerHTML = (s.g ? '<span class="g ' + s.g + '"></span>' : '') + s.title;
-    $('tour-body').innerHTML = s.body + (s.extra ? s.extra() : '');
+    $('tour-body').innerHTML = s.body + (s.extra ? s.extra() : '') + prRow(PR[SLUG[i]]);
     Array.prototype.forEach.call(dots.children, function (b, n) { b.setAttribute('aria-current', n === i ? 'true' : 'false'); });
   }
   $('tour-body').addEventListener('click', function (e) {
-    var t = e.target.closest('[data-go],[data-ride],[data-tf],[data-film],[data-stand],[data-walk]'); if (!t) return;
+    var t = e.target.closest('[data-go],[data-ride],[data-tf],[data-film],[data-stand],[data-walk],[data-v360],[data-hop],[data-zone]'); if (!t) return;
+    if (prClick(t)) return;
     if (t.dataset.film) { stopPlay(); openFilm(t.dataset.film); return; }
     if (t.dataset.walk) { openGame(t.dataset.walk); return; }
     if (t.dataset.stand) { stand(t.dataset.stand); return; }
@@ -1447,7 +1452,7 @@
     mpCardEl.innerHTML = '<div class="mp-top"><button type="button" data-mp="-1">&larr; All</button><span>' + (mpSel + 1) + ' / ' + N + '</span><span class="mp-arrows"><button type="button" data-mp="' + ((mpSel + N - 1) % N) + '" aria-label="Previous">&larr;</button><button type="button" data-mp="' + ((mpSel + 1) % N) + '" aria-label="Next">&rarr;</button></span></div>' +
       clip(f.k, 'Concept clip: ' + f.name) +
       '<h2><span class="g ' + f.g + '"></span>' + f.name + '</h2><p>' + MP_TXT[f.k] + '</p>' +
-      '<div class="t-actions">' + (f.ride ? '<button type="button" class="t-btn go" data-film="' + f.k + '">&#9654; ' + (f.k === 'glamp' ? 'Watch the walk-through' : 'Watch the ride') + '</button>' + (f.k === 'glamp' ? '<button type="button" class="t-btn" data-walk="camp">Walk it in 3D</button>' : '<button type="button" class="t-btn" data-fly="' + f.k + '">Follow it in 3D</button>') : '<button type="button" class="t-btn go" data-fly="' + f.k + '">See it in 3D</button>') + '</div>' + stats +
+      prRow(PR_MP[f.k]) + '<div class="t-actions">' + (f.ride ? '<button type="button" class="t-btn go" data-film="' + f.k + '">&#9654; ' + (f.k === 'glamp' ? 'Watch the walk-through' : 'Watch the ride') + '</button>' + (f.k === 'glamp' ? '<button type="button" class="t-btn" data-walk="camp">Walk it in 3D</button>' : '<button type="button" class="t-btn" data-fly="' + f.k + '">Follow it in 3D</button>') : '<button type="button" class="t-btn go" data-fly="' + f.k + '">See it in 3D</button>') + '</div>' + stats +
       (f.ride && f.k !== 'glamp' ? '' : '<p style="margin:0"><span class="tbc">' + (f.k === 'glamp' ? 'Site layout and facilities TBC' : 'Final layout TBC') + '</span></p>');
   }
   function mpGo(n, dur) {
@@ -1459,7 +1464,8 @@
     if (!introOn && mode === 'park') try { history.replaceState(null, '', '#park' + (n >= 0 ? '-' + MP[n].k : '')); } catch (e) {}
   }
   mpEl.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-mp],[data-fly],[data-mptf],[data-film],[data-walk],#mp-snd'); if (!t) return;
+    var t = e.target.closest('[data-mp],[data-fly],[data-mptf],[data-film],[data-walk],[data-v360],[data-hop],[data-zone],#mp-snd'); if (!t) return;
+    if (prClick(t)) return;
     if (t.dataset.walk) { openGame(t.dataset.walk); return; }
     if (t.id === 'mp-snd') { setSound(!soundOn); return; }
     if (t.dataset.film) { openFilm(t.dataset.film); return; }
@@ -1608,8 +1614,8 @@
     $('film-title').textContent = 'LG bike park · the film';
     $('film-actions').innerHTML = '<button type="button" class="t-btn go" data-fgo="park">Explore the park &rarr;</button><button type="button" class="t-btn" data-fgo="fly">3D fly-through</button><button type="button" class="t-btn" data-frep="1">&#8634; Watch again</button>';
     film.classList.add('trailer'); film.classList.remove('ended'); film.hidden = false; requestAnimationFrame(function () { film.classList.add('on'); });
-    var v = TRAILER_PORTRAIT.matches ? '9x16' : '16x9';
-    fv.poster = 'assets/lg-trailer-' + v + '.webp'; fv.src = 'assets/lg-trailer-' + v + '.mp4';
+    var small = TRAILER_PORTRAIT.matches || window.innerWidth <= 900 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    fv.poster = 'assets/film/lg-showcase-poster.jpg'; fv.src = 'assets/film/lg-showcase' + (small ? '-720' : '') + '.mp4';
     fv.muted = filmMuted; setMuteLabel();
     var pp = fv.play(); if (pp && pp.catch) pp.catch(function () { fv.muted = true; filmMuted = true; setMuteLabel(); fv.play().catch(function () {}); });
     cancelAnimationFrame(filmRaf);
@@ -1735,6 +1741,7 @@
   $('ti-fly').addEventListener('click', function () { closeIntro(); i = 0; playing = true; $('tour-play').textContent = 'Pause'; setMode('fly'); });
   document.addEventListener('keydown', function (e) {
     if (e.altKey || e.ctrlKey || e.metaKey || /input|textarea|select/i.test(e.target.tagName)) return;
+    if (document.querySelector('.lg360, #lgw')) return;
     var r = tour.getBoundingClientRect(); if (r.bottom < 80 || r.top > innerHeight - 80) return;
     if (window.LGGame && window.LGGame.isOpen()) { if (e.key === 'Escape') window.LGGame.close(); return; }
     if (filmK) { if (e.key === 'Escape') closeFilm(); else if (e.key === ' ') { e.preventDefault(); if (fv.paused) fv.play(); else fv.pause(); } return; }
@@ -1749,6 +1756,71 @@
     else if (e.key === 'ArrowLeft') { stopAll(); go(i - 1); }
     else if (e.key === ' ' && (e.target === document.body || tour.contains(e.target))) { e.preventDefault(); $('tour-play').click(); }
   });
+
+  /* ---------- photo-real layer: 360° views, walking points, WASD walk-in areas ---------- */
+  var PR = {
+    'plains': { v: 'plains' }, 'lar-ne-jeering': { v: 'larnejeering' }, 'summit': { v: 'summit' }, 'picnic-ground': { v: 'picnic' },
+    'reservoir': { v: 'reservoir' }, 'former-quarry': { v: 'lift_base' }, 'bike-park': { v: 'top_station', z: 'top_station' },
+    'base': { v: 'arrival', hop: 'arrival_walk_00', hopTxt: 'Walk in from arrival' }, 'lift': { v: 'lift_ride', hop: 'lift_00', hopTxt: 'Walk the lift line' },
+    'beginner': { v: 'beginner', hop: 'beginner_00' }, 'intermediate': { v: 'intermediate', hop: 'intermediate_00' }, 'expert': { v: 'expert', hop: 'expert_00' },
+    'kids': { v: 'kids_park', hop: 'kids_loop_00', hopTxt: 'Walk the kids’ loop', z: 'kids_park' },
+    'glamping': { v: 'glamping', hop: 'glamp_walk_00', hopTxt: 'Walk to the camp', z: 'glamping' }
+  };
+  var PR_MP = { beginner: PR.beginner, intermediate: PR.intermediate, expert: PR.expert, lift: PR.lift, kids: PR.kids, glamp: PR.glamping };
+  // photo-real walk-in areas (park-local metres, from assets/zones/lg-zones.json); big downloads, so desktop only
+  var PRZ = { glamping: { c: [4.03, -39.49], r: 28, t: 'the glamping camp' }, top_station: { c: [-70.95, -437.62], r: 26, t: 'the top station' }, kids_park: { c: [-309.38, -10.64], r: 26, t: 'the kids’ park' } };
+  var PR_DESK = !coarse && !/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && window.innerWidth >= 900 && (function () { try { return !!document.createElement('canvas').getContext('webgl2'); } catch (e) { return false; } })();
+  function prRow(p) {
+    if (!p) return '';
+    return '<div class="pr-row"><span class="pr-lbl">Photo-real concept</span>' +
+      '<button type="button" class="t-btn" data-v360="' + p.v + '">&#9673; Look around 360°</button>' +
+      (p.hop ? '<button type="button" class="t-btn" data-hop="' + p.hop + '">&#10140; ' + (p.hopTxt || 'Walk this route') + '</button>' : '') +
+      (p.z && PR_DESK ? '<button type="button" class="t-btn" data-zone="' + p.z + '">&#9654; Walk it in photo-real</button>' : '') + '</div>';
+  }
+  function prLight() { return (mpView === 'dusk' || sunT >= 0.55) ? 'dusk' : sunT >= 0.3 ? 'golden' : 'day'; }
+  function prPause() { stopPlay(); if (riding) stopRide(); if (map) map.stop(); mpCardEl.querySelectorAll('video').forEach(function (v) { v.pause(); }); }
+  function prResume() { if (mode === 'park') mpCardEl.querySelectorAll('video').forEach(function (v) { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); }); }
+  function prClick(t) {
+    if (t.dataset.v360 || t.dataset.hop) {
+      prPause();
+      import('./assets/360/lg-360.js').then(function (m) { m.open360({ stop: t.dataset.v360, hop: t.dataset.hop, light: prLight(), onClose: prResume }); })
+        .catch(function (err) { console.error(err); });
+      return true;
+    }
+    if (t.dataset.zone) { prPause(); prWalk(t.dataset.zone, null, prResume); return true; }
+    return false;
+  }
+  function prWalk(zone, at, onClose) {
+    import('./assets/zones/lg-walk.js?v=1').then(function (m) { m.openWalk({ zone: zone, at: at, onClose: onClose }); })
+      .catch(function (err) { console.error(err); if (onClose) onClose(); });
+  }
+  // the 3D walk's ground plan (x east, z south, metres) <-> park-local metres (MGA zone 54 minus the park origin)
+  var G2M = { cx: [1.0012630739074129, -0.022161878907816897, 685349.4081369881], cy: [-0.022084225831249946, -0.9967773435232555, 5872438.590250795] }, PO = [685633.7366673106, 5872678.8223374635];
+  function g2l(x, z) { return [G2M.cx[0] * x + G2M.cx[1] * z + G2M.cx[2] - PO[0], G2M.cy[0] * x + G2M.cy[1] * z + G2M.cy[2] - PO[1]]; }
+  function l2g(lx, ly) { var a = G2M.cx[0], b = G2M.cx[1], c = G2M.cy[0], d = G2M.cy[1], u = lx + PO[0] - G2M.cx[2], v = ly + PO[1] - G2M.cy[2], det = a * d - b * c; return [(d * u - b * v) / det, (a * v - c * u) / det]; }
+  // inside the 3D walk: offer the photo-real version when you step into one of the areas
+  if (PR_DESK) (function () {
+    var btn = null, cur = null;
+    function enter() {
+      var G = window.LGGame; if (!cur || !G || !G.isOpen()) return; var P = G._S.player, l = g2l(P.x, P.z), zone = cur;
+      btn.hidden = true; G.onClose = function () {}; G.close();
+      prWalk(zone, { x: l[0], y: l[1], heading: P.yaw }, function (pos) {
+        var g = pos && pos.x != null ? l2g(pos.x, pos.y) : [P.x, P.z];
+        openGame('at:' + g[0].toFixed(2) + ',' + g[1].toFixed(2) + ',' + ((pos && pos.heading != null ? pos.heading : P.yaw) * 180 / Math.PI).toFixed(1) + ',0');
+      });
+    }
+    setInterval(function () {
+      var G = window.LGGame, root = document.getElementById('game'), z = null;
+      if (G && G.isOpen && G.isOpen() && G._S && G._S.player && root && !document.getElementById('lgw')) {
+        var P = G._S.player;
+        if (!P.ride && !P.flight) { var l = g2l(P.x, P.z); for (var k in PRZ) if (Math.hypot(l[0] - PRZ[k].c[0], l[1] - PRZ[k].c[1]) < PRZ[k].r) z = k; }
+        if (!btn) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'pr-enter'; btn.hidden = true; btn.addEventListener('click', enter); root.appendChild(btn); }
+      }
+      cur = z; if (!btn) return;
+      if (z) { btn.innerHTML = '&#9654; Step into photo-real: ' + PRZ[z].t + '<kbd>E</kbd>'; btn.hidden = false; } else btn.hidden = true;
+    }, 400);
+    window.addEventListener('keydown', function (e) { if (e.code === 'KeyE' && cur && btn && !btn.hidden && !e.repeat) { e.preventDefault(); enter(); } });
+  })();
 
   var startFilm = (hash.match(/^ride-(\w+)$/) || [])[1];
   if (/^walk-/.test(hash)) { intro.classList.add('out'); introOn = false; mpGo(-1, 0); openGame(hash.slice(5)); }
