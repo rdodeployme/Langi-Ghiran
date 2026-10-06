@@ -1,0 +1,40 @@
+{
+ "note": "Splats are in park-local metres (x east, y north, z up) relative to origin (MGA zone 54 easting/northing, AHD metres).",
+ "origin": {
+  "OX": 685633.7366673106,
+  "OY": 5872678.8223374635,
+  "OZ": 430.0
+ },
+ "zones": {
+  "glamping": {
+   "centre": [
+    4.03,
+    -39.49
+   ],
+   "radius": 28.0,
+   "splat": "glamping.sog",
+   "title": "Glamping camp",
+   "parts": 2
+  }
+ },
+ "pending": {
+  "top_station": {
+   "centre": [
+    -70.95,
+    -437.62
+   ],
+   "radius": 26.0,
+   "splat": "top_station.sog",
+   "title": "Top station"
+  },
+  "kids_park": {
+   "centre": [
+    -309.38,
+    -10.64
+   ],
+   "radius": 26.0,
+   "splat": "kids_park.sog",
+   "title": "Kids' park"
+  }
+ }
+}
