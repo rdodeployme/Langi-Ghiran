@@ -9,7 +9,9 @@
    "eye_m_AHD": 409.8,
    "centre_compass_deg": 123.3,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "lift_base": {
@@ -19,7 +21,9 @@
    "eye_m_AHD": 419.6,
    "centre_compass_deg": 157.4,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "lift_ride": {
@@ -29,7 +33,9 @@
    "eye_m_AHD": 429.6,
    "centre_compass_deg": 159.1,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "top_station": {
@@ -40,7 +46,8 @@
    "centre_compass_deg": 337.1,
    "lights": [
     "day",
-    "golden"
+    "golden",
+    "dusk"
    ]
   },
   "expert": {
@@ -50,7 +57,9 @@
    "eye_m_AHD": 430.9,
    "centre_compass_deg": 342.6,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "intermediate": {
@@ -60,7 +69,9 @@
    "eye_m_AHD": 423.2,
    "centre_compass_deg": 339.7,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "beginner": {
@@ -70,7 +81,9 @@
    "eye_m_AHD": 421.5,
    "centre_compass_deg": 53.4,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "kids_park": {
@@ -80,7 +93,9 @@
    "eye_m_AHD": 414.1,
    "centre_compass_deg": 106.9,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "glamping": {
@@ -102,7 +117,9 @@
    "eye_m_AHD": 411.0,
    "centre_compass_deg": 105.0,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "reservoir": {
@@ -112,7 +129,9 @@
    "eye_m_AHD": 498.8,
    "centre_compass_deg": 45.0,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "larnejeering": {
@@ -122,7 +141,9 @@
    "eye_m_AHD": 903.4,
    "centre_compass_deg": 200.0,
    "lights": [
-    "day"
+    "day",
+    "golden",
+    "dusk"
    ]
   },
   "summit": {
@@ -145,7 +166,8 @@
    "centre_compass_deg": 190.0,
    "lights": [
     "day",
-    "golden"
+    "golden",
+    "dusk"
    ]
   }
  },
