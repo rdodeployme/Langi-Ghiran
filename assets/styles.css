@@ -609,3 +609,18 @@ p,li,dd,figcaption,.lede,.section-head p,.note{text-wrap:pretty}
 .sen-measure,.sen-fit{white-space:nowrap}
 .lede .sen{display:inline;text-wrap:inherit}
 .lede .sen.sen-fit,.lede .sen.sen-measure{display:inline-block}
+
+/* Richard call, 5 Oct 2026 */
+/* LG-04: proposed opening line under the hero calls to action */
+.hero-cta{display:flex;flex-direction:column;gap:14px}
+.hero-open{margin:0;font-size:.9rem;font-weight:600;letter-spacing:.02em;color:#EEF0EC}
+.hero-open b{color:var(--yellow);font-weight:700}
+/* LG-13..18: three-division panel (reuses .pillars) */
+.pillars.three{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){.pillars.three{grid-template-columns:1fr}.pillars.three .pillar{border-right:0;padding-left:0}}
+.pillar p a[href^="tel:"],.pillar p a[href^="mailto:"]{font-weight:600}
+/* LG-21: contact photos (initials placeholder until the photos arrive) */
+.contact-person{display:flex;gap:16px;align-items:center}
+.contact-person .avatar{width:60px;height:60px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--paper-3);border:1px solid var(--line);color:var(--olive);font-family:var(--display);font-size:1.2rem;letter-spacing:.02em;object-fit:cover}
+/* LG-24: "Other (please specify)" material field */
+.material-other{margin-top:14px}

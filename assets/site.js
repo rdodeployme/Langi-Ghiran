@@ -330,6 +330,24 @@
       if (top) window.scrollTo({ top: window.scrollY + top.getBoundingClientRect().top - 90, behavior: reduceMotion ? 'auto' : 'smooth' });
     }
 
+    // "Other (please specify)" material: the text field shows, and is required, only when Other is ticked.
+    var matOther = $('[data-material-other]', decl);
+    var matOtherWrap = $('#material-other-wrap');
+    var matOtherInput = $('#d-mat-other');
+    function syncOther() {
+      if (!matOther || !matOtherWrap || !matOtherInput) return;
+      var on = matOther.checked;
+      matOtherWrap.hidden = !on;
+      matOtherInput.disabled = !on;
+      if (!on) matOtherInput.classList.remove('field-error');
+    }
+    function materialValues(scope) {
+      return $$('input[name="material_type"]:checked', scope || decl).map(function (c) {
+        var other = matOtherInput && matOtherInput.value.trim();
+        return (c === matOther && other) ? 'Other: ' + other : c.value;
+      });
+    }
+
     function blockedAnswers() {
       return ['contains_rpw', 'contains_asbestos', 'contains_wass'].filter(function (n) {
         var r = $('input[name="' + n + '"]:checked', decl); return r && r.value === 'Yes';
@@ -377,7 +395,7 @@
 
     btnNext.addEventListener('click', function () { if (validateStep(step)) { saveDraft(); go(step + 1); } });
     btnBack.addEventListener('click', function () { go(step - 1); });
-    decl.addEventListener('change', function (e) { if (e.target.type === 'radio') refreshBlocked(); saveDraft(); });
+    decl.addEventListener('change', function (e) { if (e.target.type === 'radio') refreshBlocked(); if (e.target === matOther) syncOther(); saveDraft(); });
     decl.addEventListener('input', debounce(saveDraft, 400));
 
     // Review
@@ -394,10 +412,10 @@
         if (s.hasAttribute('data-review')) return;
         var rows = [], seen = {};
         $$('input,select,textarea', s).forEach(function (el) {
-          if (!el.name || el.type === 'hidden' || el.name === 'website' || seen[el.name]) return;
+          if (!el.name || el.type === 'hidden' || el.name === 'website' || el.name === 'material_other' || el.disabled || seen[el.name]) return;
           var val = '';
           if (el.type === 'radio') { seen[el.name] = 1; var r = $('input[name="' + el.name + '"]:checked', s); val = r ? r.value : ''; }
-          else if (el.type === 'checkbox' && el.name === 'material_type') { seen[el.name] = 1; val = $$('input[name="material_type"]:checked', s).map(function (c) { return c.value; }).join(', '); rows.push(['Material type', val]); return; }
+          else if (el.type === 'checkbox' && el.name === 'material_type') { seen[el.name] = 1; val = materialValues(s).join(', '); rows.push(['Material type', val]); return; }
           else if (el.type === 'checkbox') { val = el.checked ? 'Agreed' : 'Not agreed'; rows.push(['Declaration', val]); return; }
           else if (el.type === 'file') { val = el.files && el.files[0] ? el.files[0].name : 'None attached'; }
           else val = el.value;
@@ -437,6 +455,7 @@
         });
       });
       refreshBlocked();
+      syncOther();
     }
     var qs = new URLSearchParams(window.location.search);
     var prefilled = false;
@@ -456,12 +475,13 @@
         var n = $('#draft-note');
         if (n) {
           n.classList.add('show');
-          $('[data-clear-draft]', n).addEventListener('click', function () { store(DRAFT, null); decl.reset(); n.classList.remove('show'); refreshBlocked(); setDate(); });
+          $('[data-clear-draft]', n).addEventListener('click', function () { store(DRAFT, null); decl.reset(); n.classList.remove('show'); refreshBlocked(); syncOther(); setDate(); });
         }
       }
     }
     function setDate() { var sd = $('input[name="signature_date"]', decl); if (sd && !sd.value) sd.value = new Date().toISOString().slice(0, 10); }
     setDate();
+    syncOther();
     go(0);
 
     decl.addEventListener('submit', function (e) {
@@ -471,12 +491,12 @@
         if (sections[i].hasAttribute('data-review')) continue;
         if (!validateStep(i)) { go(i); validateStep(i); return; }
       }
-      var materials = $$('input[name="material_type"]:checked', decl);
+      var materials = materialValues();
       btnSubmit.disabled = true;
       setStatus(statusEl, 'Submitting declaration…');
       var fd = new FormData(decl);
       fd.delete('material_type');
-      fd.append('material_type', materials.map(function (m) { return m.value; }).join(', '));
+      fd.append('material_type', materials.join(', '));
       fd.set('sig_image', canvas.toDataURL('image/png'));
       postForm(decl.action, fd)
         .then(function (data) {
