@@ -371,7 +371,6 @@
 </head>
 <body class="tour-page">
 <a class="skip" href="#main">Skip to content</a>
-<div class="draft"><strong>Draft for review.</strong> Items marked <span class="tbc">TBC</span> are placeholders awaiting confirmation. Photography is illustrative. Not for public release.</div>
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="LG Recycling home"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text"><b>LG Recycling</b><small>Langi Ghiran Recycling</small></span></a>
@@ -493,7 +492,7 @@
         <button type="button" id="ti-go">Explore the park</button>
         <button type="button" id="ti-fly">3D fly-through</button>
       </div>
-      <p class="ti-meta">Concept only. Final design TBC</p>
+      <p class="ti-meta">Concept only</p>
     </div>
   </div>
 
@@ -520,7 +519,7 @@
     </div>
     <ul class="note">
       <li>The rehabilitation area outline is approximate.</li>
-      <li>Run lines, the kids' park, the lift, the glamping layout and the concept images show an indicative idea of the finished park, not a final design. <span class="tbc">Final layout TBC</span></li>
+      <li>Run lines, the kids' park, the lift, the glamping layout and the concept images show an indicative idea of the finished park, not a final design.</li>
       <li>The short clips, the ride films, the dusk view and the concept aerial laid over the terrain are AI-generated illustrations, not footage or plans of the site.</li>
       <li>Trail grades use the usual shapes (circle, square, diamond) in the LG palette: green for beginner, yellow for intermediate, black for expert.</li>
       <li>Imagery &copy; Esri World Imagery (Wayback, Oct 2025 release), Maxar, Earthstar Geographics. Terrain: Terrain Tiles (Mapzen, AWS Open Data).</li>
@@ -734,10 +733,10 @@
       cam: { fit: 'site', pitch: 50, bearing: 165 }, mk: ['site'] },
     { title: 'The bike park', plan: 'all',
       body: '<p>Here’s the concept laid over the real hillside. Three downhill runs leave the top station and wind down to the bottom, with a kids’ jump park by the lift base, a pulley lift to pull riders back up, and 16 glamping sites off to the side. Pick a run to see it up close.</p>',
-      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn go" data-walk="fly-park">&#9654; Drone view of the park</button><button type="button" class="t-btn" data-walk="top">&#9673; Stand at the top station</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p><p><span class="tbc">Indicative concept. Final layout TBC</span></p>'; },
+      extra: function () { return '<div class="run-cards">' + runCard('beginner') + runCard('intermediate') + runCard('expert') + '</div><div class="t-actions"><button type="button" class="t-btn go" data-walk="fly-park">&#9654; Drone view of the park</button><button type="button" class="t-btn" data-walk="top">&#9673; Stand at the top station</button></div><p class="tour-key"><span><span class="g g-kids"></span>Kids’ jump park</span><span><span class="g g-lift"></span>Pulley lift</span><span><span class="g g-glamp"></span>Glamping</span></p>'; },
       cam: { center: [143.0915, -37.2772], zoom: 15.7, pitch: 72, bearing: 158 }, mk: ['beginner', 'intermediate', 'expert', 'kids', 'glamp', 'top', 'base'] },
     { title: 'Arriving at the base', plan: 'all', ride: 'base', g: 'g-kids',
-      body: '<p>This is where a visit starts: the base area at the foot of the slope, with the lift base, the kids’ jump park next door, the shelter and the walk across to the glamping camp. Everything in the park leads back here.</p><p><span class="tbc">Car park, shelter and access road TBC</span></p>',
+      body: '<p>This is where a visit starts: the base area at the foot of the slope, with the lift base, the kids’ jump park next door, the shelter and the walk across to the glamping camp. Everything in the park leads back here.</p>',
       extra: function () { return '<div class="t-actions"><button type="button" class="t-btn go" data-walk="carpark">&#9654; Walk in from the car park</button><button type="button" class="t-btn" data-walk="fly-base">Drone view</button><button type="button" class="t-btn" data-walk="base">&#9673; Stand at the base</button><button type="button" class="t-btn" data-film="base">Concept film</button></div>'; },
       cam: { center: BASE_C, zoom: 16.3, pitch: 64, bearing: 158 }, mk: ['base', 'kids', 'glamp', 'top'] },
     { title: 'The pulley lift', plan: 'lift', ride: 'lift', g: 'g-lift',
@@ -762,13 +761,13 @@
       cam: { fit: 'kids', pitch: 50, bearing: 200, maxZoom: 16.4 }, mk: ['kids', 'base'] },
     { title: 'Glamping', plan: 'glamp', ride: 'glamp', g: 'g-glamp',
       body: '<p>Off to the side of the bike park, on the open rise looking back at the range, sit 16 glamping sites: canvas bell tents on their own timber decks, linked by a gravel path to an amenities hut and a short walk to the lift base.</p>',
-      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-walk="camp">&#9654; Walk the camp</button><button type="button" class="t-btn" data-walk="fly-camp">Drone view</button><button type="button" class="t-btn" data-walk="deck">&#9673; Stand on a deck</button><button type="button" class="t-btn" data-film="glamp">Concept film</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + '<p><span class="tbc">Site layout and facilities TBC</span></p>'; },
+      extra: function () { return '<div class="stats"><div><b>16</b><span>Sites</span></div><div><b>Decks</b><span>Bell tents</span></div><div><b>Hut</b><span>Amenities</span></div></div><div class="t-actions"><button type="button" class="t-btn go" data-walk="camp">&#9654; Walk the camp</button><button type="button" class="t-btn" data-walk="fly-camp">Drone view</button><button type="button" class="t-btn" data-walk="deck">&#9673; Stand on a deck</button><button type="button" class="t-btn" data-film="glamp">Concept film</button></div>' + clip('glamp', 'Concept clip of canvas bell tents on timber decks at dusk, with the granite range behind') + ''; },
       cam: { fit: 'glamp', pitch: 52, bearing: 205 }, mk: ['glamp', 'base'] },
     { title: 'Today, and what it could be', plan: 'future', orbit: 40,
       body: '<p>An artist’s concept of the finished park, laid over the real terrain: revegetated ground, runs down the slope, a kids’ park at the bottom, the lift back to the top and the glamping camp beside it. Slide between today and the concept.</p>',
       extra: function () { return '<div class="tf" role="group" aria-label="Compare today and the concept"><button type="button" data-tf="0" aria-pressed="true">Today</button><button type="button" data-tf="1" aria-pressed="false">Concept</button></div>' +
         '<input class="tf-range" id="tf-range" type="range" min="0" max="100" value="0" aria-label="Blend between today and the concept"><div class="tf-ends"><span>Today</span><span>Concept</span></div>' +
-        '<p><span class="tbc">Illustrative concept based on the real site. Not a final design</span></p>'; },
+        '<p class="tf-note">Illustrative concept based on the real site.</p>'; },
       cam: { center: [143.0906, -37.2772], zoom: 15.8, pitch: 62, bearing: 160 }, mk: [] }
   ];
   var SLUG = ['plains', 'lar-ne-jeering', 'summit', 'picnic-ground', 'reservoir', 'former-quarry', 'bike-park', 'base', 'lift', 'beginner', 'intermediate', 'expert', 'kids', 'glamping', 'today-and-tomorrow'];
@@ -1444,7 +1443,7 @@
       mpCardEl.innerHTML = '<p class="mp-eyebrow">The planned bike park</p><h2>Explore the park</h2>' +
         '<p>Three downhill runs from one top station, a pulley lift back up, a kids’ jump park at the bottom and 16 glamping sites. Pick any of them for a closer look.</p>' +
         '<div class="mp-list">' + MP.map(function (f, n) { return '<button type="button" class="run-card" data-mp="' + n + '"><span class="g ' + f.g + '"></span><span><b>' + f.name + '</b><small>' + mpSub(f.k) + '</small></span><em>&rarr;</em></button>'; }).join('') + '</div>' +
-        '<p style="margin:0"><span class="tbc">Concept only. Final layout TBC</span></p>';
+        '';
       return;
     }
     var f = MP[mpSel], N = MP.length;
@@ -1453,7 +1452,7 @@
       clip(f.k, 'Concept clip: ' + f.name) +
       '<h2><span class="g ' + f.g + '"></span>' + f.name + '</h2><p>' + MP_TXT[f.k] + '</p>' +
       prRow(PR_MP[f.k]) + '<div class="t-actions">' + (f.ride ? '<button type="button" class="t-btn go" data-film="' + f.k + '">&#9654; ' + (f.k === 'glamp' ? 'Watch the walk-through' : 'Watch the ride') + '</button>' + (f.k === 'glamp' ? '<button type="button" class="t-btn" data-walk="camp">Walk it in 3D</button>' : '<button type="button" class="t-btn" data-fly="' + f.k + '">Follow it in 3D</button>') : '<button type="button" class="t-btn go" data-fly="' + f.k + '">See it in 3D</button>') + '</div>' + stats +
-      (f.ride && f.k !== 'glamp' ? '' : '<p style="margin:0"><span class="tbc">' + (f.k === 'glamp' ? 'Site layout and facilities TBC' : 'Final layout TBC') + '</span></p>');
+      '';
   }
   function mpGo(n, dur) {
     mpSel = n;
@@ -1834,6 +1833,6 @@
     window.addEventListener('load', function () { setTimeout(function () { var go2 = function () { if (window.LGGame && window.LGGame.prefetch) window.LGGame.prefetch(); }; if (window.requestIdleCallback) requestIdleCallback(go2, { timeout: 4000 }); else go2(); }, 4000); }); })();
 })();
 </script>
-<script src="assets/site.js?v=c3"></script>
+<script src="assets/site.js?v=c4"></script>
 </body>
 </html>
