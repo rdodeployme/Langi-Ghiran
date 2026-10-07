@@ -155,7 +155,7 @@
 
       if (!soils.length) {
         return { kind: 'no', badge: 'Not a match', title: "That's not something we take.",
-          body: '<p>LG Recycling accepts soil only. General rubbish, green waste, concrete and demolition waste need to go to a facility licensed for that material.</p><p><span class="tbc">Nearby alternatives TBC</span></p>',
+          body: '<p>LG Recycling accepts soil only. General rubbish, green waste, concrete and demolition waste need to go to a facility licensed for that material.</p>',
           actions: '<a class="btn btn-ghost" href="index.html#enquire">Ask us anyway</a>' };
       }
       if (hazYes.length) {
